@@ -1,7 +1,5 @@
 <template>
   <div class="graph-canvas">
-    <div v-on:click="resizeGraph()">{{ graphData.graphContainer }}
-    {{ graphData.graphInitialized }}</div>
     <div class="graph" v-once></div>
   </div>
 </template>
