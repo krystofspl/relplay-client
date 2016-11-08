@@ -1,14 +1,8 @@
 <template>
   <div id="top-panel">
     <ul id="top-menu">
-      <li>
-        <div v-on:click="switchMainPanelView('AlbumArts')">{{ $t('components.AlbumArts.name') }}</div>
-      </li>
-      <li>
-        <div v-on:click="switchMainPanelView('GenresArtistsGraph')">{{ $t('components.GenresArtistsGraph.name') }}</div>
-      </li>
-      <li>
-        <div v-on:click="switchMainPanelView('ArtistsArtistsGraph')">{{ $t('components.ArtistsArtistsGraph.name') }}</div>
+      <li v-for="link in links">
+        <div v-on:click="switchMainPanelView(link)" v-bind:class="{ active: isActive(link) }">{{ $t('components.'+link+'.name') }}</div>
       </li>
     </ul>
   </div>
@@ -18,8 +12,16 @@
 import { mapActions } from 'vuex'
 
 export default {
+  data: function () {
+    return {
+      links: this.$store.state.view.components.TopPanel.links
+    }
+  },
   methods: {
-    ...mapActions(['switchMainPanelView'])
+    ...mapActions(['switchMainPanelView']),
+    isActive: function (linkName) {
+      return (this.$store.state.view.mainPanelView === linkName)
+    }
   }
 }
 </script>
@@ -37,12 +39,17 @@ export default {
     list-style-type: none
     margin: 0
     padding: 0
-    overflow-x: scroll
+    overflow-x: auto
     white-space: nowrap
     li
       display: inline-block
-      padding: 9px 16px
+      padding: 0
       cursor: pointer
       &:hover
         background: white
+      div
+        padding: 14px 16px
+      div.active
+        border-top: 2px solid #FFF
+      
 </style>

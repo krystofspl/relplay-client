@@ -1,11 +1,22 @@
 <template>
   <div id="right-panel">
-    right
+    <keep-alive>
+      <transition name="component-fade" mode="out-in">
+          <component :is="this.$store.state.view.rightPanelView"></component>
+      </transition>
+    </keep-alive>
   </div>
 </template>
 
 <script>
+import DefaultRight from './right/DefaultRight.vue'
+import SimilarityForm from './right/SimilarityForm.vue'
+
 export default {
+  components: {
+    DefaultRight,
+    SimilarityForm
+  }
 }
 </script>
 

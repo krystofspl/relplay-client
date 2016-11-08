@@ -1,10 +1,10 @@
 <template>
   <div id="main-panel">
-    <keep-alive>
-      <transition name="component-fade" mode="out-in">
+    <transition name="component-fade" mode="out-in">
+      <keep-alive>
           <component :is="this.$store.state.view.mainPanelView"></component>
-      </transition>
-    </keep-alive>
+      </keep-alive>
+    </transition>
   </div>
 </template>
 
@@ -14,11 +14,6 @@ import ArtistsArtistsGraph from './main/ArtistsArtistsGraph.vue'
 import GenresArtistsGraph from './main/GenresArtistsGraph.vue'
 
 export default {
-  vuex: {
-    getters: {
-      mainPanelView: state => state.view.mainPanelView
-    }
-  },
   components: {
     AlbumArts,
     ArtistsArtistsGraph,
@@ -35,11 +30,4 @@ export default {
   position: fixed
   top: 50px
   left: 0
-
-.component-fade-enter-active, .component-fade-leave-active 
-  transition: opacity .3s ease
-
-.component-fade-enter, .component-fade-leave-active 
-  opacity: 0
-
 </style>
