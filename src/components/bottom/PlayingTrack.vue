@@ -2,14 +2,23 @@
   <div id="playing-track">
     [{{ this.$store.state.player.state }}]
     <div class="playing-track-name">
-      {{ this.$store.state.player.nowPlaying.trackName }}
+      <span v-if="this.$store.state.player.nowPlaying">    
+        {{ getNowPlayingTrack().title }}
+      </span>
+      <span v-else>
+        Nothing playing
+      </span>
     </div>
   </div>
 </template>
 
 <script>
-export default {
+import { mapGetters } from 'vuex'
 
+export default {
+  methods: {
+    ...mapGetters(['getNowPlayingTrack'])
+  }
 }
 </script>
 

@@ -3,7 +3,7 @@
     <div v-on:click="playerPrevious">
       <icon name="fast-backward" scale="2"></icon>
     </div>
-    <div v-on:click="playerPlayPause">
+    <div v-on:click="playerSwitchState">
       <icon name="play" scale="2" v-if="this.$store.state.player.state == 'paused'"></icon>
       <icon name="pause" scale="2" v-else></icon>
     </div>  
@@ -23,10 +23,7 @@ export default {
     Icon
   },
   methods: {
-    ...mapActions(['playerPrevious', 'playerNext']),
-    ...mapActions({
-      playerPlayPause: 'switchPlayerState'
-    })
+    ...mapActions(['playerPrevious', 'playerSwitchState', 'playerNext'])
   }
 }
 </script>
