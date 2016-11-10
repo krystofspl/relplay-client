@@ -25,6 +25,10 @@ export default {
   height: calc(100% - 80px)
   width: 300px
   background: yellow
+  padding: 5px
+  -webkit-box-sizing: border-box
+  -moz-box-sizing: border-box
+  box-sizing: border-box
   position: fixed
   top: 0
   right: 0

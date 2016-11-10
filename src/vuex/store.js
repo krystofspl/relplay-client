@@ -1,20 +1,18 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import { tempData } from './temp_data.js'
+
 Vue.use(Vuex)
 
 // Initial state
 const state = {
-  data: {
-    tracks: [{id: 1, title: 'Ahoj 1'}, {id: 2, title: 'Ahoj 2'}, {id: 3, title: 'Ahoj 3'}, {id: 4, title: 'Ahoj 4'}],
-    albums: [],
-    artists: [],
-    genres: []
-  },
+  data: tempData,
   player: {
     state: 'paused',
-    nowPlaying: 1,
-    playlist: [1, 4, 3]
+    nowPlaying: 375,
+    playlist: [104, 375, 550, 600],
+    progress: 55
   },
   view: {
     mainPanelView: 'AlbumArts',
@@ -24,7 +22,7 @@ const state = {
         links: ['AlbumArts', 'GenresArtistsGraph', 'ArtistsArtistsGraph']
       },
       TrackInfo: {
-        displayedFields: ['trackName', 'artistName', 'albumName', 'year', 'albumArt']
+        displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'album.albumArt']
       }
     }
   }

@@ -17,6 +17,15 @@ var locales = {
       },
       ArtistsArtistsGraph: {
         name: 'Graph - ArtistsArtistsGraph/Aritsts'
+      },
+      PlayingTrack: {
+        nothingPlaing: 'Nothing playing now'
+      },
+      Playlist: {
+        playlist: 'Playlist'
+      },
+      TrackInfo: {
+        nowPlaying: 'Now playing'
       }
     },
     views: {

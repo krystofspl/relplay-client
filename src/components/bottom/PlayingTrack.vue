@@ -1,12 +1,11 @@
 <template>
   <div id="playing-track">
-    [{{ this.$store.state.player.state }}]
     <div class="playing-track-name">
       <span v-if="this.$store.state.player.nowPlaying">    
-        {{ getNowPlayingTrack().title }}
+        {{ getArtistForTrack(getNowPlayingTrack()).name }} -  {{ getNowPlayingTrack().title }}
       </span>
       <span v-else>
-        Nothing playing
+        {{ $t('components.PlayingTrack.nothingPlaying') }}
       </span>
     </div>
   </div>
@@ -14,13 +13,19 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { trackGetters } from '../../mixins/getters/trackGetters.js'
 
 export default {
   methods: {
     ...mapGetters(['getNowPlayingTrack'])
-  }
+  },
+  mixins: [trackGetters]
 }
 </script>
 
-<style lang="sass" scoped>  
+<style lang="sass" scoped>
+#playing-track
+  background: white
+  width: 80%
+  margin: 0
 </style>
