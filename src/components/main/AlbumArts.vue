@@ -1,8 +1,7 @@
 <template>
   <div id="album-arts">
     album-arts
-    <span @click='asd()'>asdasd</span>
-    {{ this.$store.state }}
+    {{ this.$store.state.data.tracks }}
   </div>
 </template>
 
