@@ -12,12 +12,16 @@
         <div v-if="field === 'album.name'">
           <span>Album: {{ getAlbumForTrack(getNowPlayingTrack).title }}</span>
         </div>
+        <!--
         <div v-if="field === 'album.year'">
           <span>Year: {{ getAlbumForTrack(getNowPlayingTrack).year }}</span>
         </div>
+        -->
+        <!--
         <div v-if="field === 'album.albumArt'">
-          <img v-bind:src="getAlbumForTrack(getNowPlayingTrack).artworkPath">
+          <img v-bind:src="getArtworkPath(getNowPlayingId)">
         </div>
+        -->
       </div>
     </div>
   </div>
@@ -30,11 +34,14 @@ import { trackGetters } from '../../mixins/getters/trackGetters.js'
 export default {
   data: function () {
     return {
-      displayedFields: this.$store.state.view.components.TrackInfo.displayedFields
+      displayedFields: []
     }
   },
   computed: {
-    ...mapGetters(['getNowPlayingTrack'])
+    ...mapGetters(['getNowPlayingTrack']),
+    displayedFields: function () {
+      return this.$store.state.view.components.TrackInfo.displayedFields
+    }
   },
   mixins: [trackGetters]
 }

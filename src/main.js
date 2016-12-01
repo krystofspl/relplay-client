@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
-
-import App from './App.vue'
+import VueResource from 'vue-resource'
+Vue.use(VueResource)
+Vue.use(Vuex)
 
 import store from './vuex/store'
+
+import App from './App.vue'
 
 var locales = {
   en: {
@@ -13,10 +16,13 @@ var locales = {
         name: 'Album Arts'
       },
       GenresArtistsGraph: {
-        name: 'Graph - Genres/Aritsts'
+        name: 'Genres/Artists'
+      },
+      ArtistAlbumsGraph: {
+        name: 'One Artist/Albums'
       },
       ArtistsArtistsGraph: {
-        name: 'Graph - ArtistsArtistsGraph/Aritsts'
+        name: 'Artists/Aritsts'
       },
       PlayingTrack: {
         nothingPlaing: 'Nothing playing now'
@@ -40,18 +46,14 @@ Object.keys(locales).forEach(function (lang) {
   Vue.locale(lang, locales[lang])
 })
 
-Vue.use(Vuex)
-
-var vue = new Vue({
-  store,
-  el: '#app',
-  components: {
-    App
-  },
-  data () {
-    return {
+store.dispatch('setInitialData').then(() => {
+  var vue = new Vue({
+    store,
+    el: '#app',
+    components: {
+      App
     }
-  }
-})
+  })
 
-window.vue = vue
+  window.vue = vue
+})

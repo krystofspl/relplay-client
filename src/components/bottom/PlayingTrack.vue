@@ -2,7 +2,7 @@
   <div id="playing-track">
     <div class="playing-track-name">
       <span v-if="this.$store.state.player.nowPlaying">    
-        {{ getArtistForTrack(getNowPlayingTrack()).name }} -  {{ getNowPlayingTrack().title }}
+        {{ getArtistForTrack(getNowPlayingTrack()).name }} - {{ getNowPlayingTrack().title }}
       </span>
       <span v-else>
         {{ $t('components.PlayingTrack.nothingPlaying') }}

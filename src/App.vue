@@ -28,5 +28,5 @@ export default {
   transition: opacity .2s ease
 
 .component-fade-enter, .component-fade-leave-active 
-  opacity: 0
+  opacity: 0  
 </style>

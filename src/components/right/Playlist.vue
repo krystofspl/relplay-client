@@ -26,7 +26,7 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   data: function () {
     return {
-      playlist: this.$store.getters.getPlaylistTracks
+      playlist: []
     }
   },
   components: {
@@ -34,12 +34,15 @@ export default {
   },
   methods: {
     ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying']),
+    ...mapGetters(['getNowPlayingId', 'getPlaylistTracks']),
     isNowPlaying: function (trackId) {
-      return (this.getNowPlayingId === trackId)
+      return (this.getNowPlayingId() === trackId)
     }
   },
   computed: {
-    ...mapGetters(['getNowPlayingId'])
+    playlist: function () {
+      return this.getPlaylistTracks()
+    }
   }
 }
 </script>

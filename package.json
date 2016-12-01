@@ -1,7 +1,7 @@
 {
-  "name": "graph_music_library",
+  "name": "gml-front",
   "version": "1.0.0",
-  "description": "A Vue.js project",
+  "description": "Graph Music Library frontend",
   "author": "krystofspl <krystofspl@gmail.com>",
   "private": true,
   "scripts": {
@@ -10,6 +10,8 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
+    "express": "^4.14.0",
+    "lodash": "^4.17.2",
     "nodejs-model": "^0.1.6",
     "vis": "^4.16.1",
     "vue": "^2.0.1",
@@ -40,7 +42,6 @@
     "eslint-plugin-promise": "^2.0.1",
     "eslint-plugin-standard": "^2.0.1",
     "eventsource-polyfill": "^0.9.6",
-    "express": "^4.13.3",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.9.0",
     "function-bind": "^1.0.2",

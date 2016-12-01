@@ -10,6 +10,7 @@
 
 <script>
 import AlbumArts from './main/AlbumArts.vue'
+import ArtistAlbumsGraph from './main/ArtistAlbumsGraph.vue'
 import ArtistsArtistsGraph from './main/ArtistsArtistsGraph.vue'
 import GenresArtistsGraph from './main/GenresArtistsGraph.vue'
 
@@ -17,7 +18,8 @@ export default {
   components: {
     AlbumArts,
     ArtistsArtistsGraph,
-    GenresArtistsGraph
+    GenresArtistsGraph,
+    ArtistAlbumsGraph
   }
 }
 </script>
