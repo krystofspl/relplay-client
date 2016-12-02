@@ -8,8 +8,11 @@ import App from './App.vue'
 var locales = {
   en: {
     components: {
-      AlbumArts: {
+      ArtistsAlbumArts: {
         name: 'Album Arts'
+      },
+      ArtistsPanel: {
+        all: 'All'
       },
       GenresArtistsGraph: {
         name: 'Genres/Artists'

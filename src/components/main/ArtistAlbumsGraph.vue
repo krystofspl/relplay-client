@@ -73,7 +73,6 @@ export default {
             }
           })
         }
-        console.log(newGraphData)
 
         this.graphData.nodes = _.concat(this.graphData.nodes, newGraphData.artist)
         this.graphData.nodes = _.concat(this.graphData.nodes, newGraphData.secondaryArtists)

@@ -13,15 +13,18 @@ const state = {
   player: {
     state: 'paused',
     nowPlaying: 19,
-    playlist: [19, 58, 17],
+    playlist: [19, 58, 17, 19, 58, 17, 19, 58, 17],
     progress: 55
   },
   view: {
-    mainPanelView: 'AlbumArts',
+    mainPanelView: 'ArtistsAlbumArts',
     rightPanelView: 'DefaultRight',
     components: {
+      ArtistsAlbumArts: {
+        selectedArtist: -1
+      },
       TopPanel: {
-        links: ['AlbumArts', 'GenresArtistsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph']
+        links: ['ArtistsAlbumArts', 'GenresArtistsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph']
       },
       TrackInfo: {
         displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'album.albumArt']
@@ -55,6 +58,9 @@ const getters = {
   },
   getAlbums: (state) => {
     return state.data.albums
+  },
+  getArtists: (state) => {
+    return state.data.artists
   }
 }
 
@@ -105,6 +111,9 @@ const mutations = {
     state.player.playlist = payload.playlist.map(track => {
       return track.id
     })
+  },
+  SET_SELECTED_ARTIST (state, payload) {
+    state.view.components.ArtistsAlbumArts.selectedArtist = payload
   }
 }
 
@@ -146,6 +155,9 @@ const actions = {
   },
   playerUpdatePlaylist (context, payload) {
     context.commit('PLAYER_UPDATE_PLAYLIST', payload)
+  },
+  setSelectedArtist (context, payload) {
+    context.commit('SET_SELECTED_ARTIST', payload)
   }
 }
 

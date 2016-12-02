@@ -9,14 +9,14 @@
 </template>
 
 <script>
-import AlbumArts from './main/AlbumArts.vue'
+import ArtistsAlbumArts from './main/ArtistsAlbumArts.vue'
 import ArtistAlbumsGraph from './main/ArtistAlbumsGraph.vue'
 import ArtistsArtistsGraph from './main/ArtistsArtistsGraph.vue'
 import GenresArtistsGraph from './main/GenresArtistsGraph.vue'
 
 export default {
   components: {
-    AlbumArts,
+    ArtistsAlbumArts,
     ArtistsArtistsGraph,
     GenresArtistsGraph,
     ArtistAlbumsGraph
@@ -32,4 +32,5 @@ export default {
   position: fixed
   top: 50px
   left: 0
+  overflow: auto
 </style>
