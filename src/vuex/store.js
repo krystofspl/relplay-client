@@ -8,7 +8,8 @@ const state = {
   data: {
     tracks: {},
     albums: {},
-    artists: {}
+    artists: {},
+    albumArts: {}
   },
   player: {
     state: 'paused',
@@ -61,10 +62,16 @@ const getters = {
   },
   getArtists: (state) => {
     return state.data.artists
+  },
+  getAlbumArt: (albumId) => {
+    return state.data.albumArts[albumId]
   }
 }
 
 const mutations = {
+  ADD_ALBUM_ART (state, payload) {
+    Vue.set(state.data.albumArts, payload.albumId, payload.albumArt)
+  },
   SET_INITIAL_DATA (state, payload) {
     payload.artists.forEach(res => {
       Vue.set(state.data.artists, res.id, res)
@@ -133,6 +140,23 @@ const actions = {
           })
         })
       })
+    }).then(() => {
+      context.dispatch('loadAlbumArts')
+    })
+  },
+  loadAlbumArts (context) {
+    Object.values(context.state.data.albums).forEach((album) => {
+      var albumId = album.id
+      Vue.http.get(context.state.settings.global.backendUrl + 'album-art/' + albumId)
+        .then((response) => {
+          if (response.ok) {
+            response.blob().then((b) => {
+              context.commit('ADD_ALBUM_ART', { albumArt: b, albumId: albumId })
+            })
+          }
+        }, (err) => {
+          console.log(err)
+        })
     })
   },
   switchMainPanelView (context, component) {

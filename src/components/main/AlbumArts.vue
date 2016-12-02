@@ -2,7 +2,10 @@
   <div class="album-arts">
     <div v-for="album in albums" class="album-art" v-bind:class="{'selected': isSelected(album.id)}" @click="setSelectedAlbum(album.id)">
       <div class="content">
-        <img v-bind:src="getAlbumArt(album.id)">
+        <!-- @load="getAlbumArtImg" doesnt't work for some reason, would be nicer -->
+        <div class="album-art-img" :data-album="album.id">
+        <img :src="getAlbumArtImg(album.id)">
+        </div>
         <div class="album-title">
           {{ album.title }}
         </div>
@@ -13,6 +16,8 @@
 
 <script>
 import { albumGetters } from '../../mixins/getters/albumGetters.js'
+import { mapGetters } from 'vuex'
+
 export default {
   data: function () {
     return {
@@ -22,11 +27,22 @@ export default {
   props: ['albums', 'selectedArtist'],
   mixins: [albumGetters],
   methods: {
+    ...mapGetters('getAlbumArt'),
     isSelected: function (albumId) {
       return this.selectedAlbumId === albumId
     },
     setSelectedAlbum: function (albumId) {
       this.selectedAlbumId = albumId
+    },
+    getAlbumArtImg: function (albumId) {
+      var urlCreator = window.URL || window.webkitURL
+      var blob = this.$store.state.data.albumArts[albumId]
+      var url = ''
+      try {
+        url = urlCreator.createObjectURL(blob)
+      } catch (e) {
+      }
+      return url
     }
   }
 }
@@ -55,6 +71,10 @@ export default {
       position: absolute
       height: 100%
       width: 100%
+      .album-art-img
+        width: 100%
+        img
+          width: 100%
       .album-title
         color: white
         width: 100%

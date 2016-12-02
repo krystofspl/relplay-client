@@ -6,9 +6,6 @@ export var albumGetters = {
     getTracksForAlbum: function (albumId) {
       // TODO
       return null
-    },
-    getAlbumArt: function (albumId) {
-      // TODO call backend
     }
   }
 }
