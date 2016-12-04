@@ -28,6 +28,7 @@ export default {
   position: fixed
   bottom: 0
   left: 0
+  z-index: -1
 #player-controls, #playing-track, #progress-bar
   display: inline-block
 </style>

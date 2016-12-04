@@ -7,21 +7,19 @@
           <span>Title: <b>{{ getNowPlayingTrack[field] }}</b></span>
         </div>
         <div v-if="field === 'artist.name'">
-          <span>Artist: {{ getArtistForTrack(getNowPlayingTrack).name }}</span>
+          <span>Artist: {{ album.artists[0].name }}</span>
         </div>
         <div v-if="field === 'album.name'">
-          <span>Album: {{ getAlbumForTrack(getNowPlayingTrack).title }}</span>
+          <span>Album: {{ album.title }}</span>
         </div>
         <!--
         <div v-if="field === 'album.year'">
           <span>Year: {{ getAlbumForTrack(getNowPlayingTrack).year }}</span>
         </div>
         -->
-        <!--
         <div v-if="field === 'album.albumArt'">
-          <img v-bind:src="getArtworkPath(getNowPlayingId)">
+          <img :src="getAlbumArtImgPath(album.id)" v-if="getAlbumArtImgPath(album.id).length">
         </div>
-        -->
       </div>
     </div>
   </div>
@@ -30,6 +28,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { trackGetters } from '../../mixins/getters/trackGetters.js'
+import { albumGetters } from '../../mixins/getters/albumGetters.js'
 
 export default {
   data: function () {
@@ -41,24 +40,27 @@ export default {
     ...mapGetters(['getNowPlayingTrack']),
     displayedFields: function () {
       return this.$store.state.view.components.TrackInfo.displayedFields
+    },
+    album: function () {
+      return this.getAlbumForTrack(this.getNowPlayingTrack)
     }
   },
-  mixins: [trackGetters]
+  mixins: [trackGetters, albumGetters]
 }
 </script>
 
 <style lang="sass" scoped>
 #track-info
   border-top: 2px solid #000
-  // position: absolute
-  // bottom: 0
+  position: relative
   h1
     margin: 5px 0
     padding: 0
     font-size: 120%
-  span
   img
     text-align: center
     width: 100%
+    margin-top: 10px
+    border: 1px solid #000
 
 </style>

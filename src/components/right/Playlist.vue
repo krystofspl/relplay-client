@@ -11,11 +11,11 @@
       <tbody is="draggable" element="tbody" :list="playlist" :options="{animation: 200, ghostClass: 'draggable-ghost', chosenClass: 'draggable-drag'}" @update="playerUpdatePlaylist({playlist})">
         <!-- @update, @add, ... -->
         <tr class="playlist-item" v-for="(element, index) in playlist" v-bind:class="{'now-playing': isNowPlaying(element.id)}" v-on:dblclick="playerSetNowPlaying({id: element.id})">
-          <td>{{index}}.</td>
+          <td>{{index + 1}}.</td>
           <td class="absorbing-column">{{element.title}}</td>
         </tr>
       </tbody>
-    </table>  
+    </table>
   </div>
 </template>
 
@@ -50,6 +50,7 @@ export default {
 <style lang="sass" scoped>
 #playlist
   cursor: default
+  overflow: auto
   h1
     margin: 5px 0
     padding: 0

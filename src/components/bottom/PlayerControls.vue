@@ -6,8 +6,8 @@
     <div v-on:click="playerSwitchState">
       <icon name="play" scale="2" v-if="this.$store.state.player.state == 'paused'"></icon>
       <icon name="pause" scale="2" v-else></icon>
-    </div>  
-    <div v-on:click="playerNext">  
+    </div>
+    <div v-on:click="playerNext">
       <icon name="fast-forward" scale="2"></icon>
     </div>
   </div>

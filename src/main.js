@@ -8,6 +8,15 @@ import App from './App.vue'
 var locales = {
   en: {
     components: {
+      AlbumDetails: {
+        modalHeader: 'Album Details',
+        albumTitle: 'Album title',
+        artistName: 'Artist',
+        year: 'Year',
+        added: 'Added',
+        inboxWarning: 'This album is in inbox.',
+        inboxAdd: 'Move to library'
+      },
       ArtistsAlbumArts: {
         name: 'Album Arts'
       },

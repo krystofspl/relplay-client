@@ -1,10 +1,15 @@
 <template>
   <div class="album-arts">
-    <div v-for="album in albums" class="album-art" v-bind:class="{'selected': isSelected(album.id)}" @click="setSelectedAlbum(album.id)">
+    <modal v-if="showModal" @close="showModal = false">
+      <div slot="header"><!-- {{ $t('components.AlbumDetails.modalHeader')}} --></div>
+      <div slot="body">
+        <album-details :album-id="selectedAlbumId"></album-details>
+      </div>
+    </modal>
+    <div v-for="album in albums" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @click="setSelectedAlbum(album.id)" @dblclick="showModal = true">
       <div class="content">
-        <!-- @load="getAlbumArtImg" doesnt't work for some reason, would be nicer -->
-        <div class="album-art-img" :data-album="album.id">
-        <img :src="getAlbumArtImg(album.id)">
+        <div class="album-art-img" :data-album="album.id" v-if="getAlbumArtImgPath(album.id).length">
+          <img :src="getAlbumArtImgPath(album.id)">
         </div>
         <div class="album-title">
           {{ album.title }}
@@ -17,12 +22,19 @@
 <script>
 import { albumGetters } from '../../mixins/getters/albumGetters.js'
 import { mapGetters } from 'vuex'
+import Modal from '../misc/Modal.vue'
+import AlbumDetails from '../misc/AlbumDetails.vue'
 
 export default {
   data: function () {
     return {
-      selectedAlbumId: null
+      selectedAlbumId: null,
+      showModal: false
     }
+  },
+  components: {
+    Modal,
+    AlbumDetails
   },
   props: ['albums', 'selectedArtist'],
   mixins: [albumGetters],
@@ -33,16 +45,6 @@ export default {
     },
     setSelectedAlbum: function (albumId) {
       this.selectedAlbumId = albumId
-    },
-    getAlbumArtImg: function (albumId) {
-      var urlCreator = window.URL || window.webkitURL
-      var blob = this.$store.state.data.albumArts[albumId]
-      var url = ''
-      try {
-        url = urlCreator.createObjectURL(blob)
-      } catch (e) {
-      }
-      return url
     }
   }
 }
@@ -93,4 +95,6 @@ export default {
 
 .selected
   border: 1px solid #0F0 !important
+.album-art-inbox
+  border-style: dashed !important
 </style>
