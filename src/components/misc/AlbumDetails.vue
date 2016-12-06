@@ -1,22 +1,22 @@
 <template>
   <div class="album-details">
     <div class="col-left">
-      <div class="album-art">
-        <img :src="getAlbumArtImgPath(album.id)" v-if="getAlbumArtImgPath(album.id).length">
+      <div class="album-art" v-if="getAlbumArtImgPath(album.id).length">
+        <img :src="getAlbumArtImgPath(album.id)">
       </div>
       <div class="album-info">
-      <strong>Album info</strong>
-        <div v-if="album.inInbox">
-          <i>
-            {{ $t('components.AlbumDetails.inboxWarning') }} 
-            <a href="#">{{ $t('components.AlbumDetails.inboxAdd') }}</a>
-          </i>
-        </div>
-        {{ $t('components.AlbumDetails.albumTitle') }}: <strong>{{ album.title }}</strong><br>
-        {{ $t('components.AlbumDetails.artistName') }}: <strong>{{ artist.name }}</strong><br>
-        <!-- TODO year -->
-        {{ $t('components.AlbumDetails.year') }}: <strong>2005</strong><br>
-        ... more data will be here ...
+      <strong>Album info</strong><br>
+      <div v-if="album.inInbox">
+        <i>
+          {{ $t('components.AlbumDetails.inboxWarning') }}
+          <a @click="moveToLibrary(album)">{{ $t('components.AlbumDetails.inboxAdd') }}</a>
+        </i>
+      </div>
+      {{ $t('components.AlbumDetails.albumTitle') }}: <strong>{{ album.title }}</strong><br>
+      {{ $t('components.AlbumDetails.artistName') }}: <strong>{{ artist.name }}</strong><br>
+      <!-- TODO year -->
+      {{ $t('components.AlbumDetails.year') }}: <strong>2005</strong><br>
+      ... more data will be here ...
       </div>
     </div>
     <div class="col-right">
@@ -31,7 +31,10 @@
       <tbody>
         <tr class="playlist-item" v-for="(track, index) in tracks" v-bind:class="{'now-playing': isNowPlaying(track.id)}" v-on:dblclick="">
           <td>{{index + 1}}.</td>
-          <td class="absorbing-column">{{track.title}}</td>
+          <td class="absorbing-column">
+            <icon scale="0.75" name="volume-up" v-if="isNowPlaying(track.id)" style="margin: 0 2px"></icon>
+            {{track.title}}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -44,13 +47,19 @@
   import { albumGetters } from '../../mixins/getters/albumGetters.js'
   import { trackGetters } from '../../mixins/getters/trackGetters.js'
   import { mapGetters } from 'vuex'
+  import Icon from 'vue-awesome/components/Icon'
+  import 'vue-awesome/icons/volume-up'
+
   export default {
     props: ['album-id'],
     mixins: [artistGetters, albumGetters, trackGetters],
+    components: {
+      Icon
+    },
     computed: {
       artist: function () {
         console.log(this.album)
-        return this.getArtist(this.album.artists[0])
+        return this.getArtist(this.album.mainArtist)
       },
       album: function () {
         return this.getAlbum(this.albumId)
@@ -60,10 +69,7 @@
       }
     },
     methods: {
-      ...mapGetters(['getNowPlayingId']),
-      isNowPlaying: function (trackId) {
-        return (this.getNowPlayingId() === trackId)
-      }
+      ...mapGetters(['getNowPlayingId'])
     }
   }
 </script>
@@ -99,4 +105,7 @@
           text-align: left
         td.absorbing-column
           width: 100%
+
+  .now-playing
+    font-weight: bold
 </style>

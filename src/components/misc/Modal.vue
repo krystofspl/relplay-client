@@ -6,19 +6,17 @@
           <div class="modal-container">
             <div class="modal-header">
               <slot name="header">
-                default header
               </slot>
             </div>
             <div class="modal-actions">
-              <slot name="actions">
-                <div @click="$emit('close')">
-                  <icon class="action" scale="1.5" name="times-circle"></icon>
-                </div>
-              </slot>
+              <slot name="actions"></slot>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <div @click="$emit('close')" class="action">
+                <icon scale="1.5" name="times-circle"></icon>
+              </div>
             </div>
             <div class="modal-body">
               <slot name="body">
-                default body
               </slot>
             </div>
           </div>
@@ -30,7 +28,7 @@
 
 <script>
   import Icon from 'vue-awesome/components/Icon'
-  import 'vue-awesome/icons'
+  import 'vue-awesome/icons/times'
   export default {
     components: {
       Icon
@@ -38,7 +36,7 @@
   }
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 .modal-mask-wrapper
   position: fixed
   top: 0
@@ -60,7 +58,9 @@
       display: table-cell
       vertical-align: middle
       .modal-container
-        width: 70%
+        min-width: 50%
+        max-width: 70%
+        min-height: 30%
         max-height: 70%
         overflow: auto
         margin: 0px auto
@@ -76,6 +76,7 @@
         .modal-actions
           float: right
           .action
+            display: inline
             &:hover
               color: #FFF
         .modal-body

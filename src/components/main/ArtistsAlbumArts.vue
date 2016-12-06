@@ -1,7 +1,19 @@
 <template>
   <div id="artists-album-arts">
-    <artists-panel :artists="artists" :selectedArtistId="selectedArtistId"></artists-panel>
-    <album-arts :albums="albums"></album-arts>
+    <div class="filters">
+      <input type="text" name="artistNameFilter" v-model="artistNameFilter" :placeholder="$t('components.AlbumDetails.artistName')">
+
+      <input type="text" name="albumNameFilter" v-model="albumNameFilter" :placeholder="$t('components.AlbumDetails.albumTitle')">
+
+      {{ $t('components.AlbumDetails.inInbox') }} <input type="checkbox" name="albumInboxFilter" v-model="albumInboxFilter">
+
+      {{ $t('components.ArtistsAlbumArts.sortBy') }} <select v-model="albumSort">
+        <option :value="{sortBy: 'titleAsc'}">Title asc</option>
+        <option :value="{sortBy: 'titleDesc'}">Title desc</option>
+      </select>
+    </div>
+    <artists-panel :artists="artists()" :selectedArtistId="selectedArtistId"></artists-panel>
+    <album-arts :albums="albums()"></album-arts>
   </div>
 </template>
 
@@ -15,7 +27,13 @@ var _ = require('lodash')
 export default {
   data: function () {
     return {
-      selectedArtistId: -1
+      selectedArtistId: -1,
+      albumNameFilter: '',
+      albumInboxFilter: true,
+      artistNameFilter: '',
+      albumSort: {
+        sortBy: 'titleAsc'
+      }
     }
   },
   components: {
@@ -23,23 +41,43 @@ export default {
     ArtistsPanel
   },
   methods: {
-    ...mapGetters('getArtists', 'getAlbums')
-  },
-  mixins: [artistGetters],
-  computed: {
+    ...mapGetters('getArtists', 'getAlbums'),
+    albums: function () {
+      var albumsData = []
+      var self = this
+      if (this.selectedArtistId === -1) {
+        albumsData = _.values(this.$store.state.data.albums)
+      } else {
+        albumsData = this.getAlbumsForArtist(this.selectedArtistId)
+      }
+      return albumsData.filter(album => {
+        return album.title.match(new RegExp(self.albumNameFilter, 'i')) && album.inInbox === self.albumInboxFilter
+      }).sort((a, b) => {
+        var sortResult = null
+        switch (self.albumSort.sortBy) {
+          case 'titleAsc':
+            sortResult = a.title.localeCompare(b.title)
+            break
+          case 'titleDesc':
+            sortResult = b.title.localeCompare(a.title)
+            break
+          default:
+            sortResult = a.title.localeCompare(b.title)
+        }
+        return sortResult
+      })
+    },
     artists: function () {
       var self = this
       return _.values(self.$store.state.data.artists).sort((a, b) => {
         return a.name.localeCompare(b.name)
+      }).filter(artist => {
+        return artist.name.match(new RegExp(self.artistNameFilter, 'i'))
       })
-    },
-    albums: function () {
-      if (this.selectedArtistId === -1) {
-        return this.$store.state.data.albums
-      } else {
-        return this.getAlbumsForArtist(this.selectedArtistId)
-      }
-    },
+    }
+  },
+  mixins: [artistGetters],
+  computed: {
     selectedArtistId: function () {
       return this.$store.state.view.components.ArtistsAlbumArts.selectedArtist
     }
@@ -50,11 +88,17 @@ export default {
 <style lang="sass" scoped>
 #artists-album-arts
   height: 100%
+  overflow: hidden
+  .filters
+    height: 22px
+    width: 100%
+    float: left
+    background: blue
+    padding: 5px
   .artists-panel
     width: 20%
     float: left
   .album-arts
     width: 80%
     float: left
-
 </style>

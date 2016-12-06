@@ -13,8 +13,8 @@ const state = {
   },
   player: {
     state: 'paused',
-    nowPlaying: 19,
-    playlist: [19, 58, 17, 19, 58, 17, 19, 58, 17, 59, 60],
+    nowPlaying: 242,
+    playlist: [242],
     progress: 55
   },
   view: {
@@ -121,6 +121,9 @@ const mutations = {
   },
   SET_SELECTED_ARTIST (state, payload) {
     state.view.components.ArtistsAlbumArts.selectedArtist = payload
+  },
+  UPDATE_ALBUM (state, payload) {
+    Vue.set(state.data.albums, payload.id, payload)
   }
 }
 
@@ -182,6 +185,26 @@ const actions = {
   },
   setSelectedArtist (context, payload) {
     context.commit('SET_SELECTED_ARTIST', payload)
+  },
+  updateAlbum (context, payload) {
+    var callback = payload.callback
+    var albumId = payload.id
+    console.log(Object.values(payload))
+    if (Object.keys(payload).length <= 2) {
+      // Only id and callback are present, return
+      callback('Nothing has changed.', null)
+      return
+    }
+    Vue.http.post(context.state.settings.global.backendUrl + 'albums/' + albumId, payload)
+    .then((response) => {
+      if (response.ok) {
+        context.commit('UPDATE_ALBUM', response.body)
+        callback(null, response.body)
+      }
+    }, (err) => {
+      console.log(err)
+      callback(err, null)
+    })
   }
 }
 

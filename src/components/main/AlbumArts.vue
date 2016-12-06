@@ -1,12 +1,27 @@
 <template>
   <div class="album-arts">
     <modal v-if="showModal" @close="showModal = false">
-      <div slot="header"><!-- {{ $t('components.AlbumDetails.modalHeader')}} --></div>
-      <div slot="body">
+      <div slot="actions" style="display: inline">
+        <div @click="toggleModalAction('edit')" class="action" v-bind:class="{'active-action': modalAction == 'edit'}">
+          <icon scale="1.5" name="pencil"></icon>
+        </div>
+        <div @click="" class="action">
+          <icon scale="1.5" name="trash-o"></icon>
+        </div>
+      </div>
+      <div slot="body" v-if="modalAction == 'show'">
         <album-details :album-id="selectedAlbumId"></album-details>
       </div>
+      <div slot="body" v-if="modalAction == 'edit'">
+        <edit-album :album="getAlbum(selectedAlbumId)"></edit-album>
+      </div>
     </modal>
-    <div v-for="album in albums" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @click="setSelectedAlbum(album.id)" @dblclick="showModal = true">
+
+    <div v-if="!albums.length" style="text-align: center; margin: 20px 0">
+      {{ $t('components.AlbumArts.noAlbums') }}
+    </div>
+
+    <div v-for="album in albums" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @click="setSelectedAlbum(album.id)" @dblclick="setModalAction('show'); showModal = true">
       <div class="content">
         <div class="album-art-img" :data-album="album.id" v-if="getAlbumArtImgPath(album.id).length">
           <img :src="getAlbumArtImgPath(album.id)">
@@ -24,17 +39,25 @@ import { albumGetters } from '../../mixins/getters/albumGetters.js'
 import { mapGetters } from 'vuex'
 import Modal from '../misc/Modal.vue'
 import AlbumDetails from '../misc/AlbumDetails.vue'
+import EditAlbum from '../misc/EditAlbum.vue'
+import Icon from 'vue-awesome/components/Icon'
+import 'vue-awesome/icons/pencil'
+import 'vue-awesome/icons/trash'
 
 export default {
   data: function () {
     return {
       selectedAlbumId: null,
-      showModal: false
+      showModal: false,
+      modalAction: 'show',
+      prevModalAction: 'show'
     }
   },
   components: {
     Modal,
-    AlbumDetails
+    AlbumDetails,
+    EditAlbum,
+    Icon
   },
   props: ['albums', 'selectedArtist'],
   mixins: [albumGetters],
@@ -45,6 +68,20 @@ export default {
     },
     setSelectedAlbum: function (albumId) {
       this.selectedAlbumId = albumId
+    },
+    setModalAction: function (action) {
+      this.modalAction = action
+      this.prevModalAction = action
+    },
+    toggleModalAction: function (action) {
+      if (this.modalAction === action) {
+        var prev = this.modalAction
+        this.modalAction = this.prevModalAction
+        this.prevModalAction = prev
+      } else {
+        this.prevModalAction = this.modalAction
+        this.modalAction = action
+      }
     }
   }
 }
@@ -94,7 +131,9 @@ export default {
         background: rgba(0, 0, 0, 0.5)
 
 .selected
-  border: 1px solid #0F0 !important
+  border-color: #0F0 !important
 .album-art-inbox
   border-style: dashed !important
+.active-action
+  color: red
 </style>

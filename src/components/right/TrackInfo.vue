@@ -7,7 +7,7 @@
           <span>Title: <b>{{ getNowPlayingTrack[field] }}</b></span>
         </div>
         <div v-if="field === 'artist.name'">
-          <span>Artist: {{ album.artists[0].name }}</span>
+          <span>Artist: {{ getMainArtistForAlbum(album.id).name }}</span>
         </div>
         <div v-if="field === 'album.name'">
           <span>Album: {{ album.title }}</span>

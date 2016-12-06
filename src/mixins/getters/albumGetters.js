@@ -3,6 +3,9 @@ export var albumGetters = {
     getAlbum: function (id) {
       return this.$store.state.data.albums[id]
     },
+    getMainArtistForAlbum: function (albumId) {
+      return this.$store.state.data.artists[this.getAlbum(albumId).mainArtist]
+    },
     getTracksForAlbum: function (albumId) {
       return Object.values(this.$store.state.data.tracks).filter(track => track.album === this.albumId)
     },

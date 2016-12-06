@@ -1,17 +1,20 @@
 export var trackGetters = {
   methods: {
-    getTrack: function (id) {
-      return this.$store.state.data.tracks[id]
+    getTrack: function (trackId) {
+      return this.$store.state.data.tracks[trackId]
     },
     getAlbumForTrack: function (track) {
       return Object.values(this.$store.state.data.albums).find(album => album.id === track.album)
     },
-    getArtistForTrack: function (track) {
-      return Object.values(this.$store.state.data.artists).find(artist => artist.id === this.getAlbumForTrack(track).artists[0])
+    getArtistForTrack: function (trackId) {
+      return Object.values(this.$store.state.data.artists).find(artist => artist.id === this.getAlbumForTrack(trackId).mainArtist)
     },
-    getArtworkPath: function (track) {
+    getArtworkPath: function (trackId) {
       // TODO let user choose
-      return (this.getTrack(track).filePath + 'folder.jpg')
+      return (this.getTrack(trackId).filePath + 'folder.jpg')
+    },
+    isNowPlaying: function (trackId) {
+      return (this.getNowPlayingId() === trackId)
     }
   }
 }

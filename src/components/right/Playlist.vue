@@ -7,12 +7,15 @@
           <th>#</th>
           <th class="absorbing-column">Title</th>
         </tr>
-      </thead>  
+      </thead>
       <tbody is="draggable" element="tbody" :list="playlist" :options="{animation: 200, ghostClass: 'draggable-ghost', chosenClass: 'draggable-drag'}" @update="playerUpdatePlaylist({playlist})">
         <!-- @update, @add, ... -->
-        <tr class="playlist-item" v-for="(element, index) in playlist" v-bind:class="{'now-playing': isNowPlaying(element.id)}" v-on:dblclick="playerSetNowPlaying({id: element.id})">
+        <tr class="playlist-item" v-for="(track, index) in playlist" v-bind:class="{'now-playing': isNowPlaying(track.id)}" v-on:dblclick="playerSetNowPlaying({id: track.id})">
           <td>{{index + 1}}.</td>
-          <td class="absorbing-column">{{element.title}}</td>
+          <td class="absorbing-column">
+            <icon scale="0.75" name="volume-up" v-if="isNowPlaying(track.id)" style="margin: 0 2px"></icon>
+            {{track.title}}
+          </td>
         </tr>
       </tbody>
     </table>
@@ -22,6 +25,9 @@
 <script>
 import Draggable from 'vuedraggable'
 import { mapGetters, mapActions } from 'vuex'
+import { trackGetters } from '../../mixins/getters/trackGetters.js'
+import Icon from 'vue-awesome/components/Icon'
+import 'vue-awesome/icons/volume-up'
 
 export default {
   data: function () {
@@ -30,14 +36,13 @@ export default {
     }
   },
   components: {
-    Draggable
+    Draggable,
+    Icon
   },
+  mixins: [trackGetters],
   methods: {
     ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying']),
-    ...mapGetters(['getNowPlayingId', 'getPlaylistTracks']),
-    isNowPlaying: function (trackId) {
-      return (this.getNowPlayingId() === trackId)
-    }
+    ...mapGetters(['getNowPlayingId', 'getPlaylistTracks'])
   },
   computed: {
     playlist: function () {

@@ -8,17 +8,24 @@ import App from './App.vue'
 var locales = {
   en: {
     components: {
+      AlbumArts: {
+        noAlbums: 'There are no albums available for the selected criteria.'
+      },
       AlbumDetails: {
         modalHeader: 'Album Details',
         albumTitle: 'Album title',
         artistName: 'Artist',
+        mainArtist: 'Main artist',
+        artists: 'Other artists',
         year: 'Year',
         added: 'Added',
+        inInbox: 'Is in inbox?',
         inboxWarning: 'This album is in inbox.',
         inboxAdd: 'Move to library'
       },
       ArtistsAlbumArts: {
-        name: 'Album Arts'
+        name: 'Album Arts',
+        sortBy: 'Sort by'
       },
       ArtistsPanel: {
         all: 'All'
