@@ -22,12 +22,13 @@ export default {
 
 <style lang="sass" scoped>
 #right-panel
-  height: calc(100% - 80px)
+  float: left
+  height: 100%
   width: 300px
   background: #333
   border-left: 1px solid #000
   color: #CCC
-  padding: 5px
+  padding: 10px
   -webkit-box-sizing: border-box
   -moz-box-sizing: border-box
   box-sizing: border-box

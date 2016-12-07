@@ -28,8 +28,7 @@ export default {
   border-top: 1px solid #000
   position: fixed
   bottom: 0
-  left: 0
-  z-index: 0
+  z-index: -1
 #player-controls, #playing-track, #progress-bar
   display: inline-block
 </style>

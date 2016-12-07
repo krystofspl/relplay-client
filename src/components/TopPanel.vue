@@ -28,15 +28,14 @@ export default {
 
 <style lang="sass" scoped>
 #top-panel
-  height: 50px
   width: calc(100% - 300px)
   background: #333
   color: #CCC
-  position: fixed
-  top: 0
-  left: 0
+  float: left
   border-bottom: 1px solid #000
+  position: fixed
   ul#top-menu
+    height: 47px
     list-style-type: none
     margin: 0
     padding: 0

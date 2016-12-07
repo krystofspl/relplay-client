@@ -78,7 +78,7 @@ export default {
 .album-arts
   // TODO responsive and fixed max widths
   height: 100%
-  overflow: auto
+  float: left
   .album-art
     cursor: default
     float: left
@@ -92,8 +92,9 @@ export default {
     background: grey
     &:hover
       cursor: pointer
-      transform: scale(.95)
+      transform: scale(1.05)
       transition: all 0.15s ease-out
+      z-index: 100
     .content
       position: absolute
       height: 100%

@@ -25,12 +25,18 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+$top-height: 47px
+$bottom-height: 80px
+$top-offset: calc(#{$top-height} + 1px)
+$bottom-offset: calc(#{$bottom-height} + 1px)
+$panel-height: calc(100% - #{$top-offset} - #{$bottom-offset})
 #main-panel
-  height: calc(100% - 130px)
+  position: fixed
+  top: $top-offset
+  min-height: min-content
+  height: $panel-height
   width: calc(100% - 300px)
   background: #444
-  position: fixed
-  top: 50px
-  left: 0
+  float: left
   overflow: auto
 </style>

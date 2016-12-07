@@ -38,12 +38,12 @@
 
 <style lang="sass">
 .modal-mask-wrapper
-  position: fixed
+  position: absolute
   top: 0
   left: 0
   width: 100%
   height: 100%
-  z-index: 1
+  z-index: 110
   transition: opacity .3s ease
   .modal-mask
     position: fixed

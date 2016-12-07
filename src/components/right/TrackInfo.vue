@@ -52,7 +52,7 @@ export default {
 <style lang="sass" scoped>
 #track-info
   border-top: 2px solid #000
-  position: relative
+  height: 50px
   h1
     margin: 5px 0
     padding: 0

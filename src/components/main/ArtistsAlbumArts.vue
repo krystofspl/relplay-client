@@ -95,20 +95,29 @@ export default {
 </script>
 
 <style lang="sass" scoped>
+$filters-height: 22px
+$filters-padding: 5px
+$panel-height: calc(100% - #{$filters-height} - 2 * #{$filters-padding})
 #artists-album-arts
   height: 100%
   overflow: hidden
   .filters
-    height: 22px
+    height: $filters-height
     width: 100%
     float: left
     background: #666
-    padding: 5px
+    padding: $filters-padding
     border-bottom: 1px solid #000
   .artists-panel
+    height: $panel-height
     width: 20%
     float: left
+    overflow: hidden
+    overflow-y: auto
   .album-arts
+    height: $panel-height
     width: 80%
     float: left
+    overflow: hidden
+    overflow-y: auto
 </style>

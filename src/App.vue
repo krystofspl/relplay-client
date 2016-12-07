@@ -25,8 +25,15 @@ export default {
 
 <style lang="sass">
 body
+  height: 100%
+  background: #444
+  margin: 0
   font-family: Arial, Helvetica, sans-serif
   font-size: 14px
+  user-select: none
+  #app
+    width: 100%
+    height: 100%
 .component-fade-enter-active, .component-fade-leave-active
   transition: opacity .2s ease
 
