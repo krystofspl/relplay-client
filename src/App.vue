@@ -24,6 +24,9 @@ export default {
 </script>
 
 <style lang="sass">
+body
+  font-family: Arial, Helvetica, sans-serif
+  font-size: 14px
 .component-fade-enter-active, .component-fade-leave-active
   transition: opacity .2s ease
 

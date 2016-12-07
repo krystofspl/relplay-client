@@ -21,7 +21,7 @@
       {{ $t('components.AlbumArts.noAlbums') }}
     </div>
 
-    <div v-for="album in albums" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @click="setSelectedAlbum(album.id)" @dblclick="setModalAction('show'); showModal()">
+    <div v-for="album in albums" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @click="setSelectedAlbum(album.id); setModalAction('show'); showModal()" >
       <div class="content">
         <div class="album-art-img" :data-album="album.id" v-if="getAlbumArtImgPath(album.id).length">
           <img :src="getAlbumArtImgPath(album.id)">
@@ -90,9 +90,10 @@ export default {
     padding-bottom: 25%
     overflow: hidden
     background: grey
-    border: 1px solid #000
     &:hover
-      border: 1px solid #F00
+      cursor: pointer
+      transform: scale(.95)
+      transition: all 0.15s ease-out
     .content
       position: absolute
       height: 100%
@@ -120,8 +121,7 @@ export default {
 .selected
   border-color: #0F0 !important
 .album-art-inbox
-  border-style: dashed !important
-  border-color: white !important
+  // border: 1px dashed #FFF !important
   .album-title
     background: rgba(255, 255, 255, 0.5) !important
     color: #000 !important

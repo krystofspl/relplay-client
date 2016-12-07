@@ -102,8 +102,9 @@ export default {
     height: 22px
     width: 100%
     float: left
-    background: blue
+    background: #666
     padding: 5px
+    border-bottom: 1px solid #000
   .artists-panel
     width: 20%
     float: left

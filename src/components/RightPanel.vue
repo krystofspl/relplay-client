@@ -24,7 +24,9 @@ export default {
 #right-panel
   height: calc(100% - 80px)
   width: 300px
-  background: yellow
+  background: #333
+  border-left: 1px solid #000
+  color: #CCC
   padding: 5px
   -webkit-box-sizing: border-box
   -moz-box-sizing: border-box

@@ -30,11 +30,12 @@ export default {
 #top-panel
   height: 50px
   width: calc(100% - 300px)
-  background: red
+  background: #333
+  color: #CCC
   position: fixed
   top: 0
   left: 0
-
+  border-bottom: 1px solid #000
   ul#top-menu
     list-style-type: none
     margin: 0
@@ -51,5 +52,5 @@ export default {
         padding: 14px 16px
       div.active
         border-top: 2px solid #FFF
-      
+        background: #444
 </style>

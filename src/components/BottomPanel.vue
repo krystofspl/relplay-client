@@ -24,11 +24,12 @@ export default {
 #bottom-panel
   height: 80px
   width: 100%
-  background: orange
+  background: #353535
+  border-top: 1px solid #000
   position: fixed
   bottom: 0
   left: 0
-  z-index: -1
+  z-index: 0
 #player-controls, #playing-track, #progress-bar
   display: inline-block
 </style>
