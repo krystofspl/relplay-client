@@ -9,11 +9,17 @@
       <div v-if="album.inInbox">
         <i>
           {{ $t('components.AlbumDetails.inboxWarning') }}
-          <a @click="moveToLibrary(album)">{{ $t('components.AlbumDetails.inboxAdd') }}</a>
+          <a href="#" @click="moveToLibrary(album.id)">{{ $t('components.AlbumDetails.inboxAdd') }}</a>
         </i>
       </div>
       {{ $t('components.AlbumDetails.albumTitle') }}: <strong>{{ album.title }}</strong><br>
-      {{ $t('components.AlbumDetails.artistName') }}: <strong>{{ artist.name }}</strong><br>
+      {{ $t('components.AlbumDetails.artistName') }}: <strong>{{ mainArtist.name }}</strong><br>
+      <div v-if="artists.length">
+        {{ $t('components.AlbumDetails.artists') }}:
+        <span v-for="otherArtist in artists">
+          <strong>{{ otherArtist.name }}</strong>&nbsp;
+        </span>
+      </div>
       <!-- TODO year -->
       {{ $t('components.AlbumDetails.year') }}: <strong>2005</strong><br>
       ... more data will be here ...
@@ -57,9 +63,12 @@
       Icon
     },
     computed: {
-      artist: function () {
-        console.log(this.album)
+      mainArtist: function () {
         return this.getArtist(this.album.mainArtist)
+      },
+      artists: function () {
+        var self = this
+        return this.album.artists.map(a => { return self.getArtist(a) })
       },
       album: function () {
         return this.getAlbum(this.albumId)
@@ -69,7 +78,18 @@
       }
     },
     methods: {
-      ...mapGetters(['getNowPlayingId'])
+      ...mapGetters(['getNowPlayingId']),
+      moveToLibrary: function (albumId) {
+        this.$store.dispatch('updateAlbum',
+          {
+            id: albumId,
+            inInbox: false,
+            callback: function (err, obj) {
+              console.log(err)
+              console.log(obj)
+            }
+          })
+      }
     }
   }
 </script>
@@ -92,7 +112,8 @@
       text-align: left
       float: left
       width: 56%
-      margin-left: 4%
+      margin-left: 3%
+      margin-right: 1%
   .col-right
     float: left
     width: 40%

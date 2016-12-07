@@ -13,8 +13,8 @@ const state = {
   },
   player: {
     state: 'paused',
-    nowPlaying: 242,
-    playlist: [242],
+    nowPlaying: 2438,
+    playlist: [2438, 2422],
     progress: 55
   },
   view: {
@@ -23,6 +23,11 @@ const state = {
     components: {
       ArtistsAlbumArts: {
         selectedArtist: -1
+      },
+      Modal: {
+        showModal: false,
+        modalAction: 'show',
+        prevModalAction: 'show'
       },
       TopPanel: {
         links: ['ArtistsAlbumArts', 'GenresArtistsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph']
@@ -122,8 +127,31 @@ const mutations = {
   SET_SELECTED_ARTIST (state, payload) {
     state.view.components.ArtistsAlbumArts.selectedArtist = payload
   },
+  SHOW_MODAL: function (state) {
+    state.view.components.Modal.showModal = true
+  },
+  HIDE_MODAL: function (state) {
+    state.view.components.Modal.showModal = false
+  },
+  SET_MODAL_ACTION: function (state, action) {
+    state.view.components.Modal.modalAction = action
+    state.view.components.Modal.prevModalAction = action
+  },
+  TOGGLE_MODAL_ACTION: function (state, action) {
+    var modal = state.view.components.Modal
+    if (modal.modalAction === action) {
+      var prev = modal.modalAction
+      modal.modalAction = modal.prevModalAction
+      modal.prevModalAction = prev
+    } else {
+      modal.prevModalAction = modal.modalAction
+      modal.modalAction = action
+    }
+    console.log(modal.modalAction)
+  },
   UPDATE_ALBUM (state, payload) {
     Vue.set(state.data.albums, payload.id, payload)
+    console.log(payload)
   }
 }
 
@@ -186,6 +214,18 @@ const actions = {
   setSelectedArtist (context, payload) {
     context.commit('SET_SELECTED_ARTIST', payload)
   },
+  showModal: function (context) {
+    context.commit('SHOW_MODAL')
+  },
+  hideModal: function (context) {
+    context.commit('HIDE_MODAL')
+  },
+  setModalAction: function (context, action) {
+    context.commit('SET_MODAL_ACTION', action)
+  },
+  toggleModalAction: function (context, action) {
+    context.commit('TOGGLE_MODAL_ACTION', action)
+  },
   updateAlbum (context, payload) {
     var callback = payload.callback
     var albumId = payload.id
@@ -198,6 +238,7 @@ const actions = {
     Vue.http.post(context.state.settings.global.backendUrl + 'albums/' + albumId, payload)
     .then((response) => {
       if (response.ok) {
+        console.log(response.body)
         context.commit('UPDATE_ALBUM', response.body)
         callback(null, response.body)
       }

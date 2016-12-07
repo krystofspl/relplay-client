@@ -5,7 +5,12 @@
 
       <input type="text" name="albumNameFilter" v-model="albumNameFilter" :placeholder="$t('components.AlbumDetails.albumTitle')">
 
-      {{ $t('components.AlbumDetails.inInbox') }} <input type="checkbox" name="albumInboxFilter" v-model="albumInboxFilter">
+      {{ $t('components.AlbumDetails.inInbox') }}
+      <select v-model="albumInboxFilter">
+        <option :value="{inInbox: 'both'}">-</option>
+        <option :value="{inInbox: true}">Yes</option>
+        <option :value="{inInbox: false}">No</option>
+      </select>
 
       {{ $t('components.ArtistsAlbumArts.sortBy') }} <select v-model="albumSort">
         <option :value="{sortBy: 'titleAsc'}">Title asc</option>
@@ -29,7 +34,9 @@ export default {
     return {
       selectedArtistId: -1,
       albumNameFilter: '',
-      albumInboxFilter: true,
+      albumInboxFilter: {
+        inInbox: 'both'
+      },
       artistNameFilter: '',
       albumSort: {
         sortBy: 'titleAsc'
@@ -51,7 +58,9 @@ export default {
         albumsData = this.getAlbumsForArtist(this.selectedArtistId)
       }
       return albumsData.filter(album => {
-        return album.title.match(new RegExp(self.albumNameFilter, 'i')) && album.inInbox === self.albumInboxFilter
+        var nameCondition = new RegExp(self.albumNameFilter, 'i')
+        var inboxCondition = (album.inInbox === (self.albumInboxFilter.inInbox))
+        return album.title.match(nameCondition) && ((self.albumInboxFilter.inInbox === 'both') ? true : inboxCondition)
       }).sort((a, b) => {
         var sortResult = null
         switch (self.albumSort.sortBy) {

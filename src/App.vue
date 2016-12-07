@@ -24,9 +24,9 @@ export default {
 </script>
 
 <style lang="sass">
-.component-fade-enter-active, .component-fade-leave-active 
+.component-fade-enter-active, .component-fade-leave-active
   transition: opacity .2s ease
 
-.component-fade-enter, .component-fade-leave-active 
-  opacity: 0  
+.component-fade-enter, .component-fade-leave-active
+  opacity: 0
 </style>

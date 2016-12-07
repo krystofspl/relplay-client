@@ -28,7 +28,7 @@ export default {
 #main-panel
   height: calc(100% - 130px)
   width: calc(100% - 300px)
-  background: green
+  background: #444
   position: fixed
   top: 50px
   left: 0

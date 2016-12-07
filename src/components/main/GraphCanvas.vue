@@ -1,6 +1,6 @@
 <template>
   <div class="graph-canvas">
-    <div v-if="loading">
+    <div v-if="loading" style="width: 100%; text-align: center">
       <icon name="spinner" spin scale="3"></icon>
     </div>
     <div class="graph"></div>
@@ -16,7 +16,10 @@ export default {
   data: function () {
     return {
       loading: true,
-      graphDataSet: {}
+      graphDataSet: {
+        nodes: {},
+        edges: {}
+      }
     }
   },
   props: ['graph-data'],
@@ -25,10 +28,11 @@ export default {
   },
   methods: {
     initGraph: function () {
-      this.$set(this.graphData, 'graphInitialized', true)
+      // this.$set(this.graphData, 'graphInitialized', true)
       var vis = require('vis')
       var self = this
 
+      self.loading = true
       this.$parent.fetchGraphData(function () {
         var nodes = new vis.DataSet(self.graphData.nodes)
         var edges = new vis.DataSet(self.graphData.edges)
@@ -39,10 +43,39 @@ export default {
           edges: edges
         }
         var options = {
-          autoResize: true
+          'layout': {
+            'improvedLayout': true
+          },
+          'edges': {
+            'smooth': true
+          },
+          'physics': {
+            'barnesHut': {
+              'centralGravity': 1,
+              'springLength': 150,
+              'springConstant': 0.01,
+              'damping': 0.5,
+              'avoidOverlap': 1
+            },
+            'maxVelocity': 42,
+            'minVelocity': 0.75,
+            'timestep': 0.88,
+            'stabilization': {
+              'enabled': true,
+              'iterations': 5,
+              'updateInterval': 1
+            }
+          }
         }
-        self.$set(self.graphData, 'graph', new vis.Network(container, data, options))
-        self.loading = false
+        var network = new vis.Network(container, data, options)
+        network.on('doubleClick', function (params) {
+          console.log(params.nodes)
+          console.log(self.graphDataSet.nodes)
+        })
+        network.once('stabilizationIterationsDone', function () {
+          self.loading = false
+        })
+        self.$set(self.graphData, 'graph', network)
       })
     },
     resizeGraph: function () {
@@ -58,11 +91,11 @@ export default {
     updateGraphData: function () {
       var self = this
       this.$parent.fetchGraphData(function () {
-        // TODO doesnt work well
+        console.log(self.graphData.edges)
         self.graphDataSet.nodes.clear()
         self.graphDataSet.edges.clear()
+        self.graphDataSet.nodes.add(self.graphData.edges)
         self.graphDataSet.nodes.add(self.graphData.nodes)
-        self.graphDataSet.edges.add(self.graphData.edges)
       })
     }
   },
@@ -72,13 +105,15 @@ export default {
     }
   },
   created: function () {
-    if (!this.graphData.graphInitialized) { this.initGraph() }
+    // if (!this.graphInitialized) this.initGraph()
+    this.initGraph()
     var Vue = require('vue')
     Vue.nextTick(this.resizeGraph)
   },
   watch: {
     nowPlayingId: function () {
-      this.updateGraphData()
+      // TODO find out why updateGraphData() doesnt work and fix it
+      this.initGraph()
     }
   }
 }

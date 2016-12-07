@@ -31,6 +31,7 @@ export default {
   methods: {
     ...mapGetters(['getNowPlayingTrack']),
     fetchGraphData: function (callback) {
+      var self = this
       var selectedArtistId = this.getArtistForTrack(this.getNowPlayingTrack()).id || null
       this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/artist-albums-graph?artist=' + selectedArtistId).then(function (results) {
         // Initialize the data structures
@@ -53,23 +54,43 @@ export default {
           albums: albums.map(a => {
             return {
               id: a.id,
-              label: a.title,
-              shape: 'square',
-              color: 'white'
+              label: a.title.split(/((?:\w+ ){3})/g).filter(Boolean).join('\n'),
+              // shape: 'square',
+              shape: 'image',
+              image: self.getAlbumArtImgPath(a.id),
+              size: 40,
+              borderWidth: 1,
+              font: {
+                size: 16, color: '#FFF'
+              },
+              color: {
+                border: '#000',
+                background: '#666'
+              },
+              shapeProperties: {
+                useBorderWithImage: true
+              }
             }
           }),
           artist: {
             id: artist.id,
-            label: artist.name,
-            shape: 'circle',
-            color: 'blue'
+            label: artist.name.split(/((?:\w+ ){4})/g).filter(Boolean).join('\n'),
+            shape: 'dot',
+            color: {
+              border: '#FFF',
+              background: 'purple'
+            },
+            size: 30,
+            font: {size: 18, color: 'red'}
           },
           secondaryArtists: secondaryArtists.map(a => {
             return {
               id: a.id,
-              label: a.name,
-              shape: 'circle',
-              color: 'red'
+              label: a.name.split(/((?:\w+ ){4})/g).filter(Boolean).join('\n'),
+              shape: 'dot',
+              color: 'red',
+              size: 20,
+              font: {size: 18, color: 'red'}
             }
           })
         }

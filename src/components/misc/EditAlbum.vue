@@ -8,10 +8,9 @@
 
     <label for="mainArtist">{{ $t('components.AlbumDetails.mainArtist') }}</label>
     <multiselect name="mainArtist" v-model="mainArtist"
-      @input="setMainArtist"
       :options="availableArtists"
-      :custom-label="artistMultiselectLabel"
-      :value="getSelectedMainArtist()"
+      :custom-label="artistName"
+      :value="mainArtist"
       :allow-empty="false"
       :track-by="id"
       ></multiselect>
@@ -19,18 +18,14 @@
     <i>[NUR] Dynamic search by typing doesn't work yet, there's an open bug in the library.</i><br>
 
     <label for="artists">{{ $t('components.AlbumDetails.artists') }}</label>
-    <multiselect name="artists"
-      @input="setArtists"
+    <multiselect name="artists" v-model="artists"
       :options="availableArtists"
-      :custom-label="artistMultiselectLabel"
-      :value="getSelectedArtists()"
+      :custom-label="artistName"
+      :value="artists"
       :allow-empty="true"
       :multiple="true"
       :track-by="id"
       ></multiselect>
-
-    <i>[NUR] And this is a bit broken too but works for initial assignment ;-).</i><br>
-    <i>Debug values: {{ artists.map(a => a.id) }}</i><br>
 
     <button v-on:click="submit()">Submit</button>
   </div>
@@ -40,7 +35,7 @@
   import { artistGetters } from '../../mixins/getters/artistGetters.js'
   import { albumGetters } from '../../mixins/getters/albumGetters.js'
   import { trackGetters } from '../../mixins/getters/trackGetters.js'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import Icon from 'vue-awesome/components/Icon'
   import Multiselect from 'vue-multiselect'
   import 'vue-awesome/icons/'
@@ -72,21 +67,9 @@
     },
     methods: {
       ...mapGetters(['getArtists']),
-      getSelectedMainArtist: function () {
-        return this.getArtist(this.album.mainArtist)
-      },
-      getSelectedArtists: function () {
-        var self = this
-        return this.album.artists.map(a => self.getArtist(a))
-      },
-      artistMultiselectLabel: function (artist) {
+      ...mapActions(['setModalAction', 'toggleModalAction', 'showModal', 'hideModal']),
+      artistName: function (artist) {
         return artist.name
-      },
-      setMainArtist: function (artist) {
-        this.mainArtist = artist
-      },
-      setArtists: function (artists) {
-        this.artists = artists
       },
       submit: function () {
         // Prepare data
@@ -111,7 +94,15 @@
         }
         // Send
         this.$store.dispatch('updateAlbum', newData)
+        this.setModalAction('show')
       }
+    },
+    created: function () {
+      var self = this
+      this.mainArtist = this.getArtist(this.album.mainArtist)
+      this.artists = this.album.artists.map(artistId => {
+        return self.getArtist(artistId)
+      })
     }
   }
 </script>
