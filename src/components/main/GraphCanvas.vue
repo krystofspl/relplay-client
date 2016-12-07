@@ -10,12 +10,13 @@
 <script>
 import Icon from 'vue-awesome/components/Icon'
 import 'vue-awesome/icons/spinner'
+var deepMerge = require('deepmerge')
 
 export default {
   name: 'GraphCanvas',
   data: function () {
     return {
-      loading: true,
+      loading: false,
       graphDataSet: {
         nodes: {},
         edges: {}
@@ -32,7 +33,7 @@ export default {
       var vis = require('vis')
       var self = this
 
-      self.loading = true
+      // self.loading = true
       this.$parent.fetchGraphData(function () {
         var nodes = new vis.DataSet(self.graphData.nodes)
         var edges = new vis.DataSet(self.graphData.edges)
@@ -43,29 +44,34 @@ export default {
           edges: edges
         }
         var options = {
-          'layout': {
-            'improvedLayout': true
+          autoResize: true,
+          layout: {
+            improvedLayout: true
           },
-          'edges': {
-            'smooth': true
+          edges: {
+            smooth: true
           },
-          'physics': {
-            'barnesHut': {
-              'centralGravity': 1,
-              'springLength': 150,
-              'springConstant': 0.01,
-              'damping': 0.5,
-              'avoidOverlap': 1
+          physics: {
+            barnesHut: {
+              centralGravity: 1,
+              springLength: 150,
+              springConstant: 0.01,
+              damping: 0.5,
+              avoidOverlap: 1
             },
-            'maxVelocity': 42,
-            'minVelocity': 0.75,
-            'timestep': 0.88,
-            'stabilization': {
-              'enabled': true,
-              'iterations': 5,
-              'updateInterval': 1
+            maxVelocity: 30,
+            minVelocity: 5,
+            timestep: 0.88,
+            adaptiveTimestep: true,
+            stabilization: {
+              enabled: true,
+              iterations: 5,
+              updateInterval: 1
             }
           }
+        }
+        if (typeof self.$parent.graphOptions === 'function') {
+          options = deepMerge(options, self.$parent.graphOptions())
         }
         var network = new vis.Network(container, data, options)
         network.on('doubleClick', function (params) {
@@ -73,22 +79,22 @@ export default {
           console.log(self.graphDataSet.nodes)
         })
         network.once('stabilizationIterationsDone', function () {
-          self.loading = false
+          // TODO behaves weird with multiple graphs
+          // self.loading = false
         })
         self.$set(self.graphData, 'graph', network)
       })
     },
     resizeGraph: function () {
       var graphContainer = document.getElementById(this.graphData.graphContainer).getElementsByClassName('graph')[0]
-      var mainPanel = document.getElementById('main-panel')
-      graphContainer.style.height = mainPanel.clientHeight + 'px'
-      graphContainer.style.width = mainPanel.clientWidth + 'px'
+      graphContainer.style.height = document.body.scrollHeight - 130 + 'px'
       if (this.graphData.graph) {
         this.graphData.graph.redraw()
         this.graphData.graph.fit()
       }
     },
     updateGraphData: function () {
+      // TODO not in use currently, initializng every time instead, fix
       var self = this
       this.$parent.fetchGraphData(function () {
         console.log(self.graphData.edges)
@@ -107,8 +113,7 @@ export default {
   created: function () {
     // if (!this.graphInitialized) this.initGraph()
     this.initGraph()
-    var Vue = require('vue')
-    Vue.nextTick(this.resizeGraph)
+    require('vue').nextTick(this.resizeGraph)
   },
   watch: {
     nowPlayingId: function () {
@@ -121,7 +126,8 @@ export default {
 
 <style lang="sass" scoped>
 #graph-canvas
+  height: 100%
 #graph
-  width: 400px
-  height: 400px
+  width: 100%
+  height: 100%
 </style>

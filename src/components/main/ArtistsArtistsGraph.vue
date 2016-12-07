@@ -6,6 +6,12 @@
 
 <script>
 import GraphCanvas from './GraphCanvas.vue'
+import { artistGetters } from '../../mixins/getters/artistGetters.js'
+import { albumGetters } from '../../mixins/getters/albumGetters.js'
+import { trackGetters } from '../../mixins/getters/trackGetters.js'
+import { mapGetters } from 'vuex'
+var _ = require('lodash')
+
 export default {
   data: function () {
     return {
@@ -13,24 +19,104 @@ export default {
         graph: null,
         graphContainer: 'artists-artists-graph',
         graphInitialized: false,
-        nodes: [
-          {id: 1, label: 'Node 1'},
-          {id: 2, label: 'Node 2'},
-          {id: 3, label: 'Node 3'}
-        ],
-        edges: [
-          {from: 1, to: 3},
-          {from: 1, to: 2}
-        ]
+        nodes: [],
+        edges: []
       }
     }
   },
   components: {
     GraphCanvas
+  },
+  mixins: [artistGetters, albumGetters, trackGetters],
+  methods: {
+    ...mapGetters(['getNowPlayingTrack']),
+    fetchGraphData: function (callback) {
+      this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/artists-artists-graph?artist=').then(function (results) {
+        // Initialize the data structures
+        this.graphData.nodes = []
+        this.graphData.edges = []
+        var resultsArr = results.body
+
+        // Computed entity ids from the returned set of edges
+        var artistsFromQuery = _.uniq(_.castArray(resultsArr).map(result => result.artist1))
+
+        // Real objects from vuex store
+        var artists = _.compact(_.castArray(artistsFromQuery.map(id => this.getArtist(id))))
+
+        // Graph representations for the entities
+        var newGraphData = {
+          artists: artists.map(a => {
+            return {
+              id: a.id,
+              label: a.name.split(/((?:\w+ ){4})/g).filter(Boolean).join('\n'),
+              shape: 'dot',
+              color: 'red',
+              size: 20,
+              font: {size: 18, color: 'red'}
+            }
+          })
+        }
+
+        this.graphData.nodes = _.concat(this.graphData.nodes, newGraphData.artists)
+
+        results.body.forEach(res => {
+          // this.graphData.edges.push({from: res.artist, to: res.album})
+        })
+
+        callback()
+      })
+    },
+    graphOptions: function () {
+      var self = this
+      return {
+        locales: {
+          custom: {
+            back: self.$t('components.ArtistsArtistsGraph.back'),
+            addEdge: self.$t('components.ArtistsArtistsGraph.addEdge'),
+            editEdge: self.$t('components.ArtistsArtistsGraph.editEdge'),
+            edgeDescription: self.$t('components.ArtistsArtistsGraph.edgeDescription'),
+            editEdgeDescription: self.$t('components.ArtistsArtistsGraph.editEdgeDescription'),
+            del: self.$t('components.ArtistsArtistsGraph.deleteEdge')
+          }
+        },
+        locale: 'custom',
+        manipulation: {
+          enabled: true,
+          initiallyActive: true,
+          addEdge: true,
+          editEdge: true,
+          addNode: false,
+          deleteEdge: function (data, callback) {
+            var confirm = window.confirm(self.$t('components.ArtistsArtistsGraph.deleteConfirm'))
+            if (confirm) {
+              callback(data)
+            } else {
+              callback()
+            }
+          }
+        }
+      }
+    }
   }
 }
 </script>
 
-<style lang="sass" scoped>
-
+<style lang="sass">
+#artists-artists-graph
+  height: 100%
+  width: 100%
+  .vis-manipulation
+    position: absolute
+    top: 0
+    left: 0
+    .vis-none
+      .vis-label
+        color: #FFF
+    .vis-label
+      padding: 7px
+      background: #666
+      border-bottom: 1px solid #000
+      cursor: pointer
+      &:hover
+        background: #777
 </style>

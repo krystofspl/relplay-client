@@ -37,7 +37,14 @@ var locales = {
         name: 'One Artist/Albums'
       },
       ArtistsArtistsGraph: {
-        name: 'Artists/Aritsts'
+        back: 'Back',
+        name: 'Artists/Aritsts',
+        addEdge: 'Connect similar artists',
+        editEdge: 'Edit edge',
+        edgeDescription: 'Click on an artist and drag to another one to enter similarity.',
+        editEdgeDescription: 'Drag the edge\'s endpoint to another node to change it.',
+        deleteEdge: 'Delete edge',
+        deleteConfirm: 'Are you sure you want to delete this relationship?'
       },
       PlayingTrack: {
         nothingPlaing: 'Nothing playing now'
