@@ -258,13 +258,63 @@ const actions = {
     .then((response) => {
       if (response.ok) {
         context.commit('UPDATE_ALBUM', response.body)
-        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.albumUpdated'))
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateAlbumSuccess'))
         context.dispatch('showInfoPanel')
         callback(null, response.body)
       }
     }, (err) => {
       console.log(err)
-      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.albumUpdateError'))
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateAlbumErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  addArtistRelation (context, payload) {
+    var callback = payload.callback
+    if (!payload || !payload.edge) {
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationErr'))
+      context.dispatch('showInfoPanel')
+      return
+    }
+    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/artist-similarity/add', payload)
+    .then((response) => {
+      if (response.ok) {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      } else {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationErr'))
+        context.dispatch('showInfoPanel')
+        callback(response.statusText, null)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  deleteArtistRelation (context, payload) {
+    var callback = payload.callback
+    if (!payload || !payload.edge) {
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationError'))
+      context.dispatch('showInfoPanel')
+      return
+    }
+    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/artist-similarity/delete', payload)
+    .then((response) => {
+      if (response.ok) {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      } else {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationErr'))
+        context.dispatch('showInfoPanel')
+        callback(response.statusText, null)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationErr'))
       context.dispatch('showInfoPanel')
       callback(err, null)
     })

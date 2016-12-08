@@ -59,9 +59,12 @@ var locales = {
 
     },
     infoPanel: {
-      albumUpdated: 'The album was updated successfully.',
-      albumUpdateError: 'There was an error when updating the album.',
-      relationshipAdded: 'The relationship was successfully saved.'
+      updateAlbumSuccess: 'The album was updated successfully.',
+      updateAlbumErr: 'There was an error when updating the album.',
+      addArtistRelationSuccess: 'The relationship was successfully saved.',
+      addArtistRelationErr: 'There was an error when adding the relationship.',
+      deleteArtistRelationSuccess: 'The relationship was successfully deleted.',
+      deleteArtistRelationErr: 'There was an error when deleting the relationship.'
     }
   }
 }

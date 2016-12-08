@@ -105,6 +105,9 @@ export default {
 
         callback()
       })
+    },
+    nowPlayingHook: function () {
+      this.$children[0].initGraph()
     }
   }
 }

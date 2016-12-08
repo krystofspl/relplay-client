@@ -95,14 +95,14 @@ export default {
     },
     updateGraphData: function () {
       // TODO not in use currently, initializng every time instead, fix
-      var self = this
+      /* var self = this
       this.$parent.fetchGraphData(function () {
         console.log(self.graphData.edges)
         self.graphDataSet.nodes.clear()
         self.graphDataSet.edges.clear()
         self.graphDataSet.nodes.add(self.graphData.edges)
         self.graphDataSet.nodes.add(self.graphData.nodes)
-      })
+      }) */
     }
   },
   computed: {
@@ -118,7 +118,7 @@ export default {
   watch: {
     nowPlayingId: function () {
       // TODO find out why updateGraphData() doesnt work and fix it
-      this.initGraph()
+      this.$parent.nowPlayingHook()
     }
   }
 }
