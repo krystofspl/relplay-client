@@ -20,6 +20,8 @@ const state = {
   view: {
     mainPanelView: 'ArtistsAlbumArts',
     rightPanelView: 'DefaultRight',
+    showInfoPanel: false,
+    infoPanelMsg: '',
     components: {
       ArtistsAlbumArts: {
         selectedArtist: -1
@@ -127,6 +129,12 @@ const mutations = {
   SET_SELECTED_ARTIST (state, payload) {
     state.view.components.ArtistsAlbumArts.selectedArtist = payload
   },
+  SHOW_INFO_PANEL: function (state, show) {
+    state.view.showInfoPanel = show
+  },
+  SET_INFO_PANEL_MSG: function (state, msg) {
+    state.view.infoPanelMsg = msg
+  },
   SHOW_MODAL: function (state) {
     state.view.components.Modal.showModal = true
   },
@@ -214,6 +222,18 @@ const actions = {
   setSelectedArtist (context, payload) {
     context.commit('SET_SELECTED_ARTIST', payload)
   },
+  showInfoPanel (context) {
+    context.commit('SHOW_INFO_PANEL', true)
+    setTimeout(function () {
+      context.dispatch('hideInfoPanel')
+    }, 6000)
+  },
+  hideInfoPanel (context) {
+    context.commit('SHOW_INFO_PANEL', false)
+  },
+  setInfoPanelMsg (context, msg) {
+    context.commit('SET_INFO_PANEL_MSG', msg)
+  },
   showModal: function (context) {
     context.commit('SHOW_MODAL')
   },
@@ -229,7 +249,6 @@ const actions = {
   updateAlbum (context, payload) {
     var callback = payload.callback
     var albumId = payload.id
-    console.log(Object.values(payload))
     if (Object.keys(payload).length <= 2) {
       // Only id and callback are present, return
       callback('Nothing has changed.', null)
@@ -238,12 +257,15 @@ const actions = {
     Vue.http.post(context.state.settings.global.backendUrl + 'albums/' + albumId, payload)
     .then((response) => {
       if (response.ok) {
-        console.log(response.body)
         context.commit('UPDATE_ALBUM', response.body)
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.albumUpdated'))
+        context.dispatch('showInfoPanel')
         callback(null, response.body)
       }
     }, (err) => {
       console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.albumUpdateError'))
+      context.dispatch('showInfoPanel')
       callback(err, null)
     })
   }

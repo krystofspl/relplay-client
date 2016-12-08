@@ -1,5 +1,11 @@
 <template>
   <div id="app">
+    <transition name="fade">
+      <div id="info-panel" v-if="infoPanelVisible()">
+        {{ infoPanelMsg() }}
+        <div @click="hideInfoPanel()" class="close-btn">X</div>
+      </div>
+    </transition>
     <top-panel></top-panel>
     <main-panel></main-panel>
     <right-panel></right-panel>
@@ -12,6 +18,7 @@ import TopPanel from './components/TopPanel.vue'
 import MainPanel from './components/MainPanel.vue'
 import RightPanel from './components/RightPanel.vue'
 import BottomPanel from './components/BottomPanel.vue'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -19,6 +26,15 @@ export default {
     MainPanel,
     RightPanel,
     BottomPanel
+  },
+  methods: {
+    ...mapActions(['showInfoPanel', 'hideInfoPanel', 'setInfoPanelMsg']),
+    infoPanelMsg: function () {
+      return this.$store.state.view.infoPanelMsg
+    },
+    infoPanelVisible: function () {
+      return this.$store.state.view.showInfoPanel
+    }
   }
 }
 </script>
@@ -34,9 +50,30 @@ body
   #app
     width: 100%
     height: 100%
-.component-fade-enter-active, .component-fade-leave-active
-  transition: opacity .2s ease
+    #info-panel
+      padding: 10px
+      width: 40%
+      text-align: center
+      background: #DDD
+      border: 1px solid #000
+      border-radius: 5px
+      position: absolute
+      margin-left: auto
+      margin-right: auto
+      top: 10px
+      left: 0
+      right: 0
+      z-index: 1000
+      .close-btn
+        position: absolute
+        font-weight: bold
+        cursor: pointer
+        top: 2px
+        right: 4px
 
-.component-fade-enter, .component-fade-leave-active
+.component-fade-enter-active, .component-fade-leave-active, .fade-enter-active, .fade-leave-active
+  transition: opacity .5s ease
+
+.component-fade-enter, .component-fade-leave-active, .fade-enter, .fade-leave-active
   opacity: 0
 </style>
