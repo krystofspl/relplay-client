@@ -52,17 +52,18 @@ export default {
 <style lang="sass" scoped>
 #track-info
   border-top: 2px solid #000
-  height: 50px
+  display: block
   h1
     margin: 5px 0
     padding: 0
     font-size: 120%
-  img
-    text-align: center
-    width: 100%
-    margin-top: 10px
-    border: 1px solid #000
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33)
-    -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(255, 255, 255, 0.15)))
+  .track-fields
+    img
+      text-align: center
+      width: 100%
+      margin-top: 10px
+      border: 1px solid #000
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33)
+      -webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(255, 255, 255, 0.15)))
 
 </style>

@@ -92,7 +92,7 @@ export default {
   mixins: [artistGetters],
   computed: {
     selectedArtistId: function () {
-      return this.$store.state.view.components.ArtistsAlbumArts.selectedArtist
+      return this.$store.state.view.components.ArtistsAlbumDetails.selectedArtist
     }
   }
 }

@@ -49,6 +49,7 @@ export default {
           artists: artists.map(a => {
             return {
               id: a.id,
+              type: 'artist',
               label: a.name.split(/((?:\w+ ){4})/g).filter(Boolean).join('\n'),
               shape: 'dot',
               color: 'red',

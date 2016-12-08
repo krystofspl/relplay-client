@@ -26,6 +26,9 @@ const state = {
       ArtistsAlbumArts: {
         selectedArtist: -1
       },
+      ArtistsAlbumDetails: {
+        selectedArtist: -1
+      },
       Modal: {
         showModal: false,
         modalAction: 'show',
@@ -127,6 +130,7 @@ const mutations = {
     })
   },
   SET_SELECTED_ARTIST (state, payload) {
+    state.view.components.ArtistsAlbumDetails.selectedArtist = payload
     state.view.components.ArtistsAlbumArts.selectedArtist = payload
   },
   SHOW_INFO_PANEL: function (state, show) {

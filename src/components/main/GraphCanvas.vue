@@ -75,8 +75,17 @@ export default {
         }
         var network = new vis.Network(container, data, options)
         network.on('doubleClick', function (params) {
-          console.log(params.nodes)
-          console.log(self.graphDataSet.nodes)
+          var node = self.graphDataSet.nodes.get(params.nodes[0])
+          switch (node.type) {
+            case 'artist':
+              self.$store.state.view.components.ArtistsAlbumDetails.selectedArtist = node.id
+              self.$store.state.view.mainPanelView = 'ArtistsAlbumDetails'
+              break
+            case 'album':
+              break
+            default:
+              break
+          }
         })
         network.once('stabilizationIterationsDone', function () {
           // TODO behaves weird with multiple graphs

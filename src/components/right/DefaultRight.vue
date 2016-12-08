@@ -19,4 +19,5 @@ export default {
 
 <style lang="sass" scoped>
 #default-right
+  height: calc(100% - 90px)
 </style>

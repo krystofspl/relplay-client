@@ -54,6 +54,7 @@ export default {
           albums: albums.map(a => {
             return {
               id: a.id,
+              type: 'album',
               label: a.title.split(/((?:\w+ ){3})/g).filter(Boolean).join('\n'),
               // shape: 'square',
               shape: 'image',
@@ -74,6 +75,7 @@ export default {
           }),
           artist: {
             id: artist.id,
+            type: 'artist',
             label: artist.name.split(/((?:\w+ ){4})/g).filter(Boolean).join('\n'),
             shape: 'dot',
             color: {
@@ -86,6 +88,7 @@ export default {
           secondaryArtists: secondaryArtists.map(a => {
             return {
               id: a.id,
+              type: 'artist',
               label: a.name.split(/((?:\w+ ){4})/g).filter(Boolean).join('\n'),
               shape: 'dot',
               color: 'red',

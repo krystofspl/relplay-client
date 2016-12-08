@@ -56,6 +56,7 @@ export default {
 #playlist
   cursor: default
   overflow: auto
+  height: 50%
   h1
     margin: 5px 0
     padding: 0
