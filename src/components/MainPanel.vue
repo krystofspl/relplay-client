@@ -10,6 +10,7 @@
 
 <script>
 import ArtistsAlbumArts from './main/ArtistsAlbumArts.vue'
+import ArtistsAlbumDetails from './main/ArtistsAlbumDetails.vue'
 import ArtistAlbumsGraph from './main/ArtistAlbumsGraph.vue'
 import ArtistsArtistsGraph from './main/ArtistsArtistsGraph.vue'
 import GenresArtistsGraph from './main/GenresArtistsGraph.vue'
@@ -17,6 +18,7 @@ import GenresArtistsGraph from './main/GenresArtistsGraph.vue'
 export default {
   components: {
     ArtistsAlbumArts,
+    ArtistsAlbumDetails,
     ArtistsArtistsGraph,
     GenresArtistsGraph,
     ArtistAlbumsGraph
@@ -38,5 +40,4 @@ $panel-height: calc(100% - #{$top-offset} - #{$bottom-offset})
   width: calc(100% - 300px)
   background: #444
   float: left
-  overflow: auto
 </style>

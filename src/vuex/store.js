@@ -32,7 +32,7 @@ const state = {
         prevModalAction: 'show'
       },
       TopPanel: {
-        links: ['ArtistsAlbumArts', 'GenresArtistsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph']
+        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresArtistsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph']
       },
       TrackInfo: {
         displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'album.albumArt']

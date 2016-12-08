@@ -21,6 +21,9 @@ var locales = {
         inboxWarning: 'This album is in inbox.',
         inboxAdd: 'Move to library'
       },
+      ArtistsAlbumDetails: {
+        name: 'Artists/Albums'
+      },
       ArtistsAlbumArts: {
         name: 'Album Arts',
         sortBy: 'Sort by'

@@ -72,7 +72,7 @@ export default {
     graphOptions: function () {
       var self = this
       return {
-        /* locales: {
+        locales: {
           custom: {
             back: self.$t('components.ArtistsArtistsGraph.back'),
             edit: self.$t('components.ArtistsArtistsGraph.edit'),
@@ -83,12 +83,13 @@ export default {
             del: self.$t('components.ArtistsArtistsGraph.deleteEdge')
           }
         },
-        locale: 'custom', */
+        locale: 'custom',
         manipulation: {
           enabled: true,
           initiallyActive: false,
-          editEdge: true,
           addNode: false,
+          // TODO add db action
+          editEdge: false,
           addEdge: function (data, callback) {
             // TODO? check if from==to, that relationship wouldn't make sense
             self.addArtistRelation({
