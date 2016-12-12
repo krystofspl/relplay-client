@@ -30,8 +30,10 @@ export default {
 
 <style lang="sass" scoped>
 #player-controls
-  width: 15%
+  float: left
+  width: 13%
   user-select: none
+  margin: 15px
   div
     display: inline-block
     width: 35px

@@ -125,9 +125,7 @@ const mutations = {
     state.player.nowPlaying = payload.id
   },
   PLAYER_UPDATE_PLAYLIST (state, payload) {
-    state.player.playlist = payload.playlist.map(track => {
-      return track.id
-    })
+    state.player.playlist = payload
   },
   SET_SELECTED_ARTIST (state, payload) {
     state.view.components.ArtistsAlbumDetails.selectedArtist = payload
@@ -159,11 +157,9 @@ const mutations = {
       modal.prevModalAction = modal.modalAction
       modal.modalAction = action
     }
-    console.log(modal.modalAction)
   },
   UPDATE_ALBUM (state, payload) {
     Vue.set(state.data.albums, payload.id, payload)
-    console.log(payload)
   }
 }
 
@@ -221,7 +217,7 @@ const actions = {
     context.commit('PLAYER_SET_NOW_PLAYING', payload)
   },
   playerUpdatePlaylist (context, payload) {
-    context.commit('PLAYER_UPDATE_PLAYLIST', payload)
+    context.commit('PLAYER_UPDATE_PLAYLIST', payload.playlist)
   },
   setSelectedArtist (context, payload) {
     context.commit('SET_SELECTED_ARTIST', payload)

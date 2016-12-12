@@ -19,7 +19,9 @@ module.exports = {
       'vue': 'vue/dist/vue',
       'src': path.resolve(__dirname, '../src'),
       'assets': path.resolve(__dirname, '../src/assets'),
-      'components': path.resolve(__dirname, '../src/components')
+      'components': path.resolve(__dirname, '../src/components'),
+      "jquery-ui": path.resolve(__dirname, '../node_modules/jquery-ui-dist/jquery-ui.js'),
+      modules: path.join(__dirname, "node_modules")
     }
   },
   resolveLoader: {

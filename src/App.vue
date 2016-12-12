@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app-wrapper">
     <transition name="fade">
       <div id="info-panel" v-if="infoPanelVisible()">
         {{ infoPanelMsg() }}
@@ -47,7 +47,8 @@ body
   font-family: Arial, Helvetica, sans-serif
   font-size: 14px
   user-select: none
-  #app
+  cursor: default
+  #app-wrapper
     width: 100%
     height: 100%
     #info-panel

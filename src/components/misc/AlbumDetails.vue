@@ -32,15 +32,17 @@
         <tr>
           <th>#</th>
           <th class="absorbing-column">Title</th>
+          <th></th>
         </tr>
       </thead>
-      <tbody>
-        <tr class="playlist-item" v-for="(track, index) in tracks" v-bind:class="{'now-playing': isNowPlaying(track.id)}" v-on:dblclick="">
+      <tbody class="tracks-body">
+        <tr class="track-item" v-for="(track, index) in tracks" v-bind:class="{'now-playing': isNowPlaying(track.id)}" v-bind:data-trackid="track.id">
           <td>{{index + 1}}.</td>
           <td class="absorbing-column">
             <icon scale="0.75" name="volume-up" v-if="isNowPlaying(track.id)" style="margin: 0 2px"></icon>
             {{track.title}}
           </td>
+          <td><icon scale="1" name="bars" class="drag-handle"></icon></td>
         </tr>
       </tbody>
     </table>
@@ -55,6 +57,9 @@
   import { mapGetters } from 'vuex'
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/volume-up'
+  import 'vue-awesome/icons/bars'
+  var jQuery = require('jquery')
+  require('jquery-ui')
 
   export default {
     props: ['album-id'],
@@ -90,11 +95,41 @@
             }
           })
       }
+    },
+    created: function () {
+      jQuery(() => {
+        jQuery('.tracks-body').selectable({
+          cancel: '.drag-handle',
+          items: '.track-item'
+        }).draggable({
+          items: '.track-item',
+          connectToSortable: '#playlist-body',
+          revert: 'invalid',
+          handle: '.drag-handle',
+          cursorAt: { top: -5, left: -5 },
+          containment: '#right-panel',
+          helper: (e) => {
+            var helper = jQuery('<tr class="drag-helper"/>')
+            var multidrag = []
+            jQuery('.tracks-body tr.ui-selected').each((index, element) => {
+              multidrag.push(jQuery(`
+                <tr class="playlist-item" data-trackid="${jQuery(element).data('trackid')}">
+                  <td>${index + 1}.</td>
+                  <td>${jQuery(element).children()[1].innerText}</td>
+                  <td></td>
+                </tr>
+              `))
+            })
+            helper.data('multidrag', multidrag)
+            return helper
+          }
+        })
+      })
     }
   }
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 .album-details
   .col-left
     float: left
@@ -121,12 +156,34 @@
       width: 100%
       table-layout: auto
       border-collapse: collapse
-      tr
+      tr.track-item
+        cursor: default
+        border-bottom: 1px solid #000
+        height: 30px
+        width: 100%
+        &:hover
+          background: #888
         th, td
           text-align: left
-        td.absorbing-column
+        .absorbing-column
           width: 100%
+        .drag-handle
+          cursor: move
+          display: none
+          margin: 0 2px
+      tr.ui-selected, tr.ui-selecting
+        background: #454545
+        .drag-handle
+          display: inline !important
 
+  .ui-draggable.ui-draggable-dragging, .drag-helper
+    height: 30px
+    width: 270px
+    background: #555
+    opacity: 0.8
+    box-shadow: 7px 7px 23px 0px rgba(0, 0, 0, 0.65)
+    z-index: 2000
   .now-playing
     font-weight: bold
+
 </style>

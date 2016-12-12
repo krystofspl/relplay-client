@@ -1,7 +1,7 @@
 <template>
   <div id="playing-track">
     <div class="playing-track-name">
-      <span v-if="this.$store.state.player.nowPlaying">    
+      <span v-if="this.$store.state.player.nowPlaying">
         {{ getArtistForTrack(getNowPlayingTrack()).name }} - {{ getNowPlayingTrack().title }}
       </span>
       <span v-else>
@@ -25,7 +25,9 @@ export default {
 
 <style lang="sass" scoped>
 #playing-track
-  background: white
+  float: left
+  font-size: 16px
+  color: white
   width: 80%
-  margin: 0
+  margin-top: 25px
 </style>
