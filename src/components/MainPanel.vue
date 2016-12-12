@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import AlbumsAlbumsGraph from './main/AlbumsAlbumsGraph.vue'
 import ArtistsAlbumArts from './main/ArtistsAlbumArts.vue'
 import ArtistsAlbumDetails from './main/ArtistsAlbumDetails.vue'
 import ArtistAlbumsGraph from './main/ArtistAlbumsGraph.vue'
@@ -17,6 +18,7 @@ import GenresArtistsGraph from './main/GenresArtistsGraph.vue'
 
 export default {
   components: {
+    AlbumsAlbumsGraph,
     ArtistsAlbumArts,
     ArtistsAlbumDetails,
     ArtistsArtistsGraph,

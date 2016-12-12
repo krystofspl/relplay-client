@@ -35,7 +35,7 @@ const state = {
         prevModalAction: 'show'
       },
       TopPanel: {
-        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresArtistsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph']
+        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresArtistsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph']
       },
       TrackInfo: {
         displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'album.albumArt']
@@ -265,6 +265,56 @@ const actions = {
     }, (err) => {
       console.log(err)
       context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateAlbumErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  addAlbumRelation (context, payload) {
+    var callback = payload.callback
+    if (!payload || !payload.edge) {
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationErr'))
+      context.dispatch('showInfoPanel')
+      return
+    }
+    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/album-similarity/add', payload)
+    .then((response) => {
+      if (response.ok) {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      } else {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationErr'))
+        context.dispatch('showInfoPanel')
+        callback(response.statusText, null)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  deleteAlbumRelation (context, payload) {
+    var callback = payload.callback
+    if (!payload || !payload.edge) {
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationError'))
+      context.dispatch('showInfoPanel')
+      return
+    }
+    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/album-similarity/delete', payload)
+    .then((response) => {
+      if (response.ok) {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      } else {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationErr'))
+        context.dispatch('showInfoPanel')
+        callback(response.statusText, null)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationErr'))
       context.dispatch('showInfoPanel')
       callback(err, null)
     })

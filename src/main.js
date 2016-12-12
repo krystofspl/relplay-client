@@ -9,6 +9,17 @@ var locales = {
       AlbumArts: {
         noAlbums: 'There are no albums available for the selected criteria.'
       },
+      AlbumsAlbumsGraph: {
+        back: 'Back',
+        edit: 'Edit similarity',
+        name: 'Albums/Albums',
+        addEdge: 'Connect similar albums',
+        editEdge: 'Edit edge',
+        edgeDescription: 'Click on an album and drag to another one to enter similarity.',
+        editEdgeDescription: 'Drag the edge\'s endpoint to another node to change it.',
+        deleteEdge: 'Delete edge',
+        deleteConfirm: 'Are you sure you want to delete this relationship?'
+      },
       AlbumDetails: {
         modalHeader: 'Album Details',
         albumTitle: 'Album title',
