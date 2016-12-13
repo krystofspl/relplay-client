@@ -5,24 +5,29 @@
         <img :src="getAlbumArtImgPath(album.id)">
       </div>
       <div class="album-info">
-      <strong>Album info</strong><br>
-      <div v-if="album.inInbox">
-        <i>
-          {{ $t('components.AlbumDetails.inboxWarning') }}
-          <a href="#" @click="moveToLibrary(album.id)">{{ $t('components.AlbumDetails.inboxAdd') }}</a>
-        </i>
-      </div>
-      {{ $t('components.AlbumDetails.albumTitle') }}: <strong>{{ album.title }}</strong><br>
-      {{ $t('components.AlbumDetails.artistName') }}: <strong>{{ mainArtist.name }}</strong><br>
-      <div v-if="artists.length">
-        {{ $t('components.AlbumDetails.artists') }}:
-        <span v-for="otherArtist in artists">
-          <strong>{{ otherArtist.name }}</strong>&nbsp;
-        </span>
-      </div>
-      <!-- TODO year -->
-      {{ $t('components.AlbumDetails.year') }}: <strong>2005</strong><br>
-      ... more data will be here ...
+        <strong>Album info</strong><br>
+        <div v-if="album.inInbox">
+          <i>
+            {{ $t('components.AlbumDetails.inboxWarning') }}
+            <a href="#" @click="moveToLibrary(album.id)">{{ $t('components.AlbumDetails.inboxAdd') }}</a>
+          </i>
+        </div>
+        {{ $t('components.AlbumDetails.albumTitle') }}: <strong>{{ album.title }}</strong><br>
+        {{ $t('components.AlbumDetails.artistName') }}: <strong>{{ mainArtist.name }}</strong><br>
+        <div v-if="artists.length">
+          {{ $t('components.AlbumDetails.artists') }}:
+          <span v-for="otherArtist in artists">
+            <strong>{{ otherArtist.name }}</strong>&nbsp;
+          </span>
+        </div>
+        <!-- TODO year -->
+        {{ $t('components.AlbumDetails.year') }}: <strong>2005</strong><br>
+        <div v-if="genres.length">
+          {{ $t('components.AlbumDetails.genres') }}:
+          <span v-for="genre in genres">
+            <span class="genre" v-bind:style="{ background: genre.color, color: getFontColorForBG(genre.color) }">{{ genre.title }}</span>
+          </span>
+        </div>
       </div>
     </div>
     <div class="col-right">
@@ -54,6 +59,8 @@
   import { artistGetters } from '../../mixins/getters/artistGetters.js'
   import { albumGetters } from '../../mixins/getters/albumGetters.js'
   import { trackGetters } from '../../mixins/getters/trackGetters.js'
+  import { genreGetters } from '../../mixins/getters/genreGetters.js'
+  import { common } from '../../mixins/common.js'
   import { mapGetters } from 'vuex'
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/volume-up'
@@ -63,7 +70,7 @@
 
   export default {
     props: ['album-id'],
-    mixins: [artistGetters, albumGetters, trackGetters],
+    mixins: [artistGetters, albumGetters, trackGetters, genreGetters, common],
     components: {
       Icon
     },
@@ -80,6 +87,10 @@
       },
       tracks: function () {
         return this.getTracksForAlbum(this.albumId)
+      },
+      genres: function () {
+        var self = this
+        return this.album.genres.map(g => { return self.getGenre(g) })
       }
     },
     methods: {
@@ -149,6 +160,12 @@
       width: 56%
       margin-left: 3%
       margin-right: 1%
+      .genre
+        border: 1px solid #000
+        padding: 1px 3px
+        border-radius: 3px
+        margin-right: 2px
+        font-size: 83%
   .col-right
     float: left
     width: 40%
@@ -156,25 +173,26 @@
       width: 100%
       table-layout: auto
       border-collapse: collapse
-      tr.track-item
-        cursor: default
-        border-bottom: 1px solid #000
-        height: 30px
-        width: 100%
-        &:hover
-          background: #888
-        th, td
-          text-align: left
-        .absorbing-column
+      tbody
+        tr.track-item
+          cursor: default
+          border-bottom: 1px solid #000
+          height: 30px
           width: 100%
-        .drag-handle
-          cursor: move
-          display: none
-          margin: 0 2px
-      tr.ui-selected, tr.ui-selecting
-        background: #454545
-        .drag-handle
-          display: inline !important
+          &:hover
+            background: #888
+          th, td
+            text-align: left
+          .absorbing-column
+            width: 100%
+          .drag-handle
+            cursor: move
+            display: none
+            margin: 0 2px
+        tr.ui-selected, tr.ui-selecting
+          background: #454545
+          .drag-handle
+            display: inline !important
 
   .ui-draggable.ui-draggable-dragging, .drag-helper
     height: 30px

@@ -32,7 +32,7 @@ export default {
     ...mapGetters(['getNowPlayingTrack']),
     ...mapActions(['addArtistRelation', 'deleteArtistRelation']),
     fetchGraphData: function (callback) {
-      this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/artists-artists-graph?artist=').then(function (results) {
+      this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/artists-artists-graph').then(function (results) {
         // Initialize the data structures
         this.graphData.nodes = []
         this.graphData.edges = []
@@ -97,7 +97,7 @@ export default {
               edge: data,
               callback: function (err, obj) {
                 if (err) {
-                  callback
+                  callback()
                   return
                 }
                 callback(data)
@@ -136,9 +136,9 @@ export default {
 #artists-artists-graph
   height: 100%
   width: 100%
-    position: absolute
-    top: 0
-    left: 0
+  position: absolute
+  top: 0
+  left: 0
   .vis-close
     position: absolute
     top: 0

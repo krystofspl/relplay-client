@@ -33,7 +33,7 @@ export default {
     ...mapActions(['addAlbumRelation', 'deleteAlbumRelation']),
     fetchGraphData: function (callback) {
       var self = this
-      this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/albums-albums-graph?album=').then(function (results) {
+      this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/albums-albums-graph').then(function (results) {
         // Initialize the data structures
         this.graphData.nodes = []
         this.graphData.edges = []

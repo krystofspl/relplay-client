@@ -6,10 +6,12 @@ Vue.use(Vuex)
 // Initial state
 const state = {
   data: {
-    tracks: {},
+    albumArts: {},
     albums: {},
     artists: {},
-    albumArts: {}
+    genres: {},
+    labels: {},
+    tracks: {}
   },
   player: {
     state: 'paused',
@@ -31,11 +33,14 @@ const state = {
       },
       Modal: {
         showModal: false,
-        modalAction: 'show',
-        prevModalAction: 'show'
+        modalAction: 'showAlbum',
+        modalEntities: {
+          albumId: null,
+          genreId: null
+        }
       },
       TopPanel: {
-        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresArtistsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph']
+        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph']
       },
       TrackInfo: {
         displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'album.albumArt']
@@ -75,6 +80,9 @@ const getters = {
   },
   getAlbumArt: (albumId) => {
     return state.data.albumArts[albumId]
+  },
+  getGenres: (state) => {
+    return state.data.genres
   }
 }
 
@@ -91,6 +99,9 @@ const mutations = {
     })
     payload.tracks.forEach(res => {
       Vue.set(state.data.tracks, res.id, res)
+    })
+    payload.genres.forEach(res => {
+      Vue.set(state.data.genres, res.id, res)
     })
   },
   SWITCH_MAIN_PANEL_VIEW (state, component) {
@@ -143,23 +154,31 @@ const mutations = {
   HIDE_MODAL: function (state) {
     state.view.components.Modal.showModal = false
   },
-  SET_MODAL_ACTION: function (state, action) {
-    state.view.components.Modal.modalAction = action
-    state.view.components.Modal.prevModalAction = action
+  SET_MODAL_ACTION: function (state, payload) {
+    state.view.components.Modal.modalAction = payload
   },
   TOGGLE_MODAL_ACTION: function (state, action) {
+    // action is Array(2) with two actions to toggle between
     var modal = state.view.components.Modal
-    if (modal.modalAction === action) {
-      var prev = modal.modalAction
-      modal.modalAction = modal.prevModalAction
-      modal.prevModalAction = prev
+    if (modal.modalAction === action[0]) {
+      modal.modalAction = action[1]
     } else {
-      modal.prevModalAction = modal.modalAction
-      modal.modalAction = action
+      modal.modalAction = action[0]
+    }
+  },
+  SET_MODAL_ENTITY: function (state, payload) {
+    if (payload.albumId) {
+      state.view.components.Modal.modalEntities.albumId = payload.albumId
+    }
+    if (payload.genreId) {
+      state.view.components.Modal.modalEntities.genreId = payload.genreId
     }
   },
   UPDATE_ALBUM (state, payload) {
     Vue.set(state.data.albums, payload.id, payload)
+  },
+  UPDATE_GENRE (state, payload) {
+    Vue.set(state.data.genres, payload.id, payload)
   }
 }
 
@@ -169,13 +188,16 @@ const actions = {
       // TODO async/await? needs a special babel plugin
       var payload = {artists: [], albums: [], tracks: []}
       Vue.http.get(state.settings.global.backendUrl + 'artists').then(function (result) {
-        payload.artists = result.body
+        payload.artists = result.body || []
         Vue.http.get(state.settings.global.backendUrl + 'albums').then(function (result) {
-          payload.albums = result.body
+          payload.albums = result.body || []
           Vue.http.get(state.settings.global.backendUrl + 'tracks').then(function (result) {
-            payload.tracks = result.body
-            context.commit('SET_INITIAL_DATA', payload)
-            resolve()
+            payload.tracks = result.body || []
+            Vue.http.get(state.settings.global.backendUrl + 'genres').then(function (result) {
+              payload.genres = result.body || []
+              context.commit('SET_INITIAL_DATA', payload)
+              resolve()
+            })
           })
         })
       })
@@ -184,6 +206,7 @@ const actions = {
     })
   },
   loadAlbumArts (context) {
+    // TODO cache headers
     Object.values(context.state.data.albums).forEach((album) => {
       var albumId = album.id
       Vue.http.get(context.state.settings.global.backendUrl + 'album-art/' + albumId)
@@ -246,6 +269,9 @@ const actions = {
   toggleModalAction: function (context, action) {
     context.commit('TOGGLE_MODAL_ACTION', action)
   },
+  setModalEntity: function (context, payload) {
+    context.commit('SET_MODAL_ENTITY', payload)
+  },
   updateAlbum (context, payload) {
     var callback = payload.callback
     var albumId = payload.id
@@ -265,6 +291,29 @@ const actions = {
     }, (err) => {
       console.log(err)
       context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateAlbumErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  updateGenre (context, payload) {
+    var callback = payload.callback
+    var genreId = payload.id
+    if (Object.keys(payload).length <= 2) {
+      // Only id and callback are present, return
+      callback('Nothing has changed.', null)
+      return
+    }
+    Vue.http.post(context.state.settings.global.backendUrl + 'genres/' + genreId, payload)
+    .then((response) => {
+      if (response.ok) {
+        context.commit('UPDATE_GENRE', response.body)
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateGenreSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateGenreErr'))
       context.dispatch('showInfoPanel')
       callback(err, null)
     })

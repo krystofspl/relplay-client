@@ -9,25 +9,44 @@
     <label for="mainArtist">{{ $t('components.AlbumDetails.mainArtist') }}</label>
     <multiselect name="mainArtist" v-model="mainArtist"
       :options="availableArtists"
-      :custom-label="artistName"
       :value="mainArtist"
       :allow-empty="false"
-      :track-by="id"
+      :multiple="false"
+      :max-height="120"
+      :hide-selected="true"
+      track-by="id"
+      label="name"
       ></multiselect>
-
-    <i>[NUR] Dynamic search by typing doesn't work yet, there's an open bug in the library.</i><br>
 
     <label for="artists">{{ $t('components.AlbumDetails.artists') }}</label>
     <multiselect name="artists" v-model="artists"
       :options="availableArtists"
-      :custom-label="artistName"
       :value="artists"
       :allow-empty="true"
       :multiple="true"
-      :track-by="id"
+      :hide-selected="true"
+      :close-on-select="false"
+      :max-height="120"
+      track-by="name"
+      label="name"
       ></multiselect>
 
-    <button v-on:click="submit()">Submit</button>
+    <label for="genres">{{ $t('components.AlbumDetails.genres') }}</label>
+    <a href="#" @click="setModalEntity({genreId: null}); setModalAction('editGenre')">{{ $t('components.EditAlbum.editGenres') }}</a>
+    <multiselect name="genres" v-model="genres"
+      :options="availableGenres"
+      :value="genres"
+      :allow-empty="true"
+      :multiple="true"
+      :hide-selected="true"
+      :close-on-select="false"
+      :max-height="120"
+      label="title"
+      track-by="title"
+      ></multiselect>
+    <br><br><br>
+    <button v-on:click="submit()" style="float: right">Save</button>
+    <br><br><br><br>
   </div>
 </template>
 
@@ -35,6 +54,7 @@
   import { artistGetters } from '../../mixins/getters/artistGetters.js'
   import { albumGetters } from '../../mixins/getters/albumGetters.js'
   import { trackGetters } from '../../mixins/getters/trackGetters.js'
+  import { genreGetters } from '../../mixins/getters/genreGetters.js'
   import { mapGetters, mapActions } from 'vuex'
   import Icon from 'vue-awesome/components/Icon'
   import Multiselect from 'vue-multiselect'
@@ -48,29 +68,30 @@
         title: self.album.title,
         inInbox: self.album.inInbox,
         mainArtist: null,
-        artists: []
+        artists: [],
+        genres: []
       }
     },
     props: ['album'],
-    mixins: [artistGetters, albumGetters, trackGetters],
+    mixins: [artistGetters, albumGetters, genreGetters, trackGetters],
     components: {
       Icon,
       Multiselect
     },
     computed: {
       availableArtists: function () {
-        return Object.values(this.getArtists())
+        return Object.values(this.getArtists()).sort((a, b) => { return a.name.localeCompare(b.title) })
+      },
+      availableGenres: function () {
+        return Object.values(this.getGenres()).sort((a, b) => { return a.title.localeCompare(b.title) })
       },
       tracks: function () {
         return this.getTracksForAlbum(this.album.albumId)
       }
     },
     methods: {
-      ...mapGetters(['getArtists']),
-      ...mapActions(['setModalAction', 'toggleModalAction', 'showModal', 'hideModal']),
-      artistName: function (artist) {
-        return artist.name
-      },
+      ...mapGetters(['getArtists', 'getGenres']),
+      ...mapActions(['setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity']),
       submit: function () {
         // Prepare data
         var newData = {
@@ -89,12 +110,15 @@
         if (this.mainArtist && this.mainArtist.id !== this.album.mainArtist) {
           newData.mainArtist = this.mainArtist.id
         }
-        if (this.artists.length >= 1 && !_.isEqual(this.artists.map(i => i.id).sort(), this.album.artists.sort())) {
+        if (!_.isEqual(this.artists.map(i => i.id).sort(), this.album.artists.sort())) {
           newData.artists = this.artists.map(a => a.id)
+        }
+        if (!_.isEqual(this.genres.map(i => i.id).sort(), this.album.genres.sort())) {
+          newData.genres = this.genres.map(g => g.id)
         }
         // Send
         this.$store.dispatch('updateAlbum', newData)
-        this.setModalAction('show')
+        this.setModalAction('showAlbum')
       }
     },
     created: function () {
@@ -102,6 +126,9 @@
       this.mainArtist = this.getArtist(this.album.mainArtist)
       this.artists = this.album.artists.map(artistId => {
         return self.getArtist(artistId)
+      })
+      this.genres = this.album.genres.map(genreId => {
+        return self.getGenre(genreId)
       })
     }
   }
@@ -115,10 +142,18 @@
     display: block
     width: 100%
     padding-top: 5px
+  button
+    border: 1px solid #000
+    background: #888
+    padding: 10px
+    &:hover
+      border: 1px solid #CCC
   input
     border: 1px solid #000
     background: #888
     border-radius: none
+    &:hover
+      border: 1px solid #CCC
     &:focus
       border: 2px solid #000
       background: #999
@@ -136,9 +171,8 @@
     background: #888
     border-radius: 0
     padding: 0
-    &:focus
-      border: 2px solid #000
-      background: #999
+    &:hover
+      border: 1px solid #CCC
     .multiselect__input, .multiselect__single
       border: none !important
       border-radius: 0

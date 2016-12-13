@@ -26,6 +26,7 @@ var locales = {
         artistName: 'Artist',
         mainArtist: 'Main artist',
         artists: 'Other artists',
+        genres: 'Genres',
         year: 'Year',
         added: 'Added',
         inInbox: 'Is in inbox?',
@@ -42,8 +43,8 @@ var locales = {
       ArtistsPanel: {
         all: 'All'
       },
-      GenresArtistsGraph: {
-        name: 'Genres/Artists'
+      GenresAlbumsGraph: {
+        name: 'Genres/Albums'
       },
       ArtistAlbumsGraph: {
         name: 'One Artist/Albums'
@@ -58,6 +59,21 @@ var locales = {
         editEdgeDescription: 'Drag the edge\'s endpoint to another node to change it.',
         deleteEdge: 'Delete edge',
         deleteConfirm: 'Are you sure you want to delete this relationship?'
+      },
+      ModalActions: {
+        showAlbum: 'Album details',
+        editAlbum: 'Edit album',
+        editGenre: 'Edit genre'
+      },
+      EditAlbum: {
+        editGenres: 'Edit genres',
+        parentGenre: 'Parent genre'
+      },
+      EditGenre: {
+        genreTitle: 'Genre title',
+        genreDesc: 'Genre description',
+        genreColor: 'Color',
+        parentGenre: 'Parent genre'
       },
       PlayingTrack: {
         nothingPlaing: 'Nothing playing now'
@@ -75,6 +91,8 @@ var locales = {
     infoPanel: {
       updateAlbumSuccess: 'The album was updated successfully.',
       updateAlbumErr: 'There was an error when updating the album.',
+      updateGenreSuccess: 'The genre was updated successfully.',
+      updateGenreErr: 'There was an error when updating the genre.',
       addArtistRelationSuccess: 'The relationship was successfully saved.',
       addArtistRelationErr: 'There was an error when adding the relationship.',
       deleteArtistRelationSuccess: 'The relationship was successfully deleted.',

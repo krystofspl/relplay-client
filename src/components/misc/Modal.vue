@@ -12,7 +12,7 @@
               <slot name="actions"></slot>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <div @click="$emit('close')" class="action">
-                <icon scale="1.5" name="times-circle"></icon>
+                <icon scale="1.3" name="times-circle"></icon>
               </div>
             </div>
             <div class="modal-body">
@@ -71,8 +71,12 @@
         transition: all .3s ease
         .modal-header
           margin: 0
-          padding: 0
+          padding: 0 0 1px 0
           float: left
+          h2
+            margin: 0
+            padding: 0
+            text-shadow: 3px 2px 3px rgba(0,0,0,0.1)
         .modal-actions
           float: right
           .action
@@ -82,8 +86,9 @@
         .modal-body
           width: 100%
           float: left
-          margin: 0 0
-
+          margin: 0
+          padding-top: 10px
+          border-top: 1px solid #606060
   /*
    * The following styles are auto-applied to elements with
    * transition="modal" when their visibility is toggled

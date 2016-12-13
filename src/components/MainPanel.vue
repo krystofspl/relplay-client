@@ -1,5 +1,6 @@
 <template>
   <div id="main-panel">
+    <modal-actions></modal-actions>
     <transition name="component-fade" mode="out-in">
       <keep-alive>
           <component :is="this.$store.state.view.mainPanelView"></component>
@@ -14,7 +15,8 @@ import ArtistsAlbumArts from './main/ArtistsAlbumArts.vue'
 import ArtistsAlbumDetails from './main/ArtistsAlbumDetails.vue'
 import ArtistAlbumsGraph from './main/ArtistAlbumsGraph.vue'
 import ArtistsArtistsGraph from './main/ArtistsArtistsGraph.vue'
-import GenresArtistsGraph from './main/GenresArtistsGraph.vue'
+import GenresAlbumsGraph from './main/GenresAlbumsGraph.vue'
+import ModalActions from './misc/ModalActions.vue'
 
 export default {
   components: {
@@ -22,8 +24,9 @@ export default {
     ArtistsAlbumArts,
     ArtistsAlbumDetails,
     ArtistsArtistsGraph,
-    GenresArtistsGraph,
-    ArtistAlbumsGraph
+    GenresAlbumsGraph,
+    ArtistAlbumsGraph,
+    ModalActions
   }
 }
 </script>
