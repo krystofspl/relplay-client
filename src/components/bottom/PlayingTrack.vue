@@ -26,8 +26,10 @@ export default {
 <style lang="sass" scoped>
 #playing-track
   float: left
-  font-size: 16px
-  color: white
-  width: 80%
-  margin-top: 25px
+  font-size: 17px
+  color: #FFF
+  width: 500px
+  height: 65px
+  .playing-track-name
+    padding-top: 22px
 </style>
