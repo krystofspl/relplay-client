@@ -31,14 +31,18 @@ export default {
 <style lang="sass" scoped>
 #player-controls
   float: left
-  width: 13%
+  width: 200px
+  height: 65px
   user-select: none
-  margin: 15px
+  padding-top: 15px
+  padding-left: 20px
+  box-sizing: border-box
   div
     display: inline-block
     width: 35px
     text-align: center
   svg
+    color: #BBB
     &:hover
       color: #FFF
 </style>

@@ -151,7 +151,10 @@
   input
     border: 1px solid #000
     background: #888
+    color: #000
     border-radius: none
+    &::placeholder
+      color: #000
     &:hover
       border: 1px solid #CCC
     &:focus
@@ -179,6 +182,10 @@
       background: #888
       &:focus, &:hover
         background: #000
+    span.multiselect__tag
+      background: #666
+      border: 1px solid #333
+      margin: 2px 0 0 2px
   .multiselect__content
     background: #888
     border-radius: 0

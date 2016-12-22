@@ -71,6 +71,14 @@ body
         cursor: pointer
         top: 2px
         right: 4px
+  input, select
+    padding: 2px
+    color: #CCC
+    background: #333
+    border: 1px solid #000
+    &::placeholder
+      color: #CCC
+
 
 .component-fade-enter-active, .component-fade-leave-active, .fade-enter-active, .fade-leave-active
   transition: opacity .5s ease

@@ -1,8 +1,8 @@
 <template>
   <div id="bottom-panel">
+    <progress-bar></progress-bar>
     <player-controls></player-controls>
     <playing-track></playing-track>
-    <progress-bar></progress-bar>
   </div>
 </template>
 

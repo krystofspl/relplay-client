@@ -19,17 +19,19 @@ $barColorPrimary: red
 $barColorSecondary: black
 
 #progress-bar
+  width: 100%
+  height: 15px
+  float: left
   #bar
-    appearance: none;
-    -moz-appearance: none;
-    -webkit-appearance: none;
+    padding: 0
+    margin: 0
     width: 100%
-    height: 10px
+    height: 15px
+    border-bottom: 1px solid #000
+    appearance: none
+    -moz-appearance: none
+    -webkit-appearance: none
     background: $barColorSecondary
-    border-top: 1px solid #000
-    position: absolute
-    bottom: 0
-    left: 0
   progress
     color: $barColorPrimary
   progress::-moz-progress-bar

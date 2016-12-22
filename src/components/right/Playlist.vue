@@ -42,11 +42,22 @@ export default {
   methods: {
     ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying']),
     ...mapGetters(['getNowPlayingId', 'getPlaylistTracks']),
-    repairPlaylistTracksOrder: function () {
+    repairPlaylist: function () {
       jQuery('#playlist-body').children().each((index, el) => {
-        jQuery(el).children().first().html(index + 1 + '.')
+        var e = jQuery(el)
+        e.children().first().html(index + 1 + '.')
       })
       jQuery('.ui-sortable-helper').remove() // fixes helper sometimes stuck on top
+      this.playlistItemsAfterAdd()
+    },
+    playlistItemsAfterAdd: function () {
+      var self = this
+      jQuery('.playlist-item').each(function (i, item) {
+        jQuery(item).find('td:last').html('').append(jQuery('.dummy-sort-handle').clone().removeClass('dummy-sort-handle').addClass('sort-handle'))
+        jQuery(item).unbind('dblclick').dblclick(function () {
+          self.playerSetNowPlaying({ id: jQuery(item).data('trackid') })
+        })
+      })
     },
     updatePlaylistFromDOM: function () {
       // Collect playlist ids from the DOM table
@@ -87,7 +98,6 @@ export default {
     jQuery(() => {
       self.playlist.forEach((track, index) => {
         // Init playlist track DOM table rows
-        var sortHandle = jQuery('.dummy-sort-handle').clone().removeClass('dummy-sort-handle').addClass('sort-handle')
         var tableRow = jQuery(`
           <tr data-trackid=${track.id}>
             <td>${index + 1}.</td>
@@ -96,13 +106,14 @@ export default {
           </tr>
         `).addClass('playlist-item')
         jQuery('#playlist-body').append(tableRow)
-        jQuery('.playlist-item td:last').append(sortHandle)
         if (track.id === self.nowPlayingTrackId) {
           var nowPlayingItem = jQuery(`.playlist-item[data-trackid=${track.id}]`)
           nowPlayingItem.addClass('now-playing')
           nowPlayingItem.children().eq(1).prepend(jQuery('.dummy-now-playing-icon').clone().removeClass('dummy-now-playing-icon').addClass('now-playing-icon').css('display', 'inline').css('margin', '0 2px'))
         }
       })
+
+      self.playlistItemsAfterAdd()
 
       // Init playlist sorting and selecting
       jQuery('#playlist-body').selectable({
@@ -132,7 +143,7 @@ export default {
             addedItem.after(selected)
             addedItem.remove()
           }
-          self.repairPlaylistTracksOrder()
+          self.repairPlaylist()
           self.updatePlaylistFromDOM()
         },
         update: (e, ui) => {
@@ -144,7 +155,7 @@ export default {
       jQuery(document).keyup(event => {
         if (event.keyCode === 46) { // delete key
           jQuery('#playlist-body .ui-selected').remove()
-          self.repairPlaylistTracksOrder()
+          self.repairPlaylist()
           self.updatePlaylistFromDOM()
         }
       })
