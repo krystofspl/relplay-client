@@ -15,6 +15,7 @@
       </thead>
       <tbody id="playlist-body">
         <!-- Filled with jQuery on create -->
+        <tr><td>&nbsp;</td><td></td><td></td></tr>
       </tbody>
     </table>
   </div>
@@ -43,7 +44,7 @@ export default {
     ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying']),
     ...mapGetters(['getNowPlayingId', 'getPlaylistTracks']),
     repairPlaylist: function () {
-      jQuery('#playlist-body').children().each((index, el) => {
+      jQuery('.playlist-item').each((index, el) => {
         var e = jQuery(el)
         e.children().first().html(index + 1 + '.')
       })
@@ -62,7 +63,7 @@ export default {
     updatePlaylistFromDOM: function () {
       // Collect playlist ids from the DOM table
       var newPlaylist = []
-      newPlaylist = jQuery.map(jQuery('#playlist-body tr'), function (i) {
+      newPlaylist = jQuery.map(jQuery('.playlist-item'), function (i) {
         return jQuery(i).data('trackid')
       })
       // Update playlist in store
@@ -86,7 +87,7 @@ export default {
     nowPlayingTrackId: function () {
       // Add now playing styles to currently playing playlist item
       jQuery('.playlist-item').removeClass('now-playing')
-      var nowPlayingItem = jQuery('#playlist-body').children().eq(this.nowPlayingPlaylistPosition)
+      var nowPlayingItem = jQuery('.playlist-item').eq(this.nowPlayingPlaylistPosition)
       nowPlayingItem.addClass('now-playing')
       jQuery('.now-playing-icon').remove()
       nowPlayingItem.children().eq(1).prepend(jQuery('.dummy-now-playing-icon').clone().removeClass('dummy-now-playing-icon').addClass('now-playing-icon').css('display', 'inline').css('margin', '0 2px'))
@@ -154,7 +155,7 @@ export default {
       // Bind delete key to playlist items
       jQuery(document).keyup(event => {
         if (event.keyCode === 46) { // delete key
-          jQuery('#playlist-body .ui-selected').remove()
+          jQuery('.playlist-item.ui-selected').remove()
           self.repairPlaylist()
           self.updatePlaylistFromDOM()
         }
@@ -175,11 +176,8 @@ export default {
     font-size: 120%
   table
     width: 100%
-    margin-bottom: 20px
-    table-layout: auto
     border-collapse: collapse
     tbody
-      padding-top: 5px
       tr.playlist-item
         border-bottom: 1px solid #000
         height: 30px
