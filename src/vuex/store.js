@@ -280,7 +280,7 @@ const actions = {
       callback('Nothing has changed.', null)
       return
     }
-    Vue.http.post(context.state.settings.global.backendUrl + 'albums/' + albumId, payload)
+    Vue.http.patch(context.state.settings.global.backendUrl + 'albums/' + albumId, payload)
     .then((response) => {
       if (response.ok) {
         context.commit('UPDATE_ALBUM', response.body)
@@ -297,13 +297,21 @@ const actions = {
   },
   updateGenre (context, payload) {
     var callback = payload.callback
-    var genreId = payload.id
     if (Object.keys(payload).length <= 2) {
       // Only id and callback are present, return
       callback('Nothing has changed.', null)
       return
     }
-    Vue.http.post(context.state.settings.global.backendUrl + 'genres/' + genreId, payload)
+    // If ID is present in payload, then PUT update, otherwise POST new
+    var httpMethod, httpPath
+    if (payload.id) {
+      httpMethod = 'patch'
+      httpPath = context.state.settings.global.backendUrl + 'genres/' + payload.id
+    } else {
+      httpMethod = 'post'
+      httpPath = context.state.settings.global.backendUrl + 'genres'
+    }
+    Vue.http[httpMethod](httpPath, payload)
     .then((response) => {
       if (response.ok) {
         context.commit('UPDATE_GENRE', response.body)
