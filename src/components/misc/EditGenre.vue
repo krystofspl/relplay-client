@@ -3,7 +3,7 @@
     <label for="selectedGenre">Genre</label>
     <select v-model="genre">
       <option v-bind:value="newGenre">* Create new</option>
-      <option v-for="g in getGenres()" v-bind:value="g">{{ g.title }}</option>
+      <option v-for="g in availableGenres" v-bind:value="g">{{ g.title }}</option>
     </select>
 
     <label for="title">{{ $t('components.EditGenre.genreTitle') }}*</label>
@@ -17,18 +17,19 @@
 
     <label for="parentGenre">{{ $t('components.EditGenre.parentGenre') }}</label>
     <multiselect name="parentGenre" v-model="genre.parentGenre"
-      :options="availableGenres"
+      :options="availableParentGenres"
       :value="genre.parentGenre"
       :allow-empty="true"
       :multiple="false"
-      :hide-selected="true"
+      :hide-selected="false"
       :max-height="120"
       track-by="title"
       label="title"
       ></multiselect>
 
     <br><br><br>
-    <button v-on:click="submit()" style="float: right;">Save</button>
+    <button v-on:click="submit()" style="float: right; font-weight: bold;">Save</button>
+    <button v-if="genre != newGenre" v-on:click="deleteSelectedGenre()" style="float:right; margin-right: 10px;">Delete</button>
   </div>
 </template>
 
@@ -37,6 +38,7 @@
   import { mapGetters, mapActions } from 'vuex'
   import Multiselect from 'vue-multiselect'
   var chroma = require('chroma-js')
+  var _ = require('lodash')
 
   export default {
     data: function () {
@@ -58,14 +60,14 @@
     computed: {
       availableGenres: function () {
         var self = this
-        var genres = Object.values(this.getGenres()).filter(g => (g.title !== self.genre.title)).sort((a, b) => { return a.title.localeCompare(b.title) })
+        var genres = _.cloneDeep(_.values(this.getGenres()).sort((a, b) => { return a.title.localeCompare(b.title) }))
         genres.forEach(genre => {
-          if (genre.parentGenre) {
-            genre.parentGenre = self.getGenre(genre.parentGenre)
-          }
+          genre = self.embedParentGenre(genre)
         })
-        console.log(genres.map(g => g.parentGenre))
         return genres
+      },
+      availableParentGenres: function () {
+        return this.availableGenres.filter(g => (g.title !== this.genre.title))
       }
     },
     methods: {
@@ -74,36 +76,51 @@
       getRandomColor: function () {
         return chroma.random()
       },
+      embedParentGenre: function (genre) {
+        if (genre.parentGenre) {
+          genre.parentGenre = _.cloneDeep(this.getGenre(genre.parentGenre))
+        }
+        return genre
+      },
       submit: function () {
         // Prepare data
         var newData = {
           title: this.genre.title,
           description: this.genre.description,
           color: this.genre.color,
+          parentGenre: null,
           callback: function (err, obj) {
             console.log(err)
             console.log(obj)
           }
         }
-        // If it doesn't have ID, then its new and add everything, otherwise only changed stuff
-        var isNew = !this.genre.id
-        if (!isNew) {
-          newData.id = this.genre.id
-        }
-        if (this.parentGenre) {
-          newData.parentGenre = this.parentGenre.id
+        if (this.genre.parentGenre) {
+          newData.parentGenre = this.genre.parentGenre.id
         }
         // Send
-        this.$store.dispatch('updateGenre', newData)
+        var isNew = !this.genre.id
+        if (isNew) {
+          this.$store.dispatch('createGenre', newData)
+        } else {
+          newData.id = this.genre.id
+          this.$store.dispatch('updateGenre', newData)
+        }
         this.setModalAction('editAlbum')
+      },
+      deleteSelectedGenre: function () {
+        var self = this
+        var confirm = window.confirm(this.$t('components.EditGenre.deleteConfirm'))
+        if (confirm) {
+          this.$store.dispatch('deleteGenre', {id: self.genre.id, callback: function () {}})
+          self.genre = self.availableGenres[0]
+        }
       }
     },
     created: function () {
       if (this.genreId) { // Editing
-        this.genre = this.getGenre(this.genreId)
-        if (this.genre.parentGenre) {
-          this.genre.parentGenre = this.getGenre(this.genre.parentGenre)
-        }
+        var genre = _.cloneDeep(this.getGenre(this.genreId))
+        this.embedParentGenre(genre)
+        this.genre = genre
       } else { // Creating
         this.genre = this.newGenre
       }

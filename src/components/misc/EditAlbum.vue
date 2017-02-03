@@ -45,7 +45,7 @@
       track-by="title"
       ></multiselect>
     <br><br><br>
-    <button v-on:click="submit()" style="float: right">Save</button>
+    <button v-on:click="submit()" style="float: right; font-weight: bold;">Save</button>
     <br><br><br><br>
   </div>
 </template>

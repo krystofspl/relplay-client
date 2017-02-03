@@ -179,6 +179,9 @@ const mutations = {
   },
   UPDATE_GENRE (state, payload) {
     Vue.set(state.data.genres, payload.id, payload)
+  },
+  DELETE_GENRE (state, payload) {
+    Vue.delete(state.data.genres, payload.id)
   }
 }
 
@@ -275,11 +278,8 @@ const actions = {
   updateAlbum (context, payload) {
     var callback = payload.callback
     var albumId = payload.id
-    if (Object.keys(payload).length <= 2) {
-      // Only id and callback are present, return
-      callback('Nothing has changed.', null)
-      return
-    }
+    delete payload.id
+
     Vue.http.patch(context.state.settings.global.backendUrl + 'albums/' + albumId, payload)
     .then((response) => {
       if (response.ok) {
@@ -295,24 +295,32 @@ const actions = {
       callback(err, null)
     })
   },
+  createGenre (context, payload) {
+    var callback = payload.callback
+
+    Vue.http.post(context.state.settings.global.backendUrl + 'genres/', payload)
+    .then(response => {
+      if (response.ok) {
+        // Normally would use 201 + get from Location header, but there seems to be a bug in vue-resource, headers are empty
+        context.commit('UPDATE_GENRE', response.body)
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateGenreSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateGenreErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
   updateGenre (context, payload) {
     var callback = payload.callback
-    if (Object.keys(payload).length <= 2) {
-      // Only id and callback are present, return
-      callback('Nothing has changed.', null)
-      return
-    }
-    // If ID is present in payload, then PUT update, otherwise POST new
-    var httpMethod, httpPath
-    if (payload.id) {
-      httpMethod = 'patch'
-      httpPath = context.state.settings.global.backendUrl + 'genres/' + payload.id
-    } else {
-      httpMethod = 'post'
-      httpPath = context.state.settings.global.backendUrl + 'genres'
-    }
-    Vue.http[httpMethod](httpPath, payload)
-    .then((response) => {
+    var genreId = payload.id
+    delete payload.id
+
+    Vue.http.patch(context.state.settings.global.backendUrl + 'genres/' + genreId, payload)
+    .then(response => {
       if (response.ok) {
         context.commit('UPDATE_GENRE', response.body)
         context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateGenreSuccess'))
@@ -326,6 +334,26 @@ const actions = {
       callback(err, null)
     })
   },
+  deleteGenre (context, payload) {
+    var callback = payload.callback
+    var genreId = payload.id
+    delete payload.id
+
+    Vue.http.delete(context.state.settings.global.backendUrl + 'genres/' + genreId, payload)
+    .then(response => {
+      if (response.ok) {
+        context.commit('DELETE_GENRE', {id: genreId})
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteGenreSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, {id: genreId})
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteGenreErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
   addAlbumRelation (context, payload) {
     var callback = payload.callback
     if (!payload || !payload.edge) {
@@ -334,7 +362,7 @@ const actions = {
       return
     }
     Vue.http.post(context.state.settings.global.backendUrl + 'relationships/album-similarity/add', payload)
-    .then((response) => {
+    .then(response => {
       if (response.ok) {
         context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationSuccess'))
         context.dispatch('showInfoPanel')
@@ -359,7 +387,7 @@ const actions = {
       return
     }
     Vue.http.post(context.state.settings.global.backendUrl + 'relationships/album-similarity/delete', payload)
-    .then((response) => {
+    .then(response => {
       if (response.ok) {
         context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationSuccess'))
         context.dispatch('showInfoPanel')
@@ -384,7 +412,7 @@ const actions = {
       return
     }
     Vue.http.post(context.state.settings.global.backendUrl + 'relationships/artist-similarity/add', payload)
-    .then((response) => {
+    .then(response => {
       if (response.ok) {
         context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationSuccess'))
         context.dispatch('showInfoPanel')
@@ -409,7 +437,7 @@ const actions = {
       return
     }
     Vue.http.post(context.state.settings.global.backendUrl + 'relationships/artist-similarity/delete', payload)
-    .then((response) => {
+    .then(response => {
       if (response.ok) {
         context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationSuccess'))
         context.dispatch('showInfoPanel')

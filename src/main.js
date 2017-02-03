@@ -73,7 +73,8 @@ var locales = {
         genreTitle: 'Genre title',
         genreDesc: 'Genre description',
         genreColor: 'Color',
-        parentGenre: 'Parent genre'
+        parentGenre: 'Parent genre',
+        deleteConfirm: 'Are you sure you want to delete this genre?'
       },
       PlayingTrack: {
         nothingPlaing: 'Nothing playing now'
@@ -93,6 +94,8 @@ var locales = {
       updateAlbumErr: 'There was an error when updating the album.',
       updateGenreSuccess: 'The genre was updated successfully.',
       updateGenreErr: 'There was an error when updating the genre.',
+      deleteGenreSuccess: 'The genre was deleted successfully.',
+      deleteGenreErr: 'Therewas an error when deleting the genre.',
       addArtistRelationSuccess: 'The relationship was successfully saved.',
       addArtistRelationErr: 'There was an error when adding the relationship.',
       deleteArtistRelationSuccess: 'The relationship was successfully deleted.',
