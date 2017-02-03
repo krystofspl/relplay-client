@@ -100,12 +100,13 @@ export default {
           enabled: true,
           initiallyActive: false,
           addNode: false,
-          // TODO add db action
           editEdge: false,
           addEdge: function (data, callback) {
             // TODO? check if from==to, that relationship wouldn't make sense
+            // Persist in DB
             self.addAlbumRelation({
-              edge: data,
+              start: data.from,
+              end: data.to,
               callback: function (err, obj) {
                 if (err) {
                   callback()
@@ -118,9 +119,11 @@ export default {
           deleteEdge: function (data, callback) {
             var confirm = window.confirm(self.$t('components.AlbumsAlbumsGraph.deleteConfirm'))
             if (confirm) {
+              // Persist in DB
               var edge = self.$children[0].$data.graphDataSet.edges.get(data.edges[0])
               self.deleteAlbumRelation({
-                edge: edge,
+                start: edge.from,
+                end: edge.to,
                 callback: function (err, obj) {
                   if (err) {
                     callback()

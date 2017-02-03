@@ -356,12 +356,7 @@ const actions = {
   },
   addAlbumRelation (context, payload) {
     var callback = payload.callback
-    if (!payload || !payload.edge) {
-      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationErr'))
-      context.dispatch('showInfoPanel')
-      return
-    }
-    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/album-similarity/add', payload)
+    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/album-similarity', payload)
     .then(response => {
       if (response.ok) {
         context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationSuccess'))
@@ -381,12 +376,9 @@ const actions = {
   },
   deleteAlbumRelation (context, payload) {
     var callback = payload.callback
-    if (!payload || !payload.edge) {
-      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationError'))
-      context.dispatch('showInfoPanel')
-      return
-    }
-    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/album-similarity/delete', payload)
+    var start = payload.start
+    var end = payload.end
+    Vue.http.delete(context.state.settings.global.backendUrl + 'relationships/album-similarity/' + start + '/' + end, null)
     .then(response => {
       if (response.ok) {
         context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationSuccess'))
@@ -406,12 +398,7 @@ const actions = {
   },
   addArtistRelation (context, payload) {
     var callback = payload.callback
-    if (!payload || !payload.edge) {
-      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationErr'))
-      context.dispatch('showInfoPanel')
-      return
-    }
-    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/artist-similarity/add', payload)
+    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/artist-similarity', payload)
     .then(response => {
       if (response.ok) {
         context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationSuccess'))
@@ -431,12 +418,9 @@ const actions = {
   },
   deleteArtistRelation (context, payload) {
     var callback = payload.callback
-    if (!payload || !payload.edge) {
-      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationError'))
-      context.dispatch('showInfoPanel')
-      return
-    }
-    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/artist-similarity/delete', payload)
+    var start = payload.start
+    var end = payload.end
+    Vue.http.delete(context.state.settings.global.backendUrl + 'relationships/artist-similarity/' + start + '/' + end, null)
     .then(response => {
       if (response.ok) {
         context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationSuccess'))
