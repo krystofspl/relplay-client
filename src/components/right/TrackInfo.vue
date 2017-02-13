@@ -12,11 +12,9 @@
         <div v-if="field === 'album.name'">
           <span>Album: {{ album.title }}</span>
         </div>
-        <!--
         <div v-if="field === 'album.year'">
           <span>Year: {{ getAlbumForTrack(getNowPlayingTrack).year }}</span>
         </div>
-        -->
         <div v-if="field === 'album.albumArt'">
           <img :src="getAlbumArtImgPath(album.id)" v-if="getAlbumArtImgPath(album.id).length">
         </div>

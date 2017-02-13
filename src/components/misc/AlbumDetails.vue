@@ -23,8 +23,7 @@
             <strong>{{ otherArtist.name }}</strong>&nbsp;
           </span>
         </div>
-        <!-- TODO year -->
-        {{ $t('components.AlbumDetails.year') }}: <strong>2005</strong><br>
+        {{ $t('components.AlbumDetails.year') }}: <strong>{{ album.year }}</strong><br>
         <div v-if="genres.length">
           {{ $t('components.AlbumDetails.genres') }}:
           <span v-for="genre in genres">

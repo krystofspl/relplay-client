@@ -15,6 +15,8 @@
       {{ $t('components.ArtistsAlbumArts.sortBy') }} <select v-model="albumSort">
         <option :value="{sortBy: 'titleAsc'}">Title asc</option>
         <option :value="{sortBy: 'titleDesc'}">Title desc</option>
+        <option :value="{sortBy: 'yearAsc'}">Year asc</option>
+        <option :value="{sortBy: 'yearDesc'}">Year desc</option>
       </select>
     </div>
     <artists-panel :artists="artists()" :selectedArtistId="selectedArtistId"></artists-panel>
@@ -70,6 +72,12 @@ export default {
             break
           case 'titleDesc':
             sortResult = b.title.localeCompare(a.title)
+            break
+          case 'yearAsc':
+            sortResult = a.year - b.year
+            break
+          case 'yearDesc':
+            sortResult = b.year - a.year
             break
           default:
             sortResult = a.title.localeCompare(b.title)
