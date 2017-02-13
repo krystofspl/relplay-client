@@ -1,35 +1,47 @@
 <template>
   <div class="album-arts">
-    <div v-if="!albums.length" style="text-align: center; margin: 20px 0">
-      {{ $t('components.AlbumArts.noAlbums') }}
-    </div>
-
-    <div v-for="album in albums" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @click="albumClick(album.id)" >
+    <div v-for="album in albumsInfinite" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @click="albumClick(album.id)" >
       <div class="content">
+      <!--
         <div class="album-art-img" :data-album="album.id" v-if="getAlbumArtImgPath(album.id).length">
           <img :src="getAlbumArtImgPath(album.id)">
+        </div>
+      -->
+        <div class="album-art-img" :data-album="album.id">
+          <img src="http://www.baxter.com/assets/images/products/Renal/thumb_image_not_available.png">
         </div>
         <div class="album-title">
           {{ album.title }}
         </div>
       </div>
     </div>
+    <infinite-loading :on-infinite="onInfinite" ref="inf">
+      <span slot="no-more">
+        <!-- {{ $t('infiniteScroll.noMore') }} -->
+      </span>
+      <span slot="no-results">
+        {{ $t('infiniteScroll.noResults') }}
+      </span>
+    </infinite-loading>
   </div>
 </template>
 
 <script>
 import { albumGetters } from '../../mixins/getters/albumGetters.js'
 import { mapActions } from 'vuex'
+import InfiniteLoading from 'vue-infinite-loading'
 
 export default {
   data: function () {
     return {
-      selectedAlbumId: null
+      selectedAlbumId: null,
+      albumsInfinite: []
     }
   },
   components: {
+    InfiniteLoading
   },
-  props: ['albums', 'selectedArtist'],
+  props: ['albums'],
   mixins: [albumGetters],
   methods: {
     ...mapActions(['setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity']),
@@ -44,7 +56,32 @@ export default {
       this.setModalEntity({albumId: albumId})
       this.setModalAction('showAlbum')
       this.showModal()
+    },
+    onInfinite: function () {
+      var availableAlbums = this.albums
+      var currentlyLoadedCount = this.albumsInfinite.length
+      if (currentlyLoadedCount === availableAlbums.length) {
+        this.$refs.inf.$emit('$InfiniteLoading:complete')
+      } else {
+        this.albumsInfinite.push(availableAlbums[currentlyLoadedCount])
+        this.$refs.inf.$emit('$InfiniteLoading:loaded')
+      }
+    },
+    resetInfiniteLoader: function () {
+      this.albumsInfinite = []
+      this.$refs.inf.$emit('$InfiniteLoading:reset')
     }
+  },
+  watch: {
+    albums: function () {
+      this.resetInfiniteLoader()
+    }
+  },
+  created: function () {
+    // Reset infinite loader, selectedArtistId could've been changed from elsewhere
+    this.$on('resetInfiniteLoader', function () {
+      this.resetInfiniteLoader()
+    })
   }
 }
 </script>

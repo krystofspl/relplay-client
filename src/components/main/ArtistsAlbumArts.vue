@@ -18,7 +18,7 @@
       </select>
     </div>
     <artists-panel :artists="artists()" :selectedArtistId="selectedArtistId"></artists-panel>
-    <album-arts :albums="albums()"></album-arts>
+    <album-arts :albums="albums()" ref="albumArtsComponent"></album-arts>
   </div>
 </template>
 
@@ -32,7 +32,6 @@ var _ = require('lodash')
 export default {
   data: function () {
     return {
-      selectedArtistId: -1,
       albumNameFilter: '',
       albumInboxFilter: {
         inInbox: 'both'
@@ -43,6 +42,7 @@ export default {
       }
     }
   },
+  mixins: [artistGetters],
   components: {
     AlbumArts,
     ArtistsPanel
@@ -85,11 +85,14 @@ export default {
       })
     }
   },
-  mixins: [artistGetters],
   computed: {
     selectedArtistId: function () {
-      return this.$store.state.view.components.ArtistsAlbumArts.selectedArtist
+      return this.$store.state.view.components.ArtistsAlbumArts.selectedArtist || -1
     }
+  },
+  activated: function () {
+    // Reset infinite loader, selectedArtistId could've been changed from elsewhere
+    this.$refs.albumArtsComponent.$emit('resetInfiniteLoader')
   }
 }
 </script>

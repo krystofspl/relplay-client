@@ -1,8 +1,11 @@
 <template>
   <div class="album-details">
     <div class="col-left">
-      <div class="album-art" v-if="getAlbumArtImgPath(album.id).length">
+      <!-- <div class="album-art" v-if="getAlbumArtImgPath(album.id).length">
         <img :src="getAlbumArtImgPath(album.id)">
+      </div> -->
+      <div class="album-art">
+        <img src="http://www.baxter.com/assets/images/products/Renal/thumb_image_not_available.png">
       </div>
       <div class="album-info">
         <strong>Album info</strong><br>

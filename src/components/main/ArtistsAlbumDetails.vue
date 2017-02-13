@@ -18,24 +18,21 @@
       </select>
     </div>
     <artists-panel :artists="artists()" :selectedArtistId="selectedArtistId"></artists-panel>
-    <div class="album-details-wrapper">
-      <album-details v-for="album in albums()" :album-id="album.id"></album-details>
-    </div>
+    <album-details-list :albums="albums()" ref="albumDetailsListComponent"></album-details-list>
   </div>
 </template>
 
 <script>
 import { artistGetters } from '../../mixins/getters/artistGetters.js'
 import { mapGetters } from 'vuex'
-import AlbumArts from './AlbumArts.vue'
-import AlbumDetails from '../misc/AlbumDetails.vue'
+import AlbumDetailsList from './AlbumDetailsList.vue'
 import ArtistsPanel from './ArtistsPanel.vue'
+
 var _ = require('lodash')
 
 export default {
   data: function () {
     return {
-      selectedArtistId: -1,
       albumNameFilter: '',
       albumInboxFilter: {
         inInbox: 'both'
@@ -46,9 +43,9 @@ export default {
       }
     }
   },
+  mixins: [artistGetters],
   components: {
-    AlbumArts,
-    AlbumDetails,
+    AlbumDetailsList,
     ArtistsPanel
   },
   methods: {
@@ -89,11 +86,14 @@ export default {
       })
     }
   },
-  mixins: [artistGetters],
   computed: {
     selectedArtistId: function () {
-      return this.$store.state.view.components.ArtistsAlbumDetails.selectedArtist
+      return this.$store.state.view.components.ArtistsAlbumDetails.selectedArtist || -1
     }
+  },
+  activated: function () {
+    // Reset infinite loader, selectedArtistId could've been changed from elsewhere
+    this.$refs.albumDetailsListComponent.$emit('resetInfiniteLoader')
   }
 }
 </script>
@@ -118,21 +118,10 @@ $panel-height: calc(100% - #{$filters-height} - 2 * #{$filters-padding})
     float: left
     overflow: hidden
     overflow-y: auto
-  .album-details-wrapper
+  .album-details-list
     height: $panel-height
     width: 80%
     float: left
     overflow: hidden
     overflow-y: auto
-    .album-details
-      background: #666
-      border-bottom: 1px solid #000
-      padding: 7px
-      overflow: hidden
-      &:after
-        content: " "
-        display: block
-        height: 0
-        clear: both
-      .col-right
 </style>

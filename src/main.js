@@ -89,6 +89,10 @@ var locales = {
     views: {
 
     },
+    infiniteScroll: {
+      noMore: 'There is no more data.',
+      noResults: 'There is no data for the specified criteria.'
+    },
     infoPanel: {
       updateAlbumSuccess: 'The album was updated successfully.',
       updateAlbumErr: 'There was an error when updating the album.',

@@ -15,8 +15,8 @@ const state = {
   },
   player: {
     state: 'paused',
-    nowPlaying: 2438,
-    playlist: [2438, 2422, 2468, 2476],
+    nowPlaying: 5170,
+    playlist: [5170],
     progress: 55
   },
   view: {
@@ -210,7 +210,7 @@ const actions = {
   },
   loadAlbumArts (context) {
     // TODO cache headers
-    Object.values(context.state.data.albums).forEach((album) => {
+    /* Object.values(context.state.data.albums).forEach((album) => {
       var albumId = album.id
       Vue.http.get(context.state.settings.global.backendUrl + 'album-art/' + albumId)
         .then((response) => {
@@ -222,7 +222,7 @@ const actions = {
         }, (err) => {
           console.log(err)
         })
-    })
+    }) */
   },
   switchMainPanelView (context, component) {
     context.commit('SWITCH_MAIN_PANEL_VIEW', component)

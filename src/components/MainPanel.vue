@@ -3,7 +3,7 @@
     <modal-actions></modal-actions>
     <transition name="component-fade" mode="out-in">
       <keep-alive>
-          <component :is="this.$store.state.view.mainPanelView"></component>
+        <component :is="this.$store.state.view.mainPanelView"></component>
       </keep-alive>
     </transition>
   </div>
