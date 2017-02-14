@@ -2,13 +2,9 @@
   <div class="album-arts">
     <div v-for="album in albumsInfinite" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @click="albumClick(album.id)" >
       <div class="content">
-      <!--
-        <div class="album-art-img" :data-album="album.id" v-if="getAlbumArtImgPath(album.id).length">
-          <img :src="getAlbumArtImgPath(album.id)">
-        </div>
-      -->
         <div class="album-art-img" :data-album="album.id">
-          <img src="http://www.baxter.com/assets/images/products/Renal/thumb_image_not_available.png">
+          <img v-if="getAlbumArtImgPath(album.id).length" :src="getAlbumArtImgPath(album.id)">
+          <img v-else src="http://www.baxter.com/assets/images/products/Renal/thumb_image_not_available.png">
         </div>
         <div class="album-title">
           {{ album.title }}
