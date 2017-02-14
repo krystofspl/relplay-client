@@ -15,8 +15,8 @@ const state = {
   },
   player: {
     state: 'paused',
-    nowPlaying: 6923,
-    playlist: [6923],
+    nowPlaying: null,
+    playlist: [],
     progress: 55
   },
   view: {

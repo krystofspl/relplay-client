@@ -1,6 +1,9 @@
 <template>
   <div id="artist-albums-graph">
-    <graph-canvas :graph-data="graphData"></graph-canvas>
+    <graph-canvas :graph-data="graphData" v-if="graphData.nodes.length"></graph-canvas>
+    <div v-else style="width: 100%; text-align: center; margin: 10px">
+      {{ $t('components.Graph.noData') }}
+    </div>
   </div>
 </template>
 

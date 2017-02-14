@@ -46,6 +46,9 @@ var locales = {
       GenresAlbumsGraph: {
         name: 'Genres/Albums'
       },
+      Graph: {
+        noData: 'There is no data to be displayed.'
+      },
       ArtistAlbumsGraph: {
         name: 'One Artist/Albums'
       },
@@ -77,10 +80,11 @@ var locales = {
         deleteConfirm: 'Are you sure you want to delete this genre?'
       },
       PlayingTrack: {
-        nothingPlaing: 'Nothing playing now'
+        nothingPlaying: 'Nothing playing now'
       },
       Playlist: {
-        playlist: 'Playlist'
+        playlist: 'Playlist',
+        playlistEmpty: 'The playlist is empty.'
       },
       TrackInfo: {
         nowPlaying: 'Now playing'
@@ -91,7 +95,7 @@ var locales = {
     },
     infiniteScroll: {
       noMore: 'There is no more data.',
-      noResults: 'There is no data for the specified criteria.'
+      noResults: 'There is no data available.'
     },
     infoPanel: {
       updateAlbumSuccess: 'The album was updated successfully.',

@@ -1,6 +1,9 @@
 <template>
   <div id="albums-albums-graph">
-    <graph-canvas :graph-data="graphData"></graph-canvas>
+    <graph-canvas :graph-data="graphData" v-if="graphData.nodes.length"></graph-canvas>
+    <div v-else style="width: 100%; text-align: center; margin: 10px">
+      {{ $t('components.Graph.noData') }}
+    </div>
   </div>
 </template>
 
@@ -168,9 +171,9 @@ export default {
 #albums-albums-graph
   height: 100%
   width: 100%
-    position: absolute
-    top: 0
-    left: 0
+  position: absolute
+  top: 0
+  left: 0
   .vis-close
     position: absolute
     top: 0

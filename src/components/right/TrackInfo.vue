@@ -1,7 +1,7 @@
 <template>
   <div id="track-info">
     <h1>{{ $t('components.TrackInfo.nowPlaying') }}</h1>
-    <div class="track-fields">
+    <div class="track-fields" v-if="getNowPlayingTrack">
       <div v-for="field in displayedFields">
         <div v-if="field === 'title'">
           <span>Title: <b>{{ getNowPlayingTrack[field] }}</b></span>
@@ -20,6 +20,9 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      {{ $t('components.PlayingTrack.nothingPlaying') }}
+    </div>
   </div>
 </template>
 
@@ -31,14 +34,11 @@ import { albumGetters } from '../../mixins/getters/albumGetters.js'
 export default {
   data: function () {
     return {
-      displayedFields: []
+      displayedFields: this.$store.state.view.components.TrackInfo.displayedFields
     }
   },
   computed: {
     ...mapGetters(['getNowPlayingTrack']),
-    displayedFields: function () {
-      return this.$store.state.view.components.TrackInfo.displayedFields
-    },
     album: function () {
       return this.getAlbumForTrack(this.getNowPlayingTrack)
     }
