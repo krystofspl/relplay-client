@@ -40,7 +40,7 @@ const state = {
         }
       },
       TopPanel: {
-        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph', 'Settings']
+        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph']
       },
       TrackInfo: {
         displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'album.albumArt']

@@ -88,9 +88,6 @@ var locales = {
       },
       TrackInfo: {
         nowPlaying: 'Now playing'
-      },
-      Settings: {
-        name: 'Settings'
       }
     },
     views: {
