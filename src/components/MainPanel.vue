@@ -16,6 +16,7 @@ import ArtistsAlbumDetails from './main/ArtistsAlbumDetails.vue'
 import ArtistAlbumsGraph from './main/ArtistAlbumsGraph.vue'
 import ArtistsArtistsGraph from './main/ArtistsArtistsGraph.vue'
 import GenresAlbumsGraph from './main/GenresAlbumsGraph.vue'
+import Settings from './misc/Settings.vue'
 import ModalActions from './misc/ModalActions.vue'
 
 export default {
@@ -26,12 +27,13 @@ export default {
     ArtistsArtistsGraph,
     GenresAlbumsGraph,
     ArtistAlbumsGraph,
+    Settings,
     ModalActions
   }
 }
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
 $top-height: 47px
 $bottom-height: 80px
 $top-offset: calc(#{$top-height} + 1px)
@@ -45,4 +47,5 @@ $panel-height: calc(100% - #{$top-offset} - #{$bottom-offset})
   width: calc(100% - 300px)
   background: #444
   float: left
+  color: #999
 </style>
