@@ -65,6 +65,7 @@ export default {
   float: right
   .album-details
     background: #666
+    color: #000
     border-bottom: 1px solid #000
     padding: 7px
     overflow: hidden

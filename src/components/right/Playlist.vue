@@ -16,7 +16,7 @@
       <tbody id="playlist-body">
         <tr v-if="!playlist.length"><td colspan="3" style="padding: 5px;">{{ $t('components.Playlist.playlistEmpty') }}</td></tr>
         <!-- Filled with jQuery on create -->
-        <tr style="background: #444; border-top: 1px dashed #777;"><td colspan="3">&nbsp;</td></tr>
+        <tr><td colspan="3">&nbsp;</td></tr>
       </tbody>
     </table>
   </div>

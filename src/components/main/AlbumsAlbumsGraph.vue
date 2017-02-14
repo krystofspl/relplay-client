@@ -1,9 +1,10 @@
 <template>
   <div id="albums-albums-graph">
-    <graph-canvas :graph-data="graphData" v-if="graphData.nodes.length"></graph-canvas>
+    <graph-canvas :graph-data="graphData"></graph-canvas>
+    <!-- <graph-canvas :graph-data="graphData" v-if="graphData.nodes.length"></graph-canvas>
     <div v-else style="width: 100%; text-align: center; margin: 10px">
       {{ $t('components.Graph.noData') }}
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -35,7 +36,7 @@ export default {
     ...mapGetters(['getNowPlayingTrack']),
     ...mapActions(['addAlbumRelation', 'deleteAlbumRelation']),
     fetchGraphData: function (callback) {
-      var self = this
+      // var self = this
       this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/albums-albums-graph').then(function (results) {
         // Initialize the data structures
         this.graphData.nodes = []
@@ -55,8 +56,8 @@ export default {
               id: a.id,
               type: 'album',
               label: a.title.split(/((?:\w+ ){4})/g).filter(Boolean).join('\n'),
-              shape: 'image',
-              image: self.getAlbumArtImgPath(a.id),
+              shape: 'dot',
+              // image: self.getAlbumArtImgPath(a.id),
               size: 40,
               borderWidth: 1,
               font: {
