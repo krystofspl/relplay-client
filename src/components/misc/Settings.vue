@@ -5,9 +5,13 @@
         <h1>Scan library folder</h1>
       </div>
       <div class="section-body">
-        <button v-on:click="rescan()" style="font-weight: bold;">Rescan</button>
-        <button v-on:click="getRescanStatus()" style="font-weight: bold;">Get status</button>
-        <button v-if="rescanStatus.status === 'done' && rescanStatus.missingFilesCount > 0" v-on:click="removeMissingTracks()" style="font-weight: bold;">Remove missing tracks</button>
+        <button @click="rescan()" style="font-weight: bold;">Rescan</button>
+        <button v-if="rescanStatus && rescanStatus.status === 'running'" @click="stopRescan()" style="font-weight: bold; color:red;">Stop scanning</button>
+        <button v-if="rescanStatus && rescanStatus.status === 'done' && rescanStatus.missingFilesCount > 0" @click="removeMissingTracks()" style="font-weight: bold;">Remove missing tracks</button>
+        <br><br>
+        <span v-if="rescanStatus && rescanStatus.status === 'stop'">
+          Waiting for the process to stop.
+        </span>
         <div v-if="rescanStatus">
           <span><strong>Rescan status: </strong>{{ rescanStatus.status }}</span><br>
           <span><strong>Now doing: </strong>{{ rescanStatus.detailedStatusMsg }}</span><br>
@@ -32,12 +36,25 @@ export default {
   },
   methods: {
     rescan: function () {
-
+      var self = this
+      Vue.http.put(this.$store.state.settings.global.backendUrl + 'rescan/', {action: 'run'}).then(response => {
+        self.pollRescanStatus()
+      }, err => {
+        console.log(err)
+      })
     },
     getRescanStatus: function () {
       var self = this
       Vue.http.get(this.$store.state.settings.global.backendUrl + 'rescan-summary/').then(response => {
         self.rescanStatus = response.body
+      }, err => {
+        console.log(err)
+      })
+    },
+    stopRescan: function () {
+      var self = this
+      Vue.http.put(this.$store.state.settings.global.backendUrl + 'rescan/', {action: 'stop'}).then(response => {
+        self.getRescanStatus()
       }, err => {
         console.log(err)
       })
@@ -49,13 +66,21 @@ export default {
         this.$store.dispatch('removeTracks', {id: self.genre.id, callback: function () {}})
         self.genre = self.availableGenres[0]
       }
+    },
+    pollRescanStatus: function () {
+      this.getRescanStatus()
+      var self = this
+      var rescanPoll = setInterval(function () {
+        this.getRescanStatus()
+        if (self.rescanStatus && self.rescanStatus.status === 'done') {
+          this.$store.dispatch('setInitialData')
+          clearInterval(rescanPoll)
+        }
+      }.bind(this), 5000)
     }
   },
-  ready: function () {
-    this.getRescanStatus()
-    setInterval(function () {
-      this.getRescanStatus()
-    }.bind(this), 5000)
+  created: function () {
+    this.pollRescanStatus()
   }
 }
 </script>
