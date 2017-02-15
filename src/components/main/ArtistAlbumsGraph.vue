@@ -1,14 +1,16 @@
 <template>
   <div id="artist-albums-graph">
-    <graph-canvas :graph-data="graphData" v-if="graphData.nodes.length"></graph-canvas>
-    <div v-else style="width: 100%; text-align: center; margin: 10px">
-      {{ $t('components.Graph.noData') }}
+    <div class="refresh-button" @click="refreshAction()">
+      <icon scale="2" name="refresh"></icon>
     </div>
+    <graph-canvas :graph-data="graphData" ref="graphCanvas"></graph-canvas>
   </div>
 </template>
 
 <script>
 import GraphCanvas from './GraphCanvas.vue'
+import Icon from 'vue-awesome/components/Icon'
+import 'vue-awesome/icons/refresh'
 import { artistGetters } from '../../mixins/getters/artistGetters.js'
 import { albumGetters } from '../../mixins/getters/albumGetters.js'
 import { trackGetters } from '../../mixins/getters/trackGetters.js'
@@ -28,11 +30,19 @@ export default {
     }
   },
   components: {
-    GraphCanvas
+    GraphCanvas,
+    Icon
   },
   mixins: [artistGetters, albumGetters, trackGetters],
   methods: {
     ...mapGetters(['getNowPlayingTrack']),
+    refreshAction: function () {
+      this.$refs.graphCanvas.tryInitGraph()
+    },
+    graphInitCondition: function () {
+      // Needs a "now playing" track to display the artist etc
+      return this.getNowPlayingTrack()
+    },
     fetchGraphData: function (callback) {
       var self = this
       var selectedArtistId = this.getArtistForTrack(this.getNowPlayingTrack()).id || null
@@ -113,12 +123,21 @@ export default {
       })
     },
     nowPlayingHook: function () {
-      this.$children[0].initGraph()
+      this.refreshAction()
     }
   }
 }
 </script>
 
 <style lang="sass" scoped>
-
+#artist-albums-graph
+  .refresh-button
+    position: absolute
+    top: 10px
+    right: 10px
+    z-index: 5000
+    display: inline
+    color: #999
+    &:hover
+      color: #FFF
 </style>

@@ -107,7 +107,8 @@ var locales = {
       addArtistRelationSuccess: 'The relationship was successfully saved.',
       addArtistRelationErr: 'There was an error when adding the relationship.',
       deleteArtistRelationSuccess: 'The relationship was successfully deleted.',
-      deleteArtistRelationErr: 'There was an error when deleting the relationship.'
+      deleteArtistRelationErr: 'There was an error when deleting the relationship.',
+      fetchingData: 'Fetching data from the database...'
     }
   }
 }
@@ -121,15 +122,15 @@ Object.keys(locales).forEach(function (lang) {
 Vue.use(VueResource)
 import store from './vuex/store'
 
-// Initialize the app only after the data has been fetched
-store.dispatch('setInitialData').then(() => {
-  var vue = new Vue({
-    store,
-    el: '#app',
-    components: {
-      App
-    }
-  })
+// Load data from backend
+store.dispatch('setInitialData').then(() => {})
 
-  window.vue = vue
+var vue = new Vue({
+  store,
+  el: '#app',
+  components: {
+    App
+  }
 })
+
+window.vue = vue

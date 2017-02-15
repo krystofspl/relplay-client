@@ -187,6 +187,8 @@ const mutations = {
 
 const actions = {
   setInitialData (context) {
+    context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.fetchingData'))
+    context.dispatch('showInfoPanel')
     return new Promise((resolve, reject) => {
       // TODO async/await? needs a special babel plugin
       var payload = {artists: [], albums: [], tracks: []}
@@ -205,6 +207,7 @@ const actions = {
         })
       })
     }).then(() => {
+      context.dispatch('hideInfoPanel')
       context.dispatch('loadAlbumArts')
     })
   },

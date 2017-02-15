@@ -1,9 +1,6 @@
 <template>
   <div id="albums-albums-graph">
-    <graph-canvas :graph-data="graphData" v-if="graphData.nodes.length"></graph-canvas>
-    <div v-else style="width: 100%; text-align: center; margin: 10px">
-      {{ $t('components.Graph.noData') }}
-    </div>
+    <graph-canvas :graph-data="graphData" ref="graphCanvas"></graph-canvas>
   </div>
 </template>
 
@@ -34,8 +31,12 @@ export default {
   methods: {
     ...mapGetters(['getNowPlayingTrack']),
     ...mapActions(['addAlbumRelation', 'deleteAlbumRelation']),
+    graphInitCondition: function () {
+      // Needs at least one album to be displayed
+      return (Object.keys(this.$store.state.data.albums).length > 0)
+    },
     fetchGraphData: function (callback) {
-      var self = this
+      // var self = this
       this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/albums-albums-graph').then(function (results) {
         // Initialize the data structures
         this.graphData.nodes = []
@@ -55,8 +56,8 @@ export default {
               id: a.id,
               type: 'album',
               label: a.title.split(/((?:\w+ ){4})/g).filter(Boolean).join('\n'),
-              shape: 'image',
-              image: self.getAlbumArtImgPath(a.id),
+              shape: 'dot',
+              // image: self.getAlbumArtImgPath(a.id),
               size: 40,
               borderWidth: 1,
               font: {
@@ -123,7 +124,7 @@ export default {
             var confirm = window.confirm(self.$t('components.AlbumsAlbumsGraph.deleteConfirm'))
             if (confirm) {
               // Persist in DB
-              var edge = self.$children[0].$data.graphDataSet.edges.get(data.edges[0])
+              var edge = self.$refs.graphCanvas.$data.graphDataSet.edges.get(data.edges[0])
               self.deleteAlbumRelation({
                 start: edge.from,
                 end: edge.to,
