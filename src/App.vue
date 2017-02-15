@@ -9,6 +9,7 @@
     <main-panel></main-panel>
     <right-panel></right-panel>
     <bottom-panel></bottom-panel>
+    <player></player>
   </div>
 </template>
 
@@ -17,6 +18,7 @@ import TopPanel from './components/TopPanel.vue'
 import MainPanel from './components/MainPanel.vue'
 import RightPanel from './components/RightPanel.vue'
 import BottomPanel from './components/BottomPanel.vue'
+import Player from './components/Player.vue'
 import { mapActions } from 'vuex'
 
 export default {
@@ -24,7 +26,8 @@ export default {
     TopPanel,
     MainPanel,
     RightPanel,
-    BottomPanel
+    BottomPanel,
+    Player
   },
   methods: {
     ...mapActions(['showInfoPanel', 'hideInfoPanel', 'setInfoPanelMsg']),
