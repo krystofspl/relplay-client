@@ -1,9 +1,8 @@
 <template>
   <div id="app-wrapper">
     <transition name="fade">
-      <div id="info-panel" v-if="infoPanelVisible()">
+      <div id="info-panel" v-if="infoPanelVisible()" @click="hideInfoPanel()">
         {{ infoPanelMsg() }}
-        <div @click="hideInfoPanel()" class="close-btn">X</div>
       </div>
     </transition>
     <top-panel></top-panel>
@@ -61,16 +60,10 @@ body
       position: absolute
       margin-left: auto
       margin-right: auto
-      top: 10px
+      top: 20px
       left: 0
       right: 0
       z-index: 1000
-      .close-btn
-        position: absolute
-        font-weight: bold
-        cursor: pointer
-        top: 2px
-        right: 4px
   input, select
     padding: 2px
     color: #CCC

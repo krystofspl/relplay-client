@@ -1,10 +1,6 @@
 <template>
   <div id="artists-artists-graph">
-    <graph-canvas :graph-data="graphData"></graph-canvas>
-    <!-- <graph-canvas :graph-data="graphData" v-if="graphData.nodes.length"></graph-canvas>
-    <div v-else style="width: 100%; text-align: center; margin: 10px">
-      {{ $t('components.Graph.noData') }}
-    </div> -->
+    <graph-canvas :graph-data="graphData" ref="graphCanvas"></graph-canvas>
   </div>
 </template>
 
@@ -35,6 +31,10 @@ export default {
   methods: {
     ...mapGetters(['getNowPlayingTrack']),
     ...mapActions(['addArtistRelation', 'deleteArtistRelation']),
+    graphInitCondition: function () {
+      // Needs at least one artist to be displayed
+      return (Object.keys(this.$store.state.data.artists).length > 0)
+    },
     fetchGraphData: function (callback) {
       this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/artists-artists-graph').then(function (results) {
         // Initialize the data structures
@@ -114,7 +114,7 @@ export default {
             var confirm = window.confirm(self.$t('components.ArtistsArtistsGraph.deleteConfirm'))
             if (confirm) {
               // Persist in DB
-              var edge = self.$children[0].$data.graphDataSet.edges.get(data.edges[0])
+              var edge = self.$refs.graphCanvas.$data.graphDataSet.edges.get(data.edges[0])
               self.deleteArtistRelation({
                 start: edge.from,
                 end: edge.to,

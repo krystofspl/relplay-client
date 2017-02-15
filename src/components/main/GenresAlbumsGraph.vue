@@ -1,10 +1,6 @@
 <template>
   <div id="genres-albums-graph">
     <graph-canvas :graph-data="graphData"></graph-canvas>
-    <!-- <graph-canvas :graph-data="graphData" v-if="graphData.nodes.length"></graph-canvas>
-    <div v-else style="width: 100%; text-align: center; margin: 10px">
-      {{ $t('components.Graph.noData') }}
-    </div> -->
   </div>
 </template>
 
@@ -36,6 +32,10 @@ export default {
   methods: {
     ...mapGetters(['getNowPlayingTrack']),
     ...mapActions(['addArtistRelation', 'deleteArtistRelation']),
+    graphInitCondition: function () {
+      // Needs at least one genre to be displayed
+      return (Object.keys(this.$store.state.data.genres).length > 0)
+    },
     fetchGraphData: function (callback) {
       var self = this
       this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/genres-albums-graph').then(function (results) {

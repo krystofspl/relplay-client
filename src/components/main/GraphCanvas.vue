@@ -3,7 +3,11 @@
     <div v-if="loading" style="width: 100%; text-align: center">
       <icon name="spinner" spin scale="3"></icon>
     </div>
-    <div class="graph"></div>
+
+    <div v-if="graphInitErr" style="width: 100%; text-align: center; margin: 10px">
+      {{ $t('components.Graph.noData') }}
+    </div>
+    <div v-else class="graph"></div>
   </div>
 </template>
 
@@ -16,6 +20,7 @@ export default {
   name: 'GraphCanvas',
   data: function () {
     return {
+      graphInitErr: false,
       loading: false,
       graphDataSet: {
         nodes: {},
@@ -28,7 +33,18 @@ export default {
     Icon
   },
   methods: {
-    initGraph: function () {
+    tryInitGraph: function () {
+      if (this.$parent.graphInitCondition()) {
+        this.graphInitErr = false
+        this.initGraph(() => {
+          require('vue').nextTick(this.resizeGraph)
+        })
+      } else {
+        this.graphInitErr = true
+      }
+    },
+    initGraph: function (callback) {
+      console.log('Initializing graph')
       // this.$set(this.graphData, 'graphInitialized', true)
       var vis = require('vis')
       var self = this
@@ -92,6 +108,9 @@ export default {
           // self.loading = false
         })
         self.$set(self.graphData, 'graph', network)
+        if (typeof callback !== 'undefined') {
+          callback()
+        }
       })
     },
     resizeGraph: function () {
@@ -121,8 +140,15 @@ export default {
   },
   created: function () {
     // if (!this.graphInitialized) this.initGraph()
-    this.initGraph()
-    require('vue').nextTick(this.resizeGraph)
+    var self = this
+    self.tryInitGraph()
+    var poll = setInterval(function () {
+      if (this.graphInitErr) {
+        self.tryInitGraph()
+      } else {
+        clearInterval(poll)
+      }
+    }.bind(this), 1000)
   },
   watch: {
     nowPlayingId: function () {
