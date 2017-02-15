@@ -208,7 +208,7 @@ const actions = {
       })
     }).then(() => {
       context.dispatch('hideInfoPanel')
-      // context.dispatch('loadAlbumArts')
+      context.dispatch('loadAlbumArts')
     })
   },
   loadAlbumArts (context) {
