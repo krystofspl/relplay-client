@@ -1,11 +1,19 @@
 <template>
   <div id="progress-bar">
-    <progress id="bar" v-bind:value="this.$store.state.player.progress" max="100"></progress>
+    <progress @click="setProgress" id="bar" v-bind:value="this.$store.state.player.progress" max="100"></progress>
   </div>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
+  methods: {
+    ...mapActions(['playerSetProgressRequest']),
+    setProgress: function (e) {
+      var percent = e.offsetX / this.$el.offsetWidth * 100
+      this.playerSetProgressRequest({ progress: percent })
+    }
+  }
 }
 </script>
 

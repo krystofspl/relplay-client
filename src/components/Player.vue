@@ -18,7 +18,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['playerSetProgress', 'playerSetNowPlaying', 'playerNext', 'playerSetState']),
+    ...mapActions(['playerSetProgress', 'playerSetNowPlaying', 'playerNext', 'playerSetState', 'playerConfirmProgressRequest']),
     play: function () {
       console.log('Playing')
       this.playerSetState({ state: 'playing' })
@@ -119,7 +119,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getPlayerState', 'getPlaylist', 'getNowPlayingId'])
+    ...mapGetters(['getPlayerState', 'getPlaylist', 'getNowPlayingId', 'getPlayerProgressRequest'])
   },
   watch: {
     getPlayerState: function () {
@@ -147,6 +147,18 @@ export default {
     howlProgress: function () {
       var self = this
       this.playerSetProgress({ progress: self.howlProgress })
+    },
+    getPlayerProgressRequest: function () {
+      var newProgress = this.getPlayerProgressRequest
+      var track = this.getHowlPlayingTrack()
+      if (newProgress) {
+        if (track && track.howl) {
+          var percent = newProgress / 100
+          var seconds = track.howl.duration()
+          track.howl.seek(seconds * percent)
+        }
+      }
+      this.playerConfirmProgressRequest()
     }
   }
 }

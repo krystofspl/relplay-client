@@ -17,7 +17,8 @@ const state = {
     state: 'paused',
     nowPlaying: null,
     playlist: [],
-    progress: 0
+    progress: 0,
+    progressRequest: null
   },
   view: {
     mainPanelView: 'ArtistsAlbumArts',
@@ -66,6 +67,9 @@ const getters = {
   },
   getPlayerProgress: (state) => {
     return state.player.progress
+  },
+  getPlayerProgressRequest: (state) => {
+    return state.player.progressRequest
   },
   getPlaylist: (state) => {
     return state.player.playlist
@@ -143,6 +147,12 @@ const mutations = {
   },
   PLAYER_SET_PROGRESS (state, payload) {
     state.player.progress = payload.progress
+  },
+  PLAYER_SET_PROGRESS_REQUEST (state, payload) {
+    state.player.progressRequest = payload.progress
+  },
+  PLAYER_CONFIRM_PROGRESS_REQUEST (state) {
+    state.player.progressRequest = null
   },
   PLAYER_UPDATE_PLAYLIST (state, payload) {
     state.player.playlist = payload
@@ -258,6 +268,12 @@ const actions = {
   },
   playerSetProgress (context, payload) {
     context.commit('PLAYER_SET_PROGRESS', payload)
+  },
+  playerSetProgressRequest (context, payload) {
+    context.commit('PLAYER_SET_PROGRESS_REQUEST', payload)
+  },
+  playerConfirmProgressRequest (context, payload) {
+    context.commit('PLAYER_CONFIRM_PROGRESS_REQUEST')
   },
   playerUpdatePlaylist (context, payload) {
     context.commit('PLAYER_UPDATE_PLAYLIST', payload.playlist)
