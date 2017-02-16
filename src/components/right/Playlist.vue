@@ -42,7 +42,7 @@ export default {
   },
   mixins: [trackGetters],
   methods: {
-    ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying']),
+    ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying', 'playerSetState']),
     ...mapGetters(['getNowPlayingId', 'getPlaylistTracks']),
     repairPlaylist: function () {
       jQuery('.playlist-item').each((index, el) => {
@@ -58,6 +58,7 @@ export default {
         jQuery(item).find('td:last').html('').append(jQuery('.dummy-sort-handle').clone().removeClass('dummy-sort-handle').addClass('sort-handle'))
         jQuery(item).unbind('dblclick').dblclick(function () {
           self.playerSetNowPlaying({ id: jQuery(item).data('trackid') })
+          self.playerSetState({ state: 'playing' })
         })
       })
     },
@@ -88,6 +89,7 @@ export default {
     nowPlayingTrackId: function () {
       // Add now playing styles to currently playing playlist item
       jQuery('.playlist-item').removeClass('now-playing')
+      if (this.nowPlayingPlaylistPosition === -1) return
       var nowPlayingItem = jQuery('.playlist-item').eq(this.nowPlayingPlaylistPosition)
       nowPlayingItem.addClass('now-playing')
       jQuery('.now-playing-icon').remove()

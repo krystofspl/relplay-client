@@ -41,10 +41,10 @@
         </tr>
       </thead>
       <tbody class="tracks-body">
-        <tr class="track-item" v-for="(track, index) in tracks" v-bind:class="{'now-playing': isNowPlaying(track.id)}" v-bind:data-trackid="track.id">
+        <tr class="track-item" v-for="(track, index) in tracks" v-bind:class="{'now-playing': getNowPlayingId === track.id}" v-bind:data-trackid="track.id">
           <td>{{index + 1}}.</td>
           <td class="absorbing-column">
-            <icon scale="0.75" name="volume-up" v-if="isNowPlaying(track.id)" style="margin: 0 2px"></icon>
+            <icon scale="0.75" name="volume-up" v-if="getNowPlayingId === track.id" style="margin: 0 2px"></icon>
             {{track.title}}
           </td>
           <td><icon scale="1" name="bars" class="drag-handle"></icon></td>
@@ -75,6 +75,7 @@
       Icon
     },
     computed: {
+      ...mapGetters(['getNowPlayingId']),
       mainArtist: function () {
         return this.getArtist(this.album.mainArtist)
       },
@@ -94,7 +95,6 @@
       }
     },
     methods: {
-      ...mapGetters(['getNowPlayingId']),
       moveToLibrary: function (albumId) {
         this.$store.dispatch('updateAlbum',
           {

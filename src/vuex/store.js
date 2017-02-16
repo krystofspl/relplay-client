@@ -17,7 +17,7 @@ const state = {
     state: 'paused',
     nowPlaying: null,
     playlist: [],
-    progress: 55
+    progress: 0
   },
   view: {
     mainPanelView: 'ArtistsAlbumArts',
@@ -49,7 +49,7 @@ const state = {
   },
   settings: {
     global: {
-      backendUrl: 'http://localhost:8079/'
+      backendUrl: 'http://192.168.1.8:8079/'
     }
   }
 }
@@ -63,6 +63,9 @@ const getters = {
   },
   getPlayerState: (state) => {
     return state.player.state
+  },
+  getPlayerProgress: (state) => {
+    return state.player.progress
   },
   getPlaylist: (state) => {
     return state.player.playlist
@@ -118,6 +121,9 @@ const mutations = {
       state.player.state = 'paused'
     }
   },
+  PLAYER_SET_STATE (state, payload) {
+    state.player.state = payload.state
+  },
   PLAYER_PREVIOUS (state) {
     var currentPosition = state.player.playlist.indexOf(state.player.nowPlaying)
     var newPosition = currentPosition - 1
@@ -134,6 +140,9 @@ const mutations = {
   },
   PLAYER_SET_NOW_PLAYING (state, payload) {
     state.player.nowPlaying = payload.id
+  },
+  PLAYER_SET_PROGRESS (state, payload) {
+    state.player.progress = payload.progress
   },
   PLAYER_UPDATE_PLAYLIST (state, payload) {
     state.player.playlist = payload
@@ -208,7 +217,7 @@ const actions = {
       })
     }).then(() => {
       context.dispatch('hideInfoPanel')
-      context.dispatch('loadAlbumArts')
+      // context.dispatch('loadAlbumArts')
     })
   },
   loadAlbumArts (context) {
@@ -235,6 +244,9 @@ const actions = {
   playerSwitchState (context) {
     context.commit('PLAYER_SWITCH_STATE')
   },
+  playerSetState (context, payload) {
+    context.commit('PLAYER_SET_STATE', payload)
+  },
   playerPrevious (context) {
     context.commit('PLAYER_PREVIOUS')
   },
@@ -243,6 +255,9 @@ const actions = {
   },
   playerSetNowPlaying (context, payload) {
     context.commit('PLAYER_SET_NOW_PLAYING', payload)
+  },
+  playerSetProgress (context, payload) {
+    context.commit('PLAYER_SET_PROGRESS', payload)
   },
   playerUpdatePlaylist (context, payload) {
     context.commit('PLAYER_UPDATE_PLAYLIST', payload.playlist)

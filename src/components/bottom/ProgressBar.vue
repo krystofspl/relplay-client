@@ -1,16 +1,11 @@
 <template>
   <div id="progress-bar">
-    <progress id="bar" v-bind:value="progress" max="100"></progress>
+    <progress id="bar" v-bind:value="this.$store.state.player.progress" max="100"></progress>
   </div>
 </template>
 
 <script>
 export default {
-  data: function () {
-    return {
-      progress: parseFloat(this.$store.state.player.progress)
-    }
-  }
 }
 </script>
 
