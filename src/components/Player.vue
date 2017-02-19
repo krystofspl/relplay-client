@@ -20,6 +20,7 @@ export default {
   methods: {
     ...mapActions(['playerSetProgress', 'playerSetNowPlaying', 'playerNext', 'playerSetState', 'playerConfirmProgressRequest']),
     play: function () {
+      // TODO bug - sometimes when switching too fast, multiple songs play simmultaneously, add check that nothing is playing here and stop it otherwise
       console.log('Playing')
       this.playerSetState({ state: 'playing' })
       var self = this
