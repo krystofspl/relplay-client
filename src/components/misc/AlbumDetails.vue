@@ -22,6 +22,7 @@
           </span>
         </div>
         {{ $t('components.AlbumDetails.year') }}: <strong>{{ album.year }}</strong><br>
+        {{ $t('components.Labels.headingAlbum') }}: <labels :entity-type="'album'" :entity-id="album.id"></labels>
         <div v-if="genres.length">
           {{ $t('components.AlbumDetails.genres') }}:
           <span v-for="genre in genres">
@@ -62,6 +63,7 @@
   import { genreGetters } from '../../mixins/getters/genreGetters.js'
   import { common } from '../../mixins/common.js'
   import { mapGetters } from 'vuex'
+  import Labels from '../misc/Labels.vue'
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/volume-up'
   import 'vue-awesome/icons/bars'
@@ -72,7 +74,8 @@
     props: ['album-id'],
     mixins: [artistGetters, albumGetters, trackGetters, genreGetters, common],
     components: {
-      Icon
+      Icon,
+      Labels
     },
     computed: {
       ...mapGetters(['getNowPlayingId']),

@@ -18,6 +18,9 @@ export var albumGetters = {
       } catch (e) {
       }
       return url
+    },
+    getLabelsForAlbum: function (albumId) {
+      return (this.getAlbum(albumId).labels.map(labelId => { return this.$store.state.data.labels[labelId] }))
     }
   }
 }

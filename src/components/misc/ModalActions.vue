@@ -1,13 +1,10 @@
 <template>
   <modal v-if="modalVisible" @close="hideModal()">
-    <div slot="header" v-if="modalAction == 'showAlbum'">
-      <h2>{{ $t('components.ModalActions.showAlbum') }}</h2>
-    </div>
-    <div slot="header" v-if="modalAction == 'editAlbum'">
-      <h2>{{ $t('components.ModalActions.editAlbum') }}</h2>
-    </div>
-    <div slot="header" v-if="modalAction == 'editGenre'">
-      <h2>{{ $t('components.ModalActions.editGenre') }}</h2>
+    <div slot="header">
+      <h2 v-if="modalAction == 'showAlbum'">{{ $t('components.ModalActions.showAlbum') }}</h2>
+      <h2 v-if="modalAction == 'editAlbum'">{{ $t('components.ModalActions.editAlbum') }}</h2>
+      <h2 v-if="modalAction == 'editGenre'">{{ $t('components.ModalActions.editGenre') }}</h2>
+      <h2 v-if="modalAction == 'editEntityLabels'">{{ $t('components.ModalActions.editEntityLabels') }}</h2>
     </div>
 
     <div slot="actions" style="display: inline">
@@ -24,16 +21,16 @@
           <icon scale="1.3" name="arrow-left"></icon>
         </div>
       </div>
+      <div v-if="modalAction == 'editEntityLabels'" style="display: inline">
+        <!-- nothing yet -->
+      </div>
     </div>
 
-    <div slot="body" v-if="modalAction == 'showAlbum'">
-      <album-details :album-id="modalEntities.albumId"></album-details>
-    </div>
-    <div slot="body" v-if="modalAction == 'editAlbum'">
-      <edit-album :album="getAlbum(modalEntities.albumId)"></edit-album>
-    </div>
-    <div slot="body" v-if="modalAction == 'editGenre'">
-      <edit-genre :genre-id="modalEntities.genreId"></edit-genre>
+    <div slot="body">
+      <album-details v-if="modalAction == 'showAlbum'" :album-id="modalEntities.albumId"></album-details>
+      <edit-album v-if="modalAction == 'editAlbum'" :album="getAlbum(modalEntities.albumId)"></edit-album>
+      <edit-genre v-if="modalAction == 'editGenre'" :genre-id="modalEntities.genreId"></edit-genre>
+      <edit-entity-labels v-if="modalAction == 'editEntityLabels'" :entity-id="modalEntities.entityId" :entity-type="modalEntities.entityType"></edit-entity-labels>
     </div>
 
   </modal>
@@ -46,6 +43,7 @@ import { mapActions } from 'vuex'
 import Modal from './Modal.vue'
 import EditAlbum from '../misc/EditAlbum.vue'
 import EditGenre from '../misc/EditGenre.vue'
+import EditEntityLabels from '../misc/EditEntityLabels.vue'
 import AlbumDetails from '../misc/AlbumDetails.vue'
 import Icon from 'vue-awesome/components/Icon'
 import 'vue-awesome/icons'
@@ -59,6 +57,7 @@ export default {
     Modal,
     EditAlbum,
     EditGenre,
+    EditEntityLabels,
     Icon,
     AlbumDetails
   },

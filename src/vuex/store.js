@@ -37,14 +37,16 @@ const state = {
         modalAction: 'showAlbum',
         modalEntities: {
           albumId: null,
-          genreId: null
+          genreId: null,
+          entityId: null,
+          entityType: null
         }
       },
       TopPanel: {
         links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph', 'Settings']
       },
       TrackInfo: {
-        displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'album.albumArt']
+        displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'labels', 'album.albumArt']
       }
     }
   },
@@ -90,6 +92,9 @@ const getters = {
   },
   getGenres: (state) => {
     return state.data.genres
+  },
+  getLabels: (state) => {
+    return state.data.labels
   }
 }
 
@@ -98,18 +103,21 @@ const mutations = {
     Vue.set(state.data.albumArts, payload.albumId, payload.albumArt)
   },
   SET_INITIAL_DATA (state, payload) {
-    payload.artists.forEach(res => {
-      Vue.set(state.data.artists, res.id, res)
-    })
-    payload.albums.forEach(res => {
-      Vue.set(state.data.albums, res.id, res)
-    })
-    payload.tracks.forEach(res => {
-      Vue.set(state.data.tracks, res.id, res)
-    })
-    payload.genres.forEach(res => {
-      Vue.set(state.data.genres, res.id, res)
-    })
+    for (let i = 0; i < payload.artists.length; i++) {
+      Vue.set(state.data.artists, payload.artists[i].id, payload.artists[i])
+    }
+    for (let i = 0; i < payload.albums.length; i++) {
+      Vue.set(state.data.albums, payload.albums[i].id, payload.albums[i])
+    }
+    for (let i = 0; i < payload.tracks.length; i++) {
+      Vue.set(state.data.tracks, payload.tracks[i].id, payload.tracks[i])
+    }
+    for (let i = 0; i < payload.genres.length; i++) {
+      Vue.set(state.data.genres, payload.genres[i].id, payload.genres[i])
+    }
+    for (let i = 0; i < payload.labels.length; i++) {
+      Vue.set(state.data.labels, payload.labels[i].id, payload.labels[i])
+    }
   },
   SWITCH_MAIN_PANEL_VIEW (state, component) {
     state.view.mainPanelView = component
@@ -186,11 +194,18 @@ const mutations = {
     }
   },
   SET_MODAL_ENTITY: function (state, payload) {
+    // TODO just use entity
     if (payload.albumId) {
       state.view.components.Modal.modalEntities.albumId = payload.albumId
     }
     if (payload.genreId) {
       state.view.components.Modal.modalEntities.genreId = payload.genreId
+    }
+    if (payload.entityId) {
+      state.view.components.Modal.modalEntities.entityId = payload.entityId
+    }
+    if (payload.entityType) {
+      state.view.components.Modal.modalEntities.entityType = payload.entityType
     }
   },
   UPDATE_ALBUM (state, payload) {
@@ -201,6 +216,14 @@ const mutations = {
   },
   DELETE_GENRE (state, payload) {
     Vue.delete(state.data.genres, payload.id)
+  },
+  ADD_NEW_LABELS (state, payload) {
+    for (let i = 0; i < payload.labels.length; i++) {
+      Vue.set(state.data.labels, payload.labels[i].id, payload.labels[i])
+    }
+  },
+  UPDATE_TRACK (state, payload) {
+    Vue.set(state.data.tracks, payload.id, payload)
   }
 }
 
@@ -210,7 +233,7 @@ const actions = {
     context.dispatch('showInfoPanel')
     return new Promise((resolve, reject) => {
       // TODO async/await? needs a special babel plugin
-      var payload = {artists: [], albums: [], tracks: []}
+      var payload = {artists: [], albums: [], tracks: [], genres: [], labels: []}
       Vue.http.get(state.settings.global.backendUrl + 'artists').then(function (result) {
         payload.artists = result.body || []
         Vue.http.get(state.settings.global.backendUrl + 'albums').then(function (result) {
@@ -219,8 +242,12 @@ const actions = {
             payload.tracks = result.body || []
             Vue.http.get(state.settings.global.backendUrl + 'genres').then(function (result) {
               payload.genres = result.body || []
-              context.commit('SET_INITIAL_DATA', payload)
-              resolve()
+              Vue.http.get(state.settings.global.backendUrl + 'labels').then(
+                function (result) {
+                  payload.labels = result.body || []
+                  context.commit('SET_INITIAL_DATA', payload)
+                  resolve()
+                })
             })
           })
         })
@@ -387,6 +414,25 @@ const actions = {
       callback(err, null)
     })
   },
+  addNewLabels (context, payload) {
+    var callback = payload.callback
+    var newLabels = payload.labels
+
+    if (!newLabels || !newLabels.length) {
+      callback('No new labels supplied.', [])
+      return
+    }
+
+    Vue.http.post(context.state.settings.global.backendUrl + 'labels/', newLabels).then(response => {
+      if (response.ok) {
+        context.commit('ADD_NEW_LABELS', {labels: response.body})
+        callback(null, response.body)
+      }
+    }, err => {
+      console.log(err)
+      callback(err, null)
+    })
+  },
   addAlbumRelation (context, payload) {
     var callback = payload.callback
     Vue.http.post(context.state.settings.global.backendUrl + 'relationships/album-similarity', payload)
@@ -467,6 +513,26 @@ const actions = {
     }, (err) => {
       console.log(err)
       context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  updateTrack (context, payload) {
+    var callback = payload.callback
+    var trackId = payload.id
+    delete payload.id
+
+    Vue.http.patch(context.state.settings.global.backendUrl + 'tracks/' + trackId, payload)
+    .then((response) => {
+      if (response.ok) {
+        context.commit('UPDATE_TRACK', response.body)
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateTrackSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateTrackErr'))
       context.dispatch('showInfoPanel')
       callback(err, null)
     })

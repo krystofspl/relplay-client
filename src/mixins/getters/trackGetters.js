@@ -12,6 +12,9 @@ export var trackGetters = {
     getArtworkPath: function (trackId) {
       // TODO let user choose
       return (this.getTrack(trackId).filePath + 'folder.jpg')
+    },
+    getLabelsForTrack: function (trackId) {
+      return (this.getTrack(trackId).labels.map(labelId => { return this.$store.state.data.labels[labelId] }))
     }
   }
 }

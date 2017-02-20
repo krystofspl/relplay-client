@@ -66,7 +66,8 @@ var locales = {
       ModalActions: {
         showAlbum: 'Album details',
         editAlbum: 'Edit album',
-        editGenre: 'Edit genre'
+        editGenre: 'Edit genre',
+        editEntityLabels: 'Edit labels'
       },
       EditAlbum: {
         editGenres: 'Edit genres',
@@ -91,6 +92,12 @@ var locales = {
       },
       Settings: {
         name: 'Settings'
+      },
+      Labels: {
+        headingTrack: 'Track labels',
+        headingAlbum: 'Album labels',
+        labels: 'Labels',
+        tagPlaceholder: '[Enter] Add as new label'
       }
     },
     views: {
@@ -103,6 +110,8 @@ var locales = {
     infoPanel: {
       updateAlbumSuccess: 'The album was updated successfully.',
       updateAlbumErr: 'There was an error when updating the album.',
+      updateTrackSuccess: 'The track was updated successfully.',
+      updateTrackErr: 'There was an error when updating the track.',
       updateGenreSuccess: 'The genre was updated successfully.',
       updateGenreErr: 'There was an error when updating the genre.',
       deleteGenreSuccess: 'The genre was deleted successfully.',

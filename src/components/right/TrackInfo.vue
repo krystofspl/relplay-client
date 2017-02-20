@@ -18,6 +18,12 @@
         <div v-if="field === 'album.albumArt'">
           <img :src="getAlbumArtImgPath(album.id)" v-if="getAlbumArtImgPath(album.id).length">
         </div>
+        <div v-if="field === 'labels'">
+          <span>{{ $t('components.Labels.headingAlbum') }}: </span>
+          <labels :entity-type="'album'" :entity-id="album.id"></labels><br>
+          <span>{{ $t('components.Labels.headingTrack') }}: </span>
+          <labels :entity-type="'track'" :entity-id="getNowPlayingId"></labels>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -30,6 +36,7 @@
 import { mapGetters } from 'vuex'
 import { trackGetters } from '../../mixins/getters/trackGetters.js'
 import { albumGetters } from '../../mixins/getters/albumGetters.js'
+import Labels from '../misc/Labels.vue'
 
 export default {
   data: function () {
@@ -37,8 +44,11 @@ export default {
       displayedFields: this.$store.state.view.components.TrackInfo.displayedFields
     }
   },
+  components: {
+    Labels
+  },
   computed: {
-    ...mapGetters(['getNowPlayingTrack']),
+    ...mapGetters(['getNowPlayingTrack', 'getNowPlayingId']),
     album: function () {
       return this.getAlbumForTrack(this.getNowPlayingTrack)
     }
