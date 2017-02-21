@@ -43,7 +43,7 @@ const state = {
         }
       },
       TopPanel: {
-        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph', 'Settings']
+        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph', 'LabelsGraph', 'Settings']
       },
       TrackInfo: {
         displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'labels', 'album.albumArt']
@@ -500,6 +500,50 @@ const actions = {
     var start = payload.start
     var end = payload.end
     Vue.http.delete(context.state.settings.global.backendUrl + 'relationships/artist-similarity/' + start + '/' + end, null)
+    .then(response => {
+      if (response.ok) {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      } else {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationErr'))
+        context.dispatch('showInfoPanel')
+        callback(response.statusText, null)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  addLabelParentRelation (context, payload) {
+    var callback = payload.callback
+    var start = payload.start
+    var end = payload.end
+    Vue.http.post(context.state.settings.global.backendUrl + 'relationships/labels-parent/' + start + '/' + end, null)
+    .then(response => {
+      if (response.ok) {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      } else {
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationErr'))
+        context.dispatch('showInfoPanel')
+        callback(response.statusText, null)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.addArtistRelationErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  deleteLabelParentRelation (context, payload) {
+    var callback = payload.callback
+    var start = payload.start
+    var end = payload.end
+    Vue.http.delete(context.state.settings.global.backendUrl + 'relationships/labels-parent/' + start + '/' + end, null)
     .then(response => {
       if (response.ok) {
         context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deleteArtistRelationSuccess'))

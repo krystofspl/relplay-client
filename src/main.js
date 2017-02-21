@@ -63,6 +63,17 @@ var locales = {
         deleteEdge: 'Delete edge',
         deleteConfirm: 'Are you sure you want to delete this relationship?'
       },
+      LabelsGraph: {
+        name: 'Labels',
+        back: 'Back',
+        edit: 'Edit hierarchy',
+        addEdge: 'Set parent label',
+        editEdge: 'Edit relationship',
+        edgeDescription: 'Click on a label and drag to another one to enter relationship.',
+        editEdgeDescription: 'Drag the edge\'s endpoint to another label to change it.',
+        deleteEdge: 'Delete relationship',
+        deleteConfirm: 'Are you sure you want to delete this relationship?'
+      },
       ModalActions: {
         showAlbum: 'Album details',
         editAlbum: 'Edit album',
