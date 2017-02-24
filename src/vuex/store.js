@@ -26,6 +26,15 @@ const state = {
     showInfoPanel: false,
     infoPanelMsg: '',
     components: {
+      FiltersArtistsAlbums: {
+        filteredAlbumIds: [],
+        filteredArtistIds: [],
+        albumNameFilter: '',
+        artistNameFilter: '',
+        albumInboxFilter: 'both',
+        labelsFilter: [],
+        albumSort: 'titleAsc'
+      },
       ArtistsAlbumArts: {
         selectedArtist: -1
       },
@@ -105,9 +114,11 @@ const mutations = {
   SET_INITIAL_DATA (state, payload) {
     for (let i = 0; i < payload.artists.length; i++) {
       Vue.set(state.data.artists, payload.artists[i].id, payload.artists[i])
+      Vue.set(state.view.components.FiltersArtistsAlbums.filteredArtistIds, i, payload.artists[i].id)
     }
     for (let i = 0; i < payload.albums.length; i++) {
       Vue.set(state.data.albums, payload.albums[i].id, payload.albums[i])
+      Vue.set(state.view.components.FiltersArtistsAlbums.filteredAlbumIds, i, payload.albums[i].id)
     }
     for (let i = 0; i < payload.tracks.length; i++) {
       Vue.set(state.data.tracks, payload.tracks[i].id, payload.tracks[i])
@@ -224,6 +235,13 @@ const mutations = {
   },
   UPDATE_TRACK (state, payload) {
     Vue.set(state.data.tracks, payload.id, payload)
+  },
+  UPDATE_ARTIST_ALBUM_FILTERS (state, payload) {
+    var keys = Object.keys(payload)
+    for (let i = 0; i < keys.length; i++) {
+      var key = keys[i]
+      Vue.set(state.view.components.FiltersArtistsAlbums, key, payload[key])
+    }
   }
 }
 
@@ -580,6 +598,9 @@ const actions = {
       context.dispatch('showInfoPanel')
       callback(err, null)
     })
+  },
+  updateArtistAlbumFilters (context, payload) {
+    context.commit('UPDATE_ARTIST_ALBUM_FILTERS', payload)
   }
 }
 

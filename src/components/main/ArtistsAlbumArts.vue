@@ -1,35 +1,17 @@
 <template>
   <div id="artists-album-arts">
-    <div class="filters">
-      <input type="text" name="artistNameFilter" v-model="artistNameFilter" :placeholder="$t('components.AlbumDetails.artistName')">
-
-      <input type="text" name="albumNameFilter" v-model="albumNameFilter" :placeholder="$t('components.AlbumDetails.albumTitle')">
-
-      {{ $t('components.AlbumDetails.inInbox') }}
-      <select v-model="albumInboxFilter">
-        <option :value="{inInbox: 'both'}">-</option>
-        <option :value="{inInbox: true}">Yes</option>
-        <option :value="{inInbox: false}">No</option>
-      </select>
-
-      {{ $t('components.ArtistsAlbumArts.sortBy') }} <select v-model="albumSort">
-        <option :value="{sortBy: 'titleAsc'}">Title asc</option>
-        <option :value="{sortBy: 'titleDesc'}">Title desc</option>
-        <option :value="{sortBy: 'yearAsc'}">Year asc</option>
-        <option :value="{sortBy: 'yearDesc'}">Year desc</option>
-      </select>
-    </div>
-    <artists-panel :artists="artists()" :selectedArtistId="selectedArtistId"></artists-panel>
-    <album-arts :albums="albums()" ref="albumArtsComponent"></album-arts>
+    <filters-artists-albums :selectedArtistId="selectedArtistId" class="filters"></filters-artists-albums>
+    <artists-panel :artists="artists" :selectedArtistId="selectedArtistId"></artists-panel>
+    <album-arts :albums="albums" ref="albumArtsComponent"></album-arts>
   </div>
 </template>
 
 <script>
 import { artistGetters } from '../../mixins/getters/artistGetters.js'
-import { mapGetters } from 'vuex'
+import { albumGetters } from '../../mixins/getters/albumGetters.js'
 import AlbumArts from './AlbumArts.vue'
 import ArtistsPanel from './ArtistsPanel.vue'
-var _ = require('lodash')
+import FiltersArtistsAlbums from '../misc/FiltersArtistsAlbums.vue'
 
 export default {
   data: function () {
@@ -44,56 +26,21 @@ export default {
       }
     }
   },
-  mixins: [artistGetters],
+  mixins: [artistGetters, albumGetters],
   components: {
     AlbumArts,
-    ArtistsPanel
-  },
-  methods: {
-    ...mapGetters('getArtists', 'getAlbums'),
-    albums: function () {
-      var albumsData = []
-      var self = this
-      if (this.selectedArtistId === -1) {
-        albumsData = _.values(this.$store.state.data.albums)
-      } else {
-        albumsData = this.getAlbumsForArtist(this.selectedArtistId)
-      }
-      return albumsData.filter(album => {
-        var nameCondition = new RegExp(self.albumNameFilter, 'i')
-        var inboxCondition = (album.inInbox === (self.albumInboxFilter.inInbox))
-        return album.title.match(nameCondition) && ((self.albumInboxFilter.inInbox === 'both') ? true : inboxCondition)
-      }).sort((a, b) => {
-        var sortResult = null
-        switch (self.albumSort.sortBy) {
-          case 'titleAsc':
-            sortResult = a.title.localeCompare(b.title)
-            break
-          case 'titleDesc':
-            sortResult = b.title.localeCompare(a.title)
-            break
-          case 'yearAsc':
-            sortResult = a.year - b.year
-            break
-          case 'yearDesc':
-            sortResult = b.year - a.year
-            break
-          default:
-            sortResult = a.title.localeCompare(b.title)
-        }
-        return sortResult
-      })
-    },
-    artists: function () {
-      var self = this
-      return _.values(self.$store.state.data.artists).sort((a, b) => {
-        return a.name.localeCompare(b.name)
-      }).filter(artist => {
-        return artist.name.match(new RegExp(self.artistNameFilter, 'i'))
-      })
-    }
+    ArtistsPanel,
+    FiltersArtistsAlbums
   },
   computed: {
+    artists: function () {
+      var self = this
+      return self.$store.state.view.components.FiltersArtistsAlbums.filteredArtistIds.map(id => self.getArtist(id))
+    },
+    albums: function () {
+      var self = this
+      return self.$store.state.view.components.FiltersArtistsAlbums.filteredAlbumIds.map(id => self.getAlbum(id))
+    },
     selectedArtistId: function () {
       return this.$store.state.view.components.ArtistsAlbumArts.selectedArtist || -1
     }
@@ -113,7 +60,7 @@ $panel-height: calc(100% - #{$filters-height} - 2 * #{$filters-padding})
   height: 100%
   overflow: hidden
   .filters
-    height: $filters-height
+    height: auto
     width: 100%
     float: left
     background: #666

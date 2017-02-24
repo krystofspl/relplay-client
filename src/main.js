@@ -78,7 +78,8 @@ var locales = {
         showAlbum: 'Album details',
         editAlbum: 'Edit album',
         editGenre: 'Edit genre',
-        editEntityLabels: 'Edit labels'
+        editEntityLabels: 'Edit labels',
+        filtersArtistsAlbumsMore: 'Additional filters'
       },
       EditAlbum: {
         editGenres: 'Edit genres',

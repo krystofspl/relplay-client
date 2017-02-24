@@ -5,6 +5,7 @@
       <h2 v-if="modalAction == 'editAlbum'">{{ $t('components.ModalActions.editAlbum') }}</h2>
       <h2 v-if="modalAction == 'editGenre'">{{ $t('components.ModalActions.editGenre') }}</h2>
       <h2 v-if="modalAction == 'editEntityLabels'">{{ $t('components.ModalActions.editEntityLabels') }}</h2>
+      <h2 v-if="modalAction == 'filtersArtistsAlbumsMore'">{{ $t('components.ModalActions.filtersArtistsAlbumsMore') }}</h2>
     </div>
 
     <div slot="actions" style="display: inline">
@@ -24,6 +25,9 @@
       <div v-if="modalAction == 'editEntityLabels'" style="display: inline">
         <!-- nothing yet -->
       </div>
+      <div v-if="modalAction == 'filtersArtistsAlbumsMore'" style="display: inline">
+        <!-- nothing yet -->
+      </div>
     </div>
 
     <div slot="body">
@@ -31,6 +35,7 @@
       <edit-album v-if="modalAction == 'editAlbum'" :album="getAlbum(modalEntities.albumId)"></edit-album>
       <edit-genre v-if="modalAction == 'editGenre'" :genre-id="modalEntities.genreId"></edit-genre>
       <edit-entity-labels v-if="modalAction == 'editEntityLabels'" :entity-id="modalEntities.entityId" :entity-type="modalEntities.entityType"></edit-entity-labels>
+      <filters-artists-albums-more v-if="modalAction == 'filtersArtistsAlbumsMore'"></filters-artists-albums-more>
     </div>
 
   </modal>
@@ -45,6 +50,7 @@ import EditAlbum from '../misc/EditAlbum.vue'
 import EditGenre from '../misc/EditGenre.vue'
 import EditEntityLabels from '../misc/EditEntityLabels.vue'
 import AlbumDetails from '../misc/AlbumDetails.vue'
+import FiltersArtistsAlbumsMore from '../misc/FiltersArtistsAlbumsMore.vue'
 import Icon from 'vue-awesome/components/Icon'
 import 'vue-awesome/icons'
 
@@ -59,7 +65,8 @@ export default {
     EditGenre,
     EditEntityLabels,
     Icon,
-    AlbumDetails
+    AlbumDetails,
+    FiltersArtistsAlbumsMore
   },
   mixins: [albumGetters, genreGetters],
   methods: {
