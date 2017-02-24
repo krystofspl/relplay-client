@@ -132,3 +132,9 @@ export default {
   }
 }
 </script>
+
+<style lang="sass">
+.filters-artists-albums
+  a, a:visited
+    color: white
+</style>
