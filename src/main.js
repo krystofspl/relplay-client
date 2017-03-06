@@ -77,13 +77,25 @@ var locales = {
       ModalActions: {
         showAlbum: 'Album details',
         editAlbum: 'Edit album',
+        editAlbumTracks: 'Edit tracks',
         editGenre: 'Edit genre',
         editEntityLabels: 'Edit labels',
         filtersArtistsAlbumsMore: 'Additional filters'
       },
       EditAlbum: {
         editGenres: 'Edit genres',
-        parentGenre: 'Parent genre'
+        parentGenre: 'Parent genre',
+        editAlbumTracks: 'Edit tracks'
+      },
+      EditAlbumTracks: {
+        trackTitle: 'Track title',
+        trackNr: 'Track #',
+        diskNr: 'Disk #',
+        playCount: 'Play count',
+        album: 'Album',
+        filePath: 'Location in filesystem',
+        labels: 'Labels',
+        lyrics: 'Lyrics'
       },
       EditGenre: {
         genreTitle: 'Genre title',

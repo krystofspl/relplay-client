@@ -58,6 +58,7 @@
       display: table-cell
       vertical-align: middle
       .modal-container
+        color: #000
         min-width: 50%
         max-width: 70%
         min-height: 30%
@@ -65,7 +66,7 @@
         overflow: auto
         margin: 0px auto
         padding: 10px 15px 20px 15px
-        background-color: #666
+        background-color: #888
         border-radius: 4px
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33)
         transition: all .3s ease

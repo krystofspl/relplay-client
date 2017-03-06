@@ -69,12 +69,48 @@ body
       z-index: 1000
   input, select
     padding: 2px
-    color: #CCC
-    background: #333
     border: 1px solid #000
     &::placeholder
       color: #CCC
+  input, select, .multiselect__input::placeholder, .multiselect__tags, button, textarea
+    color: #CCC !important
+    background: #444 !important
+  button
+    border: 1px solid #000
+    padding: 10px
+    &:hover
+      border: 1px solid #CCC
 
+.multiselect
+  border-radius: 0
+  .multiselect__tags
+    border: 1px solid #000
+    background: #888
+    border-radius: 0
+    padding: 0
+    &:hover
+      border: 1px solid #CCC
+    .multiselect__input, .multiselect__single
+      border: none !important
+      border-radius: 0
+      background: #888
+      &:focus, &:hover
+    span.multiselect__tag
+      background: #666
+      border: 1px solid #333
+      margin: 2px 0 0 2px
+  .multiselect__content
+    background: #888
+    border-radius: 0
+    border: 1px solid #000
+    .multiselect__option
+      background: #888
+    .multiselect__option--active
+      background: yellow
+    .multiselect__option--highlight
+      background: #666
+      &::after
+        background: red
 
 .component-fade-enter-active, .component-fade-leave-active, .fade-enter-active, .fade-leave-active
   transition: opacity .5s ease
