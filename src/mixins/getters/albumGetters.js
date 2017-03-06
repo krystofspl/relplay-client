@@ -7,7 +7,7 @@ export var albumGetters = {
       return this.$store.state.data.artists[this.getAlbum(albumId).mainArtist]
     },
     getTracksForAlbum: function (albumId) {
-      return Object.values(this.$store.state.data.tracks).filter(track => track.album === this.albumId)
+      return Object.values(this.$store.state.data.tracks).filter(track => track.album === albumId)
     },
     getAlbumArtImgPath: function (albumId) {
       var urlCreator = window.URL || window.webkitURL

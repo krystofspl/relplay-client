@@ -136,12 +136,6 @@
     display: block
     width: 100%
     padding-top: 5px
-  button
-    border: 1px solid #000
-    background: #888
-    padding: 10px
-    &:hover
-      border: 1px solid #CCC
   input, textarea, select
     border: 1px solid #000
     background: #888

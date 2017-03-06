@@ -37,12 +37,12 @@ $barColorSecondary: black
     background: $barColorSecondary
   progress
     color: $barColorPrimary
-  progress::-moz-progress-bar
-    background: $barColorPrimary
-  progress::-webkit-progress-value
-    background: $barColorPrimary
-  progress::-webkit-progress-bar
-    background: $barColorSecondary
-  progress::-webkit-progress-value
-    background: $barColorPrimary
+    &::-webkit-progress-bar
+      background: $barColorSecondary
+    &[value]::-webkit-progress-value
+      background: $barColorPrimary
+      background-image: -webkit-linear-gradient(-45deg, transparent 33%, rgba(0, 0, 0, .1) 33%, rgba(0,0, 0, .1) 66%, transparent 66%)
+      background-size: 35px 20px, 100% 100%, 100% 100%
+    &::-moz-progress-bar
+      background: $barColorPrimary
 </style>

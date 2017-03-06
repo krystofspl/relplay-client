@@ -1,5 +1,7 @@
 <template>
   <div id="edit-album">
+    <a href="#" @click="setModalEntity({entityId: album.id}); setModalAction('editAlbumTracks')">{{ $t('components.EditAlbum.editAlbumTracks') }}</a>
+
     <label>{{ $t('components.AlbumDetails.albumTitle') }}</label>
     <input type="text" name="title" v-model="title">
 
@@ -142,12 +144,6 @@
     display: block
     width: 100%
     padding-top: 5px
-  button
-    border: 1px solid #000
-    background: #888
-    padding: 10px
-    &:hover
-      border: 1px solid #CCC
   input
     border: 1px solid #000
     background: #888
@@ -179,7 +175,6 @@
     .multiselect__input, .multiselect__single
       border: none !important
       border-radius: 0
-      background: #888
       &:focus, &:hover
         background: #000
     span.multiselect__tag

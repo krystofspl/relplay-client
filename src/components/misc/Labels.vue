@@ -4,7 +4,7 @@
       <icon scale="0.9" name="pencil"></icon>
     </div>
     <div v-if="!labels.length" style="display: inline-block">
-      -
+      No labels
     </div>
     <span v-for="label in labels" class="label">{{ label.title }}</span>
   </div>
@@ -62,7 +62,7 @@ export default {
     margin: 1px
     font-size: 83%
   .edit-action
-    display: none
+    display: inline-block
     &:hover
       color: #FFF
 </style>
