@@ -5,10 +5,20 @@
     <icon scale="0.75" name="volume-up" class="dummy-now-playing-icon" style="display: none"></icon>
 
     <h1>{{ $t('components.Playlist.playlist') }}</h1>
-    {{ this.$store.state.player.autoPlaylist }}<br>
-    <span v-if="isPlaylistEmpty">Playlist empty</span>
-    <span v-else-if="autoPlaylistClickable" @click="toggleAutoPlaylistState()">Start/stop</span>
-    <span v-else>Waiting</span>
+    <span v-if="isPlaylistEmpty" :title="$t('components.Playlist.autoPlaylistEmpty')" @click="autoPlaylistMsg('empty')" class="action">
+      <icon scale="1.2" name="circle-o"></icon>
+    </span>
+    <span v-else-if="autoPlaylistClickable" @click="toggleAutoPlaylistState()">
+      <div v-if="autoPlaylistActive" @click="autoPlaylistMsg('stopped')" :title="$t('components.Playlist.autoPlaylistStop')">
+        <icon scale="1.2" name="stop-circle"></icon>
+      </div>
+      <div v-else @click="autoPlaylistMsg('started')" :title="$t('components.Playlist.autoPlaylistStart')">
+        <icon scale="1.2" name="play-circle"></icon>
+      </div>
+    </span>
+    <span v-else :title="$t('components.Playlist.autoPlaylistWaiting')">
+      <icon scale="1.2" name="circle-o-notch" spin></icon>
+    </span>
     <table>
       <thead>
         <tr>
@@ -30,10 +40,10 @@
 import { mapGetters, mapActions } from 'vuex'
 import { trackGetters } from '../../mixins/getters/trackGetters.js'
 import Icon from 'vue-awesome/components/Icon'
-import 'vue-awesome/icons/volume-up'
-import 'vue-awesome/icons/bars'
+import 'vue-awesome/icons'
 var jQuery = require('jquery')
 require('jquery-ui')
+var _ = require('lodash')
 
 export default {
   data: function () {
@@ -94,19 +104,16 @@ export default {
     },
     addNewTracksFromAutoplaylist: function () {
       var self = this
-      var newTrackIds = this.$store.state.player.autoPlaylist.newTracks
+      var newTrackIds = _.compact(this.$store.state.player.autoPlaylist.newTracks)
       if (newTrackIds.length > 0) {
         this.playerUpdatePlaylist({
-          playlist: self.playlist.map(t => t.id).concat(newTrackIds)
+          playlist: self.$store.state.player.playlist.concat(newTrackIds)
         })
         this.$set(this, 'playlist', this.getPlaylistTracks())
         var newTracks = newTrackIds.map(id => self.getTrack(id))
         newTracks.forEach(track => {
-          self.appendTrackRowToPlaylist(track)
+          if (track) { self.appendTrackRowToPlaylist(track) }
         })
-      } else {
-        // TODO display info msg that there are no new songs available
-        this.toggleAutoPlaylistState()
       }
     },
     appendTrackRowToPlaylist: function (track) {
@@ -124,6 +131,19 @@ export default {
       nowPlayingJqueryTableRowSelector.addClass('now-playing')
       jQuery('.now-playing-icon').remove()
       nowPlayingJqueryTableRowSelector.children().eq(1).prepend(jQuery('.dummy-now-playing-icon').clone().removeClass('dummy-now-playing-icon').addClass('now-playing-icon').css('display', 'inline').css('margin', '0 2px'))
+    },
+    autoPlaylistMsg: function (type) {
+      switch (type) {
+        case 'empty':
+          this.$store.dispatch('setInfoPanelMsg', this.$t('components.Playlist.autoPlaylistEmpty'))
+          break
+        case 'started':
+          this.$store.dispatch('setInfoPanelMsg', this.$t('components.Playlist.autoPlaylistStarted'))
+          break
+        case 'stopped':
+          this.$store.dispatch('setInfoPanelMsg', this.$t('components.Playlist.autoPlaylistStopped'))
+      }
+      this.$store.dispatch('showInfoPanel')
     }
   },
   computed: {
@@ -142,19 +162,35 @@ export default {
     },
     nowPlayingPlaylistPosition: function () {
       return this.$store.state.player.playlist.indexOf(this.nowPlayingTrackId)
+    },
+    autoPlaylistActive: function () {
+      return this.$store.state.player.autoPlaylist.state === 'active'
     }
   },
   watch: {
     // Obtained new tracks from autoplaylist?
     getNewAutoPlaylistTracks: function () {
-      this.addNewTracksFromAutoplaylist()
+      if (this.autoPlaylistActive) {
+        if (this.getNewAutoPlaylistTracks.length === 0) {
+          this.$store.dispatch('stopAutoPlaylist')
+          this.$store.dispatch('setInfoPanelMsg', this.$t('infoPanel.autoPlaylistNoSongsAvailable'))
+          this.$store.dispatch('showInfoPanel')
+        } else {
+          this.addNewTracksFromAutoplaylist()
+        }
+      }
     },
     nowPlayingPlaylistPosition: function () {
       // AutoPlaylist
       // Get new songs when the playlist position is 3 tracks from the end or less
-      if (this.$store.state.player.autoPlaylist.state === 'active' && this.nowPlayingPlaylistPosition >= this.playlist.length - 2) {
+      if (this.autoPlaylistActive && this.nowPlayingPlaylistPosition >= this.playlist.length - 2) {
         // TODO? might cause problems in some special situations
-        this.$store.dispatch('getAutoPlaylistData', { seedTrackIds: this.playlist.slice(-1)[0].id })
+        var id = (this.playlist.slice(-1)[0]) ? (this.playlist.slice(-1)[0].id) : -1
+        if (id !== -1) {
+          this.$store.dispatch('getAutoPlaylistData', { seedTrackIds: id })
+        } else {
+          this.$store.dispatch('stopAutoPlaylist')
+        }
       }
     },
     nowPlayingTrackId: function () {
@@ -287,4 +323,7 @@ export default {
         opacity: .5
   .now-playing
     color: #FF3030
+  .action
+    &:hover
+      color: red
 </style>

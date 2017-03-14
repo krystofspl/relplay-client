@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+var _ = require('lodash')
 
 Vue.use(Vuex)
 
@@ -262,7 +263,7 @@ const mutations = {
   },
   UPDATE_AUTO_PLAYLIST_USED_TRACK_IDS (state, payload) {
     var oldList = state.player.autoPlaylist.usedTrackIds
-    var newList = oldList.concat(payload.usedTrackIds)
+    var newList = _.uniq(_.concat(oldList, payload.usedTrackIds))
     state.player.autoPlaylist.usedTrackIds = newList
   }
 }
@@ -630,13 +631,12 @@ const actions = {
     if (autoPlaylistState === 'inactive') {
       var seed = (payload && payload.seedTrackIds) ? payload.seedTrackIds : []
       context.dispatch('getAutoPlaylistData', { seedTrackIds: seed })
-    }
-    if (autoPlaylistState === 'active') {
+    } else {
       context.dispatch('stopAutoPlaylist')
     }
   },
   getAutoPlaylistData (context, payload) {
-    var seedTrackIds = payload.seedTrackIds
+    var seedTrackIds = _.castArray(payload.seedTrackIds)
     context.dispatch('updateAutoPlaylistUsedTrackIds', { usedTrackIds: seedTrackIds })
     context.commit('SET_AUTO_PLAYLIST_STATE', { state: 'waiting' })
     // Send request, when done save to store and set state to active
