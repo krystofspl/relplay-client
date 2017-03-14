@@ -51,6 +51,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import { trackGetters } from '../../mixins/getters/trackGetters.js'
+import { albumGetters } from '../../mixins/getters/albumGetters.js'
 import Icon from 'vue-awesome/components/Icon'
 import 'vue-awesome/icons'
 var jQuery = require('jquery')
@@ -67,7 +68,7 @@ export default {
   components: {
     Icon
   },
-  mixins: [trackGetters],
+  mixins: [trackGetters, albumGetters],
   methods: {
     ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying', 'playerSetState']),
     ...mapGetters(['getNowPlayingId', 'getPlaylistTracks']),
@@ -123,9 +124,8 @@ export default {
         this.$set(this, 'playlist', this.getPlaylistTracks())
       })
     },
-    addNewTracksFromAutoplaylist: function () {
+    addNewTracksToPlaylist: function (newTrackIds) {
       var self = this
-      var newTrackIds = _.compact(this.$store.state.player.autoPlaylist.newTracks)
       if (newTrackIds.length > 0) {
         this.playerUpdatePlaylist({
           playlist: self.$store.state.player.playlist.concat(newTrackIds)
@@ -133,11 +133,15 @@ export default {
         this.$set(this, 'playlist', this.getPlaylistTracks())
         var newTracks = newTrackIds.map(id => self.getTrack(id))
         newTracks.forEach(track => {
-          if (track) { self.appendTrackRowToPlaylist(track) }
+          if (track) { self.addTrackRowToPlaylist(track) }
         })
       }
     },
-    appendTrackRowToPlaylist: function (track) {
+    addNewTracksFromAutoplaylist: function () {
+      var newTrackIds = _.compact(this.$store.state.player.autoPlaylist.newTracks)
+      this.addNewTracksToPlaylist(newTrackIds)
+    },
+    addTrackRowToPlaylist: function (track, position) {
       var tableRow = jQuery(`
         <tr data-trackid=${track.id}>
           <td></td>
@@ -145,7 +149,11 @@ export default {
           <td class="sort-handle-column"></td>
         </tr>
       `).addClass('playlist-item')
-      jQuery('#playlist-body').append(tableRow)
+      if (!position || position === -1) {
+        jQuery('#playlist-body').append(tableRow)
+      } else {
+        jQuery('#playlist-body tr').eq(position - 1).after(tableRow)
+      }
       this.repairPlaylist()
     },
     addNowPlayingStyles: function (nowPlayingJqueryTableRowSelector) {
@@ -213,7 +221,6 @@ export default {
       // AutoPlaylist
       // Get new songs when the playlist position is 3 tracks from the end or less
       if (this.autoPlaylistActive && this.nowPlayingPlaylistPosition >= this.playlist.length - 2) {
-        // TODO? might cause problems in some special situations
         var id = (this.playlist.slice(-1)[0]) ? (this.playlist.slice(-1)[0].id) : -1
         if (id !== -1) {
           this.$store.dispatch('getAutoPlaylistData', { seedTrackIds: id })
@@ -238,7 +245,7 @@ export default {
       // Fill playlist table with rows from the playlist structure
       self.playlist.forEach(track => {
         // Init playlist track DOM table rows
-        self.appendTrackRowToPlaylist(track)
+        self.addTrackRowToPlaylist(track)
         // For now playing track add icon and appropriate classes
         if (track.id === self.nowPlayingTrackId) {
           self.addNowPlayingStyles(jQuery(`.playlist-item[data-trackid=${track.id}]`))
@@ -268,11 +275,24 @@ export default {
         },
         stop: (e, ui) => {
           var addedItem = ui.item
-          if (addedItem.data('multidrag')) {
-            var selected = addedItem.data('multidrag')
-            addedItem.after(selected)
-            addedItem.remove()
+          if (addedItem.data('draggable-type') === 'track') {
+            if (addedItem.data('multidrag')) {
+              var selected = addedItem.data('multidrag')
+              addedItem.after(selected)
+            }
+          } else if (addedItem.data('draggable-type') === 'album') {
+            var albumId = jQuery(ui.item).data('albumId')
+            if (albumId) {
+              var trackIds = self.getTracksForAlbum(albumId).map(album => album.id)
+              var initialPosition = jQuery('#playlist-body tr').index(addedItem)
+              var offset = 0
+              trackIds.forEach(trackId => {
+                self.addTrackRowToPlaylist(self.getTrack(trackId), initialPosition + offset)
+                offset++
+              })
+            }
           }
+          addedItem.remove()
           self.repairPlaylist()
           self.updatePlaylistFromDOM()
         },

@@ -1,6 +1,6 @@
 <template>
   <div class="album-arts">
-    <div v-for="album in albumsInfinite" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @click="albumClick(album.id)" >
+    <div v-for="album in albumsInfinite" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @dblclick="albumClick(album.id)" :data-album="album.id">
       <div class="content">
         <div class="album-art-img" :data-album="album.id">
           <img v-if="getAlbumArtImgPath(album.id).length" :src="getAlbumArtImgPath(album.id)">
@@ -26,6 +26,8 @@
 import { albumGetters } from '../../mixins/getters/albumGetters.js'
 import { mapActions } from 'vuex'
 import InfiniteLoading from 'vue-infinite-loading'
+var jQuery = require('jquery')
+require('jquery-ui')
 
 export default {
   data: function () {
@@ -78,6 +80,21 @@ export default {
     this.$on('resetInfiniteLoader', function () {
       this.resetInfiniteLoader()
     })
+    jQuery(() => {
+      jQuery('.album-arts').draggable({
+        items: '.album-art',
+        connectToSortable: '#playlist-body',
+        revert: 'invalid',
+        cursorAt: { top: -5, left: -5 },
+        containment: '#right-panel',
+        helper: (e) => {
+          var helper = jQuery('<tr class="drag-helper"><td colspan="3"/></tr>')
+          helper.data('draggable-type', 'album')
+          helper.data('albumId', jQuery(e.target).closest('.album-art').data('album'))
+          return helper
+        }
+      })
+    })
   }
 }
 </script>
@@ -126,7 +143,6 @@ export default {
         position: absolute
         bottom: 0
         background: rgba(0, 0, 0, 0.5)
-
 .selected
   border-color: #0F0 !important
 .album-art-inbox

@@ -112,6 +112,14 @@ body
       &::after
         background: red
 
+.ui-draggable.ui-draggable-dragging, .drag-helper
+  height: 30px
+  width: 270px
+  background: #555
+  opacity: 0.8
+  box-shadow: 7px 7px 23px 0px rgba(0, 0, 0, 0.65)
+  z-index: 2000
+
 .component-fade-enter-active, .component-fade-leave-active, .fade-enter-active, .fade-leave-active
   transition: opacity .5s ease
 

@@ -123,7 +123,7 @@
           cursorAt: { top: -5, left: -5 },
           containment: '#right-panel',
           helper: (e) => {
-            var helper = jQuery('<tr class="drag-helper"/>')
+            var helper = jQuery('<tr class="drag-helper"><td colspan="3"/></tr>')
             var multidrag = []
             jQuery('.tracks-body tr.ui-selected').each((index, element) => {
               multidrag.push(jQuery(`
@@ -135,6 +135,7 @@
               `))
             })
             helper.data('multidrag', multidrag)
+            helper.data('draggable-type', 'track')
             return helper
           }
         })
@@ -197,13 +198,6 @@
           .drag-handle
             display: inline !important
 
-  .ui-draggable.ui-draggable-dragging, .drag-helper
-    height: 30px
-    width: 270px
-    background: #555
-    opacity: 0.8
-    box-shadow: 7px 7px 23px 0px rgba(0, 0, 0, 0.65)
-    z-index: 2000
   .now-playing
     font-weight: bold
 
