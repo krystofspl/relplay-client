@@ -1,6 +1,6 @@
 <template>
   <div class="album-arts">
-    <div v-for="album in albumsInfinite" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @dblclick="albumClick(album.id)" :data-album="album.id">
+    <div v-for="album in albumsInfinite" class="album-art" v-bind:class="{'selected': isSelected(album.id), 'album-art-inbox': album.inInbox}" @click="albumClick(album.id)" :data-album="album.id">
       <div class="content">
         <div class="album-art-img" :data-album="album.id">
           <img v-if="getAlbumArtImgPath(album.id).length" :src="getAlbumArtImgPath(album.id)">
@@ -86,7 +86,7 @@ export default {
         connectToSortable: '#playlist-body',
         revert: 'invalid',
         cursorAt: { top: -5, left: -5 },
-        containment: '#right-panel',
+        containment: 'window',
         helper: (e) => {
           var helper = jQuery('<tr class="drag-helper"><td colspan="3"/></tr>')
           helper.data('draggable-type', 'album')
