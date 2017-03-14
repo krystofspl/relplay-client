@@ -115,7 +115,10 @@ var locales = {
         autoPlaylistStop: 'Stop auto playlist',
         autoPlaylistStopped: 'Auto playlist has been stopped.',
         autoPlaylistWaiting: 'Auto playlist waiting for data.',
-        autoPlaylistEmpty: 'Playlist is empty, add something to start auto playlist.'
+        autoPlaylistEmpty: 'Playlist is empty, add something to start auto playlist.',
+        confirmClear: 'Are you sure you want to clear the playlist?',
+        savePlaylist: 'Save this playlist',
+        loadPlaylist: 'Load saved playlist'
       },
       TrackInfo: {
         nowPlaying: 'Now playing'

@@ -4,21 +4,34 @@
     <icon scale="1" name="bars" class="dummy-sort-handle" style="display: none"></icon>
     <icon scale="0.75" name="volume-up" class="dummy-now-playing-icon" style="display: none"></icon>
 
+    <div class="icons">
+      <span v-if="isPlaylistEmpty" :title="$t('components.Playlist.autoPlaylistEmpty')" @click="autoPlaylistMsg('empty')" class="action">
+        <icon scale="1.2" name="circle-o"></icon>
+      </span>
+      <span v-else-if="autoPlaylistClickable" @click="toggleAutoPlaylistState()" class="action">
+        <div v-if="autoPlaylistActive" @click="autoPlaylistMsg('stopped')" :title="$t('components.Playlist.autoPlaylistStop')">
+          <icon scale="1.2" name="stop-circle"></icon>
+        </div>
+        <div v-else @click="autoPlaylistMsg('started')" :title="$t('components.Playlist.autoPlaylistStart')">
+          <icon scale="1.2" name="play-circle"></icon>
+        </div>
+      </span>
+      <span v-else :title="$t('components.Playlist.autoPlaylistWaiting')">
+        <icon scale="1.2" name="circle-o-notch" spin></icon>
+      </span>
+      <span class="action" @click="clearPlaylist()" :title="$t('components.Playlist.autoPlaylistWaiting')">
+        <icon scale="1.2" name="trash">
+      </span>
+      <span class="action">
+        <icon scale="1.2" name="floppy-o" :title="$t('components.Playlist.savePlaylist')">
+      </span>
+      <span class="action">
+        <icon scale="1.2" name="list" :title="$t('components.Playlist.loadPlaylist')">
+      </span>
+    </div>
+
     <h1>{{ $t('components.Playlist.playlist') }}</h1>
-    <span v-if="isPlaylistEmpty" :title="$t('components.Playlist.autoPlaylistEmpty')" @click="autoPlaylistMsg('empty')" class="action">
-      <icon scale="1.2" name="circle-o"></icon>
-    </span>
-    <span v-else-if="autoPlaylistClickable" @click="toggleAutoPlaylistState()">
-      <div v-if="autoPlaylistActive" @click="autoPlaylistMsg('stopped')" :title="$t('components.Playlist.autoPlaylistStop')">
-        <icon scale="1.2" name="stop-circle"></icon>
-      </div>
-      <div v-else @click="autoPlaylistMsg('started')" :title="$t('components.Playlist.autoPlaylistStart')">
-        <icon scale="1.2" name="play-circle"></icon>
-      </div>
-    </span>
-    <span v-else :title="$t('components.Playlist.autoPlaylistWaiting')">
-      <icon scale="1.2" name="circle-o-notch" spin></icon>
-    </span>
+
     <table>
       <thead>
         <tr>
@@ -30,7 +43,6 @@
       <tbody id="playlist-body">
         <tr v-if="!playlist.length"><td colspan="3" style="padding: 5px;">{{ $t('components.Playlist.playlistEmpty') }}</td></tr>
         <!-- Filled with jQuery on create -->
-        <tr><td colspan="3">&nbsp;</td></tr>
       </tbody>
     </table>
   </div>
@@ -60,8 +72,17 @@ export default {
     ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying', 'playerSetState']),
     ...mapGetters(['getNowPlayingId', 'getPlaylistTracks']),
     toggleAutoPlaylistState: function () {
-      // TODO change
-      this.$store.dispatch('toggleAutoPlaylistState', { seedTrackIds: this.playlist.slice(-1)[0].id })
+      if (!this.autoPlaylistActive) {
+        // Play, seedIds: try selected items first, then the last item of the playlist
+        var seedIds = jQuery.map(jQuery('.playlist-item.ui-selected'), item => { return jQuery(item).data('trackid') })
+        if (!seedIds || !seedIds.length) {
+          seedIds = this.playlist.slice(-1)[0].id
+        }
+        this.$store.dispatch('toggleAutoPlaylistState', { seedTrackIds: seedIds })
+      } else {
+        // Stop
+        this.$store.dispatch('toggleAutoPlaylistState')
+      }
     },
     repairPlaylist: function () {
       // Compute and add playlist order
@@ -144,6 +165,14 @@ export default {
           this.$store.dispatch('setInfoPanelMsg', this.$t('components.Playlist.autoPlaylistStopped'))
       }
       this.$store.dispatch('showInfoPanel')
+    },
+    clearPlaylist: function () {
+      var conf = window.confirm(this.$t('components.Playlist.confirmClear'))
+      if (conf === true) {
+        this.playerUpdatePlaylist({ playlist: [] })
+        this.$set(this, 'playlist', [])
+        jQuery('.playlist-item').remove()
+      }
     }
   },
   computed: {
@@ -271,15 +300,18 @@ export default {
   overflow: auto
   height: 50%
   h1
-    margin: 5px 0
+    margin: 0 0
     padding: 0
-    font-size: 120%
+    font-size: 130%
   table
     width: 100%
     border-collapse: collapse
     font-size: 100%
+    margin-top: 5px
     thead
+      border-bottom: 1px solid #000
       th
+        padding: 2px 0
         text-align: left
     tbody
       tr.playlist-item
@@ -323,7 +355,12 @@ export default {
         opacity: .5
   .now-playing
     color: #FF3030
-  .action
-    &:hover
-      color: red
+  .icons
+    float: right
+    .action
+      margin-right: 5px
+      div
+        display: inline-block
+      &:hover
+        color: red
 </style>
