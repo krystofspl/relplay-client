@@ -18,7 +18,13 @@ const state = {
     nowPlaying: null,
     playlist: [],
     progress: 0,
-    progressRequest: null
+    progressRequest: null,
+    autoPlaylist: {
+      // state is one of active, inactive, waiting
+      state: 'inactive',
+      usedTrackIds: [],
+      newTracks: []
+    }
   },
   view: {
     mainPanelView: 'ArtistsAlbumArts',
@@ -242,6 +248,22 @@ const mutations = {
       var key = keys[i]
       Vue.set(state.view.components.FiltersArtistsAlbums, key, payload[key])
     }
+  },
+  SET_AUTO_PLAYLIST_STATE (state, payload) {
+    state.player.autoPlaylist.state = payload.state
+  },
+  SET_AUTO_PLAYLIST_NEW_TRACKS (state, payload) {
+    state.player.autoPlaylist.newTracks = payload.trackIds
+  },
+  STOP_AUTO_PLAYLIST (state) {
+    state.player.autoPlaylist.usedTrackIds = []
+    state.player.autoPlaylist.newTracks = []
+    state.player.autoPlaylist.state = 'inactive'
+  },
+  UPDATE_AUTO_PLAYLIST_USED_TRACK_IDS (state, payload) {
+    var oldList = state.player.autoPlaylist.usedTrackIds
+    var newList = oldList.concat(payload.usedTrackIds)
+    state.player.autoPlaylist.usedTrackIds = newList
   }
 }
 
@@ -601,6 +623,43 @@ const actions = {
   },
   updateArtistAlbumFilters (context, payload) {
     context.commit('UPDATE_ARTIST_ALBUM_FILTERS', payload)
+  },
+  // Payload has optional seed array
+  toggleAutoPlaylistState (context, payload) {
+    var autoPlaylistState = context.state.player.autoPlaylist.state
+    if (autoPlaylistState === 'inactive') {
+      var seed = (payload && payload.seedTrackIds) ? payload.seedTrackIds : []
+      context.dispatch('getAutoPlaylistData', { seedTrackIds: seed })
+    }
+    if (autoPlaylistState === 'active') {
+      context.dispatch('stopAutoPlaylist')
+    }
+  },
+  getAutoPlaylistData (context, payload) {
+    var seedTrackIds = payload.seedTrackIds
+    context.dispatch('updateAutoPlaylistUsedTrackIds', { usedTrackIds: seedTrackIds })
+    context.commit('SET_AUTO_PLAYLIST_STATE', { state: 'waiting' })
+    // Send request, when done save to store and set state to active
+    Vue.http.post(state.settings.global.backendUrl + 'playlists/generator', { seedTrackIds: seedTrackIds, usedTrackIds: state.player.autoPlaylist.usedTrackIds })
+    .then(response => {
+      console.log(response)
+      if (response.ok) {
+        context.commit('SET_AUTO_PLAYLIST_NEW_TRACKS', { trackIds: response.body })
+        context.dispatch('updateAutoPlaylistUsedTrackIds', { usedTrackIds: response.body })
+      }
+      context.commit('SET_AUTO_PLAYLIST_STATE', { state: 'active' })
+    }, err => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.fetchAutoPlaylistDataErr'))
+      context.dispatch('showInfoPanel')
+      context.commit('SET_AUTO_PLAYLIST_STATE', { state: 'inactive' })
+    })
+  },
+  stopAutoPlaylist (context) {
+    context.commit('STOP_AUTO_PLAYLIST')
+  },
+  updateAutoPlaylistUsedTrackIds (context, payload) {
+    context.commit('UPDATE_AUTO_PLAYLIST_USED_TRACK_IDS', payload)
   }
 }
 

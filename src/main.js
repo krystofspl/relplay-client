@@ -144,7 +144,8 @@ var locales = {
       addArtistRelationErr: 'There was an error when adding the relationship.',
       deleteArtistRelationSuccess: 'The relationship was successfully deleted.',
       deleteArtistRelationErr: 'There was an error when deleting the relationship.',
-      fetchingData: 'Fetching data from the database...'
+      fetchingData: 'Fetching data from the database...',
+      fetchAutoPlaylistDataErr: 'There was an error when fetching the auto playlist data.'
     }
   }
 }
