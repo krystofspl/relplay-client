@@ -72,6 +72,11 @@ body
     border: 1px solid #000
     &::placeholder
       color: #CCC
+    &:hover
+      border: 1px solid #CCC
+    &:focus
+      border: 2px solid #000
+      background: #999
   input, select, .multiselect__input::placeholder, .multiselect__tags, button, textarea
     color: #CCC !important
     background: #444 !important

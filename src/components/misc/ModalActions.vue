@@ -7,6 +7,8 @@
       <h2 v-if="modalAction == 'editGenre'">{{ $t('components.ModalActions.editGenre') }}</h2>
       <h2 v-if="modalAction == 'editEntityLabels'">{{ $t('components.ModalActions.editEntityLabels') }}</h2>
       <h2 v-if="modalAction == 'filtersArtistsAlbumsMore'">{{ $t('components.ModalActions.filtersArtistsAlbumsMore') }}</h2>
+      <h2 v-if="modalAction == 'addPlaylist'">{{ $t('components.ModalActions.addPlaylist') }}</h2>
+      <h2 v-if="modalAction == 'editPlaylist'">{{ $t('components.ModalActions.editPlaylist') }}</h2>
     </div>
 
     <div slot="actions" style="display: inline">
@@ -43,6 +45,8 @@
       <edit-genre v-if="modalAction == 'editGenre'" :genre-id="modalEntities.genreId"></edit-genre>
       <edit-entity-labels v-if="modalAction == 'editEntityLabels'" :entity-id="modalEntities.entityId" :entity-type="modalEntities.entityType"></edit-entity-labels>
       <filters-artists-albums-more v-if="modalAction == 'filtersArtistsAlbumsMore'"></filters-artists-albums-more>
+      <edit-playlist v-if="modalAction == 'addPlaylist'"></edit-playlist>
+      <edit-playlist v-if="modalAction == 'editPlaylist'" :playlist-id="modalEntities.entityId"></edit-playlist>
     </div>
 
   </modal>
@@ -59,6 +63,7 @@ import EditGenre from '../misc/EditGenre.vue'
 import EditEntityLabels from '../misc/EditEntityLabels.vue'
 import AlbumDetails from '../misc/AlbumDetails.vue'
 import FiltersArtistsAlbumsMore from '../misc/FiltersArtistsAlbumsMore.vue'
+import EditPlaylist from '../misc/EditPlaylist.vue'
 import Icon from 'vue-awesome/components/Icon'
 import 'vue-awesome/icons'
 
@@ -75,6 +80,7 @@ export default {
     EditEntityLabels,
     Icon,
     AlbumDetails,
+    EditPlaylist,
     FiltersArtistsAlbumsMore
   },
   mixins: [albumGetters, genreGetters],

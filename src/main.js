@@ -80,7 +80,9 @@ var locales = {
         editAlbumTracks: 'Edit tracks',
         editGenre: 'Edit genre',
         editEntityLabels: 'Edit labels',
-        filtersArtistsAlbumsMore: 'Additional filters'
+        filtersArtistsAlbumsMore: 'Additional filters',
+        addPlaylist: 'Save new playlist',
+        editPlaylist: 'Edit playlist'
       },
       EditAlbum: {
         editGenres: 'Edit genres',
@@ -118,7 +120,8 @@ var locales = {
         autoPlaylistEmpty: 'Playlist is empty, add something to start auto playlist.',
         confirmClear: 'Are you sure you want to clear the playlist?',
         savePlaylist: 'Save this playlist',
-        loadPlaylist: 'Load saved playlist'
+        loadPlaylist: 'Load saved playlist',
+        playlistName: 'Playlist name'
       },
       TrackInfo: {
         nowPlaying: 'Now playing'
@@ -131,10 +134,11 @@ var locales = {
         headingAlbum: 'Album labels',
         labels: 'Labels',
         tagPlaceholder: '[Enter] Add as new label'
+      },
+      EditPlaylist: {
+        headingForm: 'Attributes',
+        tracksList: 'Tracks in playlist'
       }
-    },
-    views: {
-
     },
     infiniteScroll: {
       noMore: 'There is no more data.',

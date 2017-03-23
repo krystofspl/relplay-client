@@ -12,7 +12,8 @@ const state = {
     artists: {},
     genres: {},
     labels: {},
-    tracks: {}
+    tracks: {},
+    playlists: {}
   },
   player: {
     state: 'paused',
@@ -111,6 +112,9 @@ const getters = {
   },
   getLabels: (state) => {
     return state.data.labels
+  },
+  getPlaylists: (state) => {
+    return state.data.playlists
   }
 }
 
@@ -135,6 +139,9 @@ const mutations = {
     }
     for (let i = 0; i < payload.labels.length; i++) {
       Vue.set(state.data.labels, payload.labels[i].id, payload.labels[i])
+    }
+    for (let i = 0; i < payload.playlists.length; i++) {
+      Vue.set(state.data.playlists, payload.playlists[i].id, payload.playlists[i])
     }
   },
   SWITCH_MAIN_PANEL_VIEW (state, component) {
@@ -274,7 +281,7 @@ const actions = {
     context.dispatch('showInfoPanel')
     return new Promise((resolve, reject) => {
       // TODO async/await? needs a special babel plugin
-      var payload = {artists: [], albums: [], tracks: [], genres: [], labels: []}
+      var payload = {artists: [], albums: [], tracks: [], genres: [], labels: [], playlists: []}
       Vue.http.get(state.settings.global.backendUrl + 'artists').then(function (result) {
         payload.artists = result.body || []
         Vue.http.get(state.settings.global.backendUrl + 'albums').then(function (result) {
@@ -285,6 +292,13 @@ const actions = {
               payload.genres = result.body || []
               Vue.http.get(state.settings.global.backendUrl + 'labels').then(
                 function (result) {
+                  payload.labels = result.body || []
+                  Vue.http.get(state.settings.global.backendUrl + 'playlists').then(
+                    function (result) {
+                      payload.playlists = result.body || []
+                      context.commit('SET_INITIAL_DATA', payload)
+                      resolve()
+                    })
                   payload.labels = result.body || []
                   context.commit('SET_INITIAL_DATA', payload)
                   resolve()

@@ -7,7 +7,7 @@ export var trackGetters = {
       return Object.values(this.$store.state.data.albums).find(album => album.id === track.album)
     },
     getArtistForTrack: function (trackId) {
-      return Object.values(this.$store.state.data.artists).find(artist => artist.id === this.getAlbumForTrack(trackId).mainArtist)
+      return Object.values(this.$store.state.data.artists).find(artist => artist.id === this.getAlbumForTrack(this.getTrack(trackId)).mainArtist)
     },
     getArtworkPath: function (trackId) {
       // TODO let user choose

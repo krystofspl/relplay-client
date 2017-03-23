@@ -25,7 +25,7 @@
       <span class="action">
         <icon scale="1.2" name="floppy-o" :title="$t('components.Playlist.savePlaylist')">
       </span>
-      <span class="action">
+      <span class="action" @click="setModalEntity({entityId: 12761}); setModalAction('editPlaylist'); showModal()">
         <icon scale="1.2" name="list" :title="$t('components.Playlist.loadPlaylist')">
       </span>
     </div>
@@ -70,7 +70,7 @@ export default {
   },
   mixins: [trackGetters, albumGetters],
   methods: {
-    ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying', 'playerSetState']),
+    ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying', 'playerSetState', 'setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity']),
     ...mapGetters(['getNowPlayingId', 'getPlaylistTracks']),
     toggleAutoPlaylistState: function () {
       if (!this.autoPlaylistActive) {
