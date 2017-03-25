@@ -183,12 +183,15 @@ export default {
       }
     },
     saveCurrentPlaylist: function () {
-      var storePlaylist = this.$store.state.player.playlist
-      if (storePlaylist && storePlaylist.length) {
-        this.createPlaylist({ name: 'New playlist', trackIds: storePlaylist, callback: (err, obj) => { console.log(err); console.log(obj) } })
-      } else {
-        this.setInfoPanelMsg(this.$t('components.Playlist.playlistEmpty'))
-        this.showInfoPanel()
+      var playlistName = window.prompt(this.$t('components.Playlist.playlistName'))
+      if (playlistName) {
+        var storePlaylist = this.$store.state.player.playlist
+        if (storePlaylist && storePlaylist.length) {
+          this.createPlaylist({ name: playlistName, trackIds: storePlaylist, callback: (err, obj) => { console.log(err); console.log(obj) } })
+        } else {
+          this.setInfoPanelMsg(this.$t('components.Playlist.playlistEmpty'))
+          this.showInfoPanel()
+        }
       }
     }
   },
