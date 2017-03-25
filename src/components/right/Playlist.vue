@@ -22,7 +22,7 @@
       <span class="action" @click="clearPlaylist()" :title="$t('components.Playlist.clear')">
         <icon scale="1.2" name="trash">
       </span>
-      <span class="action">
+      <span class="action" @click="saveCurrentPlaylist()">
         <icon scale="1.2" name="floppy-o" :title="$t('components.Playlist.savePlaylist')">
       </span>
       <span class="action" @click="switchMainPanelView('Playlists')">
@@ -70,7 +70,7 @@ export default {
   },
   mixins: [trackGetters, albumGetters],
   methods: {
-    ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying', 'playerSetState', 'setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity', 'switchMainPanelView']),
+    ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying', 'playerSetState', 'setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity', 'switchMainPanelView', 'createPlaylist', 'showInfoPanel', 'setInfoPanelMsg']),
     ...mapGetters(['getNowPlayingId', 'getPlaylistTracks']),
     toggleAutoPlaylistState: function () {
       if (!this.autoPlaylistActive) {
@@ -180,6 +180,15 @@ export default {
         this.playerUpdatePlaylist({ playlist: [] })
         this.$set(this, 'playlist', [])
         jQuery('.playlist-item').remove()
+      }
+    },
+    saveCurrentPlaylist: function () {
+      var storePlaylist = this.$store.state.player.playlist
+      if (storePlaylist && storePlaylist.length) {
+        this.createPlaylist({ name: 'New playlist', trackIds: storePlaylist, callback: (err, obj) => { console.log(err); console.log(obj) } })
+      } else {
+        this.setInfoPanelMsg(this.$t('components.Playlist.playlistEmpty'))
+        this.showInfoPanel()
       }
     }
   },

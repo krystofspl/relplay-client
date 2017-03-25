@@ -36,6 +36,9 @@
     components: {
     },
     computed: {
+      playlist: function () {
+        return this.getPlaylist(this.playlistId)
+      }
     },
     methods: {
       ...mapGetters([]),
@@ -43,18 +46,18 @@
       submit: function () {
         // Prepare data
         var newData = {
-          id: this.album.id,
+          id: this.playlistId,
           callback: function (err, obj) {
             console.log(err)
             console.log(obj)
           }
         }
-        if (this.title !== this.album.title) {
-          newData.title = this.title
+        if (this.name !== this.playlist.name) {
+          newData.name = this.name
         }
         // Send
         this.$store.dispatch('updatePlaylist', newData)
-        this.setModalAction('showAlbum')
+        this.hideModal()
       }
     },
     created: function () {

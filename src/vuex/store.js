@@ -272,6 +272,12 @@ const mutations = {
     var oldList = state.player.autoPlaylist.usedTrackIds
     var newList = _.uniq(_.concat(oldList, payload.usedTrackIds))
     state.player.autoPlaylist.usedTrackIds = newList
+  },
+  DELETE_PLAYLIST (state, payload) {
+    Vue.delete(state.data.playlists, payload.id)
+  },
+  UPDATE_PLAYLIST (state, payload) {
+    Vue.set(state.data.playlists, payload.id, payload)
   }
 }
 
@@ -674,6 +680,65 @@ const actions = {
   },
   updateAutoPlaylistUsedTrackIds (context, payload) {
     context.commit('UPDATE_AUTO_PLAYLIST_USED_TRACK_IDS', payload)
+  },
+  createPlaylist (context, payload) {
+    var callback = payload.callback
+
+    Vue.http.post(context.state.settings.global.backendUrl + 'playlists/', payload)
+    .then(response => {
+      if (response.ok) {
+        // Normally would use 201 + get from Location header, but there seems to be a bug in vue-resource, headers are empty
+        context.commit('UPDATE_PLAYLIST', response.body)
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updatePlaylistSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updatePlaylistErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  updatePlaylist (context, payload) {
+    var callback = payload.callback
+    var playlistId = payload.id
+    delete payload.id
+
+    Vue.http.patch(context.state.settings.global.backendUrl + 'playlists/' + playlistId, payload)
+    .then(response => {
+      if (response.ok) {
+        context.commit('UPDATE_PLAYLIST', response.body)
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updatePlaylistSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updatePlaylistErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  deletePlaylist (context, payload) {
+    var callback = payload.callback
+    var playlistId = payload.id
+    delete payload.id
+
+    Vue.http.delete(context.state.settings.global.backendUrl + 'playlists/' + playlistId, payload)
+    .then(response => {
+      if (response.ok) {
+        context.commit('DELETE_PLAYLIST', {id: playlistId})
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deletePlaylistSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, {id: playlistId})
+      }
+    }, (err) => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.deletePlaylistErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
   }
 }
 

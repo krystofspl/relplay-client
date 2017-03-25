@@ -4,7 +4,7 @@
     <span class="action" @click="setModalEntity({ entityId: playlistId }); setModalAction('editPlaylist'); showModal()">
       <icon name="pencil" /> {{ $t('components.PlaylistActions.edit') }}
     </span>
-    <span class="action">
+    <span class="action" @click="deleteCurrentPlaylist()">
       <icon name="trash" />  {{ $t('components.PlaylistActions.delete') }}
     </span>
   </div>
@@ -25,7 +25,13 @@ export default {
     Icon
   },
   methods: {
-    ...mapActions(['setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity'])
+    ...mapActions(['setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity', 'deletePlaylist']),
+    deleteCurrentPlaylist: function () {
+      var conf = window.confirm(this.$t('components.PlaylistActions.confirmDelete'))
+      if (conf === true) {
+        this.deletePlaylist({ id: this.playlistId, callback: (err, obj) => { console.log(err); console.log(obj) } })
+      }
+    }
   },
   computed: {
     playlist: function () {
