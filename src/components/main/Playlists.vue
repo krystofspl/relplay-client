@@ -74,7 +74,7 @@ export default {
   .left, .right
     height: 100%
     overflow: auto
-    width: 45%
+    width: calc(50% - 2px) // TODO fix
     padding: 10px
     display: inline-block
     vertical-align: top
