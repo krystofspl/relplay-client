@@ -1,6 +1,12 @@
 <template>
   <div class="playlist-actions">
     <h3>{{ $t('components.Playlists.actionsHeading') }}</h3>
+    <span class="action" @click="playCurrentPlaylist()">
+      <icon name="play" />  {{ $t('components.PlaylistActions.play') }}
+    </span>
+    <span class="action" @click="enqueueCurrentPlaylist()">
+      <icon name="ellipsis-h" />  {{ $t('components.PlaylistActions.enqueue') }}
+    </span>
     <span class="action" @click="setModalEntity({ entityId: playlistId }); setModalAction('editPlaylist'); showModal()">
       <icon name="pencil" /> {{ $t('components.PlaylistActions.edit') }}
     </span>
@@ -25,12 +31,16 @@ export default {
     Icon
   },
   methods: {
-    ...mapActions(['setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity', 'deletePlaylist']),
+    ...mapActions(['setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity', 'deletePlaylist', 'playerUpdatePlaylist']),
     deleteCurrentPlaylist: function () {
       var conf = window.confirm(this.$t('components.PlaylistActions.confirmDelete'))
       if (conf === true) {
         this.deletePlaylist({ id: this.playlistId, callback: (err, obj) => { console.log(err); console.log(obj) } })
       }
+    },
+    playCurrentPlaylist: function () {
+      this.playerUpdatePlaylist({ playlist: [] })
+      console.log(this.$store.state.player.playlist)
     }
   },
   computed: {

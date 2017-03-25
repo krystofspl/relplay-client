@@ -136,7 +136,9 @@ var locales = {
       PlaylistActions: {
         edit: 'Edit',
         delete: 'Delete',
-        confirmDelete: 'Are you sure you want to delete this playlist?'
+        confirmDelete: 'Are you sure you want to delete this playlist?',
+        play: 'Play',
+        enqueue: 'Enqueue'
       },
       TrackInfo: {
         nowPlaying: 'Now playing'

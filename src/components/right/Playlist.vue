@@ -284,12 +284,8 @@ export default {
         },
         stop: (e, ui) => {
           var addedItem = ui.item
-          if (addedItem.data('draggable-type') === 'track') {
-            if (addedItem.data('multidrag')) {
-              var selected = addedItem.data('multidrag')
-              addedItem.after(selected)
-            }
-          } else if (addedItem.data('draggable-type') === 'album') {
+          console.log('stop')
+          if (addedItem.data('draggable-type') === 'album') {
             var albumId = jQuery(ui.item).data('albumId')
             if (albumId) {
               var trackIds = self.getTracksForAlbum(albumId).map(album => album.id)
@@ -299,6 +295,12 @@ export default {
                 self.addTrackRowToPlaylist(self.getTrack(trackId), initialPosition + offset)
                 offset++
               })
+            }
+          } else {
+            // Dropped track or sortable helper
+            if (addedItem.data('multidrag')) {
+              var selected = addedItem.data('multidrag')
+              addedItem.after(selected)
             }
           }
           addedItem.remove()

@@ -112,6 +112,7 @@
     },
     created: function () {
       jQuery(() => {
+        // TODO this is dependent on main playlist DOM structure
         jQuery('.tracks-body').selectable({
           cancel: '.drag-handle',
           items: '.track-item'
@@ -123,7 +124,6 @@
           cursorAt: { top: -5, left: -5 },
           containment: '#right-panel',
           helper: (e) => {
-            var helper = jQuery('<tr class="drag-helper"><td colspan="3"/></tr>')
             var multidrag = []
             jQuery('.tracks-body tr.ui-selected').each((index, element) => {
               multidrag.push(jQuery(`
@@ -134,6 +134,7 @@
                 </tr>
               `))
             })
+            var helper = jQuery('<tr class="drag-helper"><td colspan="3">' + multidrag.length + ' tracks</td></tr>')
             helper.data('multidrag', multidrag)
             helper.data('draggable-type', 'track')
             return helper

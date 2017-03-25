@@ -58,6 +58,7 @@ export default {
     }
   },
   created: function () {
+    // TODO this is very similar to AlbumDetails function and is dependent on main playlist DOM structure
     jQuery(() => {
       jQuery('.playlist-tracks-body').selectable({
         cancel: '.drag-handle',
@@ -70,7 +71,6 @@ export default {
         cursorAt: { top: -5, left: -5 },
         containment: '#right-panel',
         helper: (e) => {
-          var helper = jQuery('<tr class="drag-helper"><td colspan="3"/></tr>')
           var multidrag = []
           jQuery('.playlist-tracks-body tr.ui-selected').each((index, element) => {
             multidrag.push(jQuery(`
@@ -81,6 +81,7 @@ export default {
               </tr>
             `))
           })
+          var helper = jQuery('<tr class="drag-helper"><td colspan="3">' + multidrag.length + ' tracks</td></tr>')
           helper.data('multidrag', multidrag)
           helper.data('draggable-type', 'track')
           return helper

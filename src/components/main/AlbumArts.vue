@@ -81,6 +81,7 @@ export default {
       this.resetInfiniteLoader()
     })
     jQuery(() => {
+      // TODO this is dependent on main playlist DOM structure
       jQuery('.album-arts').draggable({
         items: '.album-art',
         connectToSortable: '#playlist-body',
@@ -88,7 +89,7 @@ export default {
         cursorAt: { top: -5, left: -5 },
         containment: 'window',
         helper: (e) => {
-          var helper = jQuery('<tr class="drag-helper"><td colspan="3"/></tr>')
+          var helper = jQuery('<tr class="drag-helper"><td colspan="3">1 album</td></tr>')
           helper.data('draggable-type', 'album')
           helper.data('albumId', jQuery(e.target).closest('.album-art').data('album'))
           return helper

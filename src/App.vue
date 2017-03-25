@@ -129,6 +129,9 @@ body
   opacity: 0.8
   box-shadow: 7px 7px 23px 0px rgba(0, 0, 0, 0.65)
   z-index: 2000
+  td
+    padding: 5px
+    color: #FFF
 
 .component-fade-enter-active, .component-fade-leave-active, .fade-enter-active, .fade-leave-active
   transition: opacity .5s ease
