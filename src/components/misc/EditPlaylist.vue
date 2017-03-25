@@ -8,12 +8,12 @@
     <div class="right">
       <h3>{{ $t('components.EditPlaylist.tracksList') }}</h3>
       <div v-for="track in tracks">
-        {{ getArtistForTrack(track.id).name }} - {{ track.title }}
-      </span>
+        {{ track.position + 1 }}. {{ getArtistForTrack(track.id).name }} - {{ track.title }}
+      </div>
     </div>
+    <br><br><br>
+    <button v-on:click="submit()" style="float: right; font-weight: bold;">Save</button>
   </div>
-  <br><br><br>
-  <button v-on:click="submit()" style="float: right; font-weight: bold;">Save</button>
 </template>
 
 <script>
@@ -65,7 +65,9 @@
         if (playlist) {
           self.name = playlist.name
           _.forEach(_.sortBy(playlist.tracks, 'position'), track => {
-            self.tracks.push(self.getTrack(track.id))
+            var trackItem = self.getTrack(track.id)
+            trackItem.position = track.position
+            self.tracks.push(trackItem)
           })
         }
       }

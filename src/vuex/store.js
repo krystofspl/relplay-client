@@ -60,7 +60,7 @@ const state = {
         }
       },
       TopPanel: {
-        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph', 'LabelsGraph', 'Settings']
+        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph', 'LabelsGraph', 'Playlists', 'Settings']
       },
       TrackInfo: {
         displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'labels', 'album.albumArt']
@@ -144,11 +144,11 @@ const mutations = {
       Vue.set(state.data.playlists, payload.playlists[i].id, payload.playlists[i])
     }
   },
-  SWITCH_MAIN_PANEL_VIEW (state, component) {
-    state.view.mainPanelView = component
+  SWITCH_MAIN_PANEL_VIEW (state, componentName) {
+    state.view.mainPanelView = componentName
   },
-  SWITCH_RIGHT_PANEL_VIEW (state, component) {
-    state.view.rightPanelView = component
+  SWITCH_RIGHT_PANEL_VIEW (state, componentName) {
+    state.view.rightPanelView = componentName
   },
   PLAYER_SWITCH_STATE (state) {
     var playerState = state.player.state

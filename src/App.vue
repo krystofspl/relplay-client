@@ -86,6 +86,11 @@ body
     &:hover
       border: 1px solid #CCC
 
+  .action
+    font-weight: bold
+    &:hover
+      color: red
+
 .multiselect
   border-radius: 0
   .multiselect__tags

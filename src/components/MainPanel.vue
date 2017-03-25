@@ -17,6 +17,7 @@ import ArtistAlbumsGraph from './main/ArtistAlbumsGraph.vue'
 import ArtistsArtistsGraph from './main/ArtistsArtistsGraph.vue'
 import GenresAlbumsGraph from './main/GenresAlbumsGraph.vue'
 import LabelsGraph from './main/LabelsGraph.vue'
+import Playlists from './main/Playlists.vue'
 import Settings from './misc/Settings.vue'
 import ModalActions from './misc/ModalActions.vue'
 
@@ -29,6 +30,7 @@ export default {
     GenresAlbumsGraph,
     ArtistAlbumsGraph,
     LabelsGraph,
+    Playlists,
     Settings,
     ModalActions
   }

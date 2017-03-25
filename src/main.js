@@ -118,10 +118,24 @@ var locales = {
         autoPlaylistStopped: 'Auto playlist has been stopped.',
         autoPlaylistWaiting: 'Auto playlist waiting for data.',
         autoPlaylistEmpty: 'Playlist is empty, add something to start auto playlist.',
+        clear: 'Clear the playlist',
         confirmClear: 'Are you sure you want to clear the playlist?',
         savePlaylist: 'Save this playlist',
         loadPlaylist: 'Load saved playlist',
         playlistName: 'Playlist name'
+      },
+      Playlists: {
+        name: 'Playlists',
+        actionsHeading: 'Actions',
+        savedPlaylistsHeading: 'Saved playlists',
+        noPlaylistsAvailable: 'There are no playlists.',
+        nothingSelected: 'No playlist selected',
+        playlistDetailsHeading: 'Playlist details',
+        filterByName: 'Filter by name'
+      },
+      PlaylistActions: {
+        edit: 'Edit',
+        delete: 'Delete'
       },
       TrackInfo: {
         nowPlaying: 'Now playing'

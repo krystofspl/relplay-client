@@ -19,13 +19,13 @@
       <span v-else :title="$t('components.Playlist.autoPlaylistWaiting')">
         <icon scale="1.2" name="circle-o-notch" spin></icon>
       </span>
-      <span class="action" @click="clearPlaylist()" :title="$t('components.Playlist.autoPlaylistWaiting')">
+      <span class="action" @click="clearPlaylist()" :title="$t('components.Playlist.clear')">
         <icon scale="1.2" name="trash">
       </span>
       <span class="action">
         <icon scale="1.2" name="floppy-o" :title="$t('components.Playlist.savePlaylist')">
       </span>
-      <span class="action" @click="setModalEntity({entityId: 12761}); setModalAction('editPlaylist'); showModal()">
+      <span class="action" @click="switchMainPanelView('Playlists')">
         <icon scale="1.2" name="list" :title="$t('components.Playlist.loadPlaylist')">
       </span>
     </div>
@@ -70,7 +70,7 @@ export default {
   },
   mixins: [trackGetters, albumGetters],
   methods: {
-    ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying', 'playerSetState', 'setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity']),
+    ...mapActions(['playerUpdatePlaylist', 'playerSetNowPlaying', 'playerSetState', 'setModalAction', 'toggleModalAction', 'showModal', 'hideModal', 'setModalEntity', 'switchMainPanelView']),
     ...mapGetters(['getNowPlayingId', 'getPlaylistTracks']),
     toggleAutoPlaylistState: function () {
       if (!this.autoPlaylistActive) {
