@@ -45,7 +45,7 @@ export default {
     },
     fetchGraphData: function (callback) {
       var self = this
-      var selectedArtistId = this.getArtistForTrack(this.getNowPlayingTrack()).id || null
+      var selectedArtistId = this.getArtistForTrack(this.getNowPlayingTrack().id).id || null
       this.$http.get(this.$store.state.settings.global.backendUrl + 'graphs/artist-albums-graph?artist=' + selectedArtistId).then(function (results) {
         // Initialize the data structures
         this.graphData.nodes = []

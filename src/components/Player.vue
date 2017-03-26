@@ -37,9 +37,12 @@ export default {
       console.log('Stopping')
       var self = this
       var sound = this.getHowl(self.howlPlayingTrackId)
-      if (sound) sound.stop()
+      if (sound) {
+        sound.stop()
+      }
       for (let i = 0; i < self.howlPlaylist.length; i++) {
-        self.howlPlaylist[i].howl.stop()
+        var currentHowl = self.howlPlaylist[i].howl
+        currentHowl.stop()
       }
     },
     step: function () {
@@ -96,9 +99,11 @@ export default {
         } else {
           return {
             trackId: track,
+            // TODO unloading for better memory management
             howl: new Howl({
               src: [self.$store.state.settings.global.backendUrl + 'tracks/' + track + '/file.mp3'],
               html5: true,
+              preload: false,
               onplay: function () {
                 window.requestAnimationFrame(self.step.bind(self))
               },

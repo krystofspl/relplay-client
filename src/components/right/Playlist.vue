@@ -19,7 +19,7 @@
       <span v-else :title="$t('components.Playlist.autoPlaylistWaiting')">
         <icon scale="1.2" name="circle-o-notch" spin></icon>
       </span>
-      <span class="action" @click="clearPlaylist()" :title="$t('components.Playlist.clear')">
+      <span class="action" @click="clearPlaylistConfirm()" :title="$t('components.Playlist.clear')">
         <icon scale="1.2" name="trash">
       </span>
       <span class="action" @click="saveCurrentPlaylist()">
@@ -50,6 +50,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import bus from '../../vuex/eventBus.js'
 import { trackGetters } from '../../mixins/getters/trackGetters.js'
 import { albumGetters } from '../../mixins/getters/albumGetters.js'
 import Icon from 'vue-awesome/components/Icon'
@@ -149,9 +150,10 @@ export default {
           <td class="sort-handle-column"></td>
         </tr>
       `).addClass('playlist-item')
-      if (!position || position === -1) {
+      if (typeof position === 'undefined' || position === -1 || this.playlist.length === 0) {
         jQuery('#playlist-body').append(tableRow)
       } else {
+        console.log('adding ' + track + ' ' + position)
         jQuery('#playlist-body tr').eq(position - 1).after(tableRow)
       }
       this.repairPlaylist()
@@ -174,13 +176,16 @@ export default {
       }
       this.$store.dispatch('showInfoPanel')
     },
-    clearPlaylist: function () {
+    clearPlaylistConfirm: function () {
       var conf = window.confirm(this.$t('components.Playlist.confirmClear'))
       if (conf === true) {
-        this.playerUpdatePlaylist({ playlist: [] })
-        this.$set(this, 'playlist', [])
-        jQuery('.playlist-item').remove()
+        this.clearPlaylist()
       }
+    },
+    clearPlaylist: function () {
+      this.playerUpdatePlaylist({ playlist: [] })
+      this.playlist = []
+      jQuery('.playlist-item').remove()
     },
     saveCurrentPlaylist: function () {
       var playlistName = window.prompt(this.$t('components.Playlist.playlistName'))
@@ -249,9 +254,27 @@ export default {
     }
   },
   created: function () {
-    // Set playlist structure from store
-    this.$set(this, 'playlist', this.getPlaylistTracks())
     var self = this
+    // Register event for adding tracks
+    bus.$off('addPlaylistTracks').$on('addPlaylistTracks', payload => {
+      var trackIds = payload.trackIds
+      var clearPlaylist = payload.clearPlaylist
+      if (!trackIds || !trackIds.length) { return }
+      var offset = 0
+      if (clearPlaylist) {
+        self.clearPlaylist()
+      } else {
+        offset = jQuery('#playlist-body tr').length
+      }
+      for (let i = 0; i < trackIds.length; i++) {
+        self.addTrackRowToPlaylist(self.getTrack(trackIds[i]), offset + i)
+      }
+      self.playlistItemsAfterAdd()
+      self.updatePlaylistFromDOM()
+      // TODO play first one
+    })
+    // Set playlist structure from store
+    self.$set(self, 'playlist', self.getPlaylistTracks())
     // On document ready:
     jQuery(() => {
       // Fill playlist table with rows from the playlist structure
@@ -287,7 +310,6 @@ export default {
         },
         stop: (e, ui) => {
           var addedItem = ui.item
-          console.log('stop')
           if (addedItem.data('draggable-type') === 'album') {
             var albumId = jQuery(ui.item).data('albumId')
             if (albumId) {
@@ -295,7 +317,7 @@ export default {
               var initialPosition = jQuery('#playlist-body tr').index(addedItem)
               var offset = 0
               trackIds.forEach(trackId => {
-                self.addTrackRowToPlaylist(self.getTrack(trackId), initialPosition + offset)
+                self.addTrackRowToPlaylist(self.getTrack(trackId), initialPosition + offset + 1)
                 offset++
               })
             }
@@ -362,7 +384,7 @@ export default {
           text-overflow: ellipsis
           max-width: 0
           &:first-child
-            width: 20px
+            width: 28px
         .absorbing-column
           width: 100%
           white-space: nowrap

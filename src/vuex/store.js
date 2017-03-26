@@ -60,7 +60,7 @@ const state = {
         }
       },
       TopPanel: {
-        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph', 'LabelsGraph', 'Playlists', 'Settings']
+        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'LabelsGraph', 'Playlists', 'Settings']
       },
       TrackInfo: {
         displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'labels', 'album.albumArt']
@@ -287,6 +287,7 @@ const actions = {
     context.dispatch('showInfoPanel')
     return new Promise((resolve, reject) => {
       // TODO async/await? needs a special babel plugin
+      // TODO separate this to custom actions, might need to e.g. just load-update artists and it's nicer
       var payload = {artists: [], albums: [], tracks: [], genres: [], labels: [], playlists: []}
       Vue.http.get(state.settings.global.backendUrl + 'artists').then(function (result) {
         payload.artists = result.body || []
@@ -305,9 +306,6 @@ const actions = {
                       context.commit('SET_INITIAL_DATA', payload)
                       resolve()
                     })
-                  payload.labels = result.body || []
-                  context.commit('SET_INITIAL_DATA', payload)
-                  resolve()
                 })
             })
           })
