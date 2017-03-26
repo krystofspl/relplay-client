@@ -153,7 +153,6 @@ export default {
       if (typeof position === 'undefined' || position === -1 || this.playlist.length === 0) {
         jQuery('#playlist-body').append(tableRow)
       } else {
-        console.log('adding ' + track + ' ' + position)
         jQuery('#playlist-body tr').eq(position - 1).after(tableRow)
       }
       this.repairPlaylist()
