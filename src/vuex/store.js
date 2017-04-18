@@ -60,7 +60,7 @@ const state = {
         }
       },
       TopPanel: {
-        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'LabelsGraph', 'Playlists', 'Settings']
+        links: ['ArtistsAlbumArts', 'ArtistsAlbumDetails', 'GenresAlbumsGraph', 'ArtistAlbumsGraph', 'ArtistsArtistsGraph', 'AlbumsAlbumsGraph', 'LabelsGraph', 'Playlists', 'Settings']
       },
       TrackInfo: {
         displayedFields: ['title', 'artist.name', 'album.name', 'album.year', 'labels', 'album.albumArt']
@@ -69,7 +69,7 @@ const state = {
   },
   settings: {
     global: {
-      backendUrl: 'http://192.168.1.8:8079/'
+      backendUrl: 'http://localhost:8079/'
     }
   }
 }

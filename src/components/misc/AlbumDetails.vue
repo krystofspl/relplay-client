@@ -7,6 +7,9 @@
       </div>
       <div class="album-info">
         <strong>Album info</strong><br>
+        <span @click="setModalEntity({albumId: album.id}); setModalAction('editAlbum'); showModal()">
+          <icon name="pencil"/>
+        </span>
         <div v-if="album.inInbox">
           <i>
             {{ $t('components.AlbumDetails.inboxWarning') }}
@@ -62,11 +65,12 @@
   import { trackGetters } from '../../mixins/getters/trackGetters.js'
   import { genreGetters } from '../../mixins/getters/genreGetters.js'
   import { common } from '../../mixins/common.js'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapActions } from 'vuex'
   import Labels from '../misc/Labels.vue'
   import Icon from 'vue-awesome/components/Icon'
   import 'vue-awesome/icons/volume-up'
   import 'vue-awesome/icons/bars'
+  import 'vue-awesome/icons/pencil'
   var jQuery = require('jquery')
   require('jquery-ui')
 
@@ -98,6 +102,7 @@
       }
     },
     methods: {
+      ...mapActions(['setModalEntity', 'setModalAction', 'showModal']),
       moveToLibrary: function (albumId) {
         this.$store.dispatch('updateAlbum',
           {

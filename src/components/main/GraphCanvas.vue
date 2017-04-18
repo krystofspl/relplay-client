@@ -68,13 +68,22 @@ export default {
             smooth: true
           },
           physics: {
-            barnesHut: {
+            enabled: true,
+            /* barnesHut: {
               centralGravity: 1,
-              springLength: 150,
+              springLength: 100,
               springConstant: 0.01,
               damping: 0.5,
               avoidOverlap: 1
+            }, */
+            repulsion: {
+              nodeDistance: 150,
+              centralGravity: 0.5,
+              springLength: 120,
+              springConstant: 0.05,
+              damping: 0.05
             },
+            solver: 'repulsion',
             maxVelocity: 30,
             minVelocity: 5,
             timestep: 0.88,
