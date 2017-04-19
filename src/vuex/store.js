@@ -278,6 +278,9 @@ const mutations = {
   },
   UPDATE_PLAYLIST (state, payload) {
     Vue.set(state.data.playlists, payload.id, payload)
+  },
+  UPDATE_ARTIST (state, payload) {
+    Vue.set(state.data.artists, payload.id, payload)
   }
 }
 
@@ -410,6 +413,25 @@ const actions = {
     }, (err) => {
       console.log(err)
       context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.updateAlbumErr'))
+      context.dispatch('showInfoPanel')
+      callback(err, null)
+    })
+  },
+  createArtist (context, payload) {
+    var callback = payload.callback
+
+    Vue.http.post(context.state.settings.global.backendUrl + 'artists/', payload)
+    .then(response => {
+      if (response.ok) {
+        // Normally would use 201 + get from Location header, but there seems to be a bug in vue-resource, headers are empty
+        context.commit('UPDATE_ARTIST', response.body)
+        context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.createArtistSuccess'))
+        context.dispatch('showInfoPanel')
+        callback(null, response.body)
+      }
+    }, err => {
+      console.log(err)
+      context.dispatch('setInfoPanelMsg', Vue.t('infoPanel.createArtistErr'))
       context.dispatch('showInfoPanel')
       callback(err, null)
     })

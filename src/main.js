@@ -87,7 +87,9 @@ var locales = {
       EditAlbum: {
         editGenres: 'Edit genres',
         parentGenre: 'Parent genre',
-        editAlbumTracks: 'Edit tracks'
+        editAlbumTracks: 'Edit tracks',
+        refreshMetadata: 'Refresh aggregated metadata',
+        createArtist: 'Add new artist'
       },
       EditAlbumTracks: {
         trackTitle: 'Track title',
@@ -180,7 +182,9 @@ var locales = {
       deletePlaylistSuccess: 'The playlist was deleted successfully.',
       deletePlaylistErr: 'There was an error when deleting the playlist.',
       updatePlaylistSuccess: 'The playlist was updated successfully.',
-      updatePlaylistErr: 'There was an error when updating the playlist.'
+      updatePlaylistErr: 'There was an error when updating the playlist.',
+      createArtistSuccess: 'The artist was created successfully.',
+      createArtistErr: 'There was an error when creating the artist.'
     }
   }
 }
