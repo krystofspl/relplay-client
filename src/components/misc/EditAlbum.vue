@@ -19,7 +19,7 @@
     </span>
 
     <label for="mainArtist">{{ $t('components.AlbumDetails.mainArtist') }}</label>
-    <a href="#" @click="createArtistPrompt()">{{ $t('components.EditAlbum.createArtist') }}</a>
+    <a href="#" @click="createArtistPrompt(true)">{{ $t('components.EditAlbum.createArtist') }}</a>
     <multiselect name="mainArtist" v-model="mainArtist"
       :options="availableArtists"
       :value="mainArtist"
@@ -36,6 +36,7 @@
     </span>
 
     <label for="artists">{{ $t('components.AlbumDetails.artists') }}</label>
+    <a href="#" @click="createArtistPrompt(false)">{{ $t('components.EditAlbum.createArtist') }}</a>
     <multiselect name="artists" v-model="artists"
       :options="availableArtists"
       :value="artists"
@@ -51,10 +52,6 @@
     Suggestions: <span v-for="otherArtist in recommendations.otherArtists">
       <a href="#" @click="addOrCreateOtherArtist(otherArtist)">{{ otherArtist }}</a>&nbsp;
     </span>
-
-    <br>
-    similar artists:
-    {{ recommendations.similarArtists }} <br>
 
     <label for="genres">{{ $t('components.AlbumDetails.genres') }}</label>
     <a href="#" @click="setModalEntity({genreId: null}); setModalAction('editGenre')">{{ $t('components.EditAlbum.editGenres') }}</a>
@@ -173,14 +170,18 @@
         this.$store.dispatch('updateAlbum', newData)
         this.setModalAction('showAlbum')
       },
-      createArtistPrompt: function () {
+      createArtistPrompt: function (forMainArtistField) {
         var artistName = window.prompt('Artist name')
         if (artistName !== null) {
           this.createArtist({
             name: artistName,
             callback: (err, res) => {
               if (err) console.log(err)
-              this.mainArtist = res
+              if (forMainArtistField) {
+                this.mainArtist = res
+              } else {
+                this.artists.push(res)
+              }
             }
           })
         }
