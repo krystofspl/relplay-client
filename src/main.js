@@ -74,6 +74,9 @@ var locales = {
         deleteEdge: 'Delete relationship',
         deleteConfirm: 'Are you sure you want to delete this relationship?'
       },
+      MultiGraph: {
+        name: 'Combined graph'
+      },
       ModalActions: {
         showAlbum: 'Album details',
         editAlbum: 'Edit album',

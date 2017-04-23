@@ -77,10 +77,10 @@ export default {
               avoidOverlap: 1
             }, */
             repulsion: {
-              nodeDistance: 150,
-              centralGravity: 0.5,
-              springLength: 120,
-              springConstant: 0.05,
+              nodeDistance: 200,
+              centralGravity: 0.3,
+              springLength: 50,
+              springConstant: 0.1,
               damping: 0.05
             },
             solver: 'repulsion',
