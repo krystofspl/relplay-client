@@ -1,5 +1,8 @@
 <template>
   <div id="multi-graph">
+    <div class="refresh-button" @click="refreshAction()">
+      <icon scale="2" name="refresh"></icon>
+    </div>
     <graph-canvas :graph-data="graphData" ref="graphCanvas"></graph-canvas>
   </div>
 </template>
@@ -11,6 +14,8 @@ import { albumGetters } from '../../mixins/getters/albumGetters.js'
 import { labelGetters } from '../../mixins/getters/labelGetters.js'
 import { genreGetters } from '../../mixins/getters/genreGetters.js'
 import { mapGetters, mapActions } from 'vuex'
+import Icon from 'vue-awesome/components/Icon'
+import 'vue-awesome/icons/refresh'
 var _ = require('lodash')
 
 export default {
@@ -26,11 +31,15 @@ export default {
     }
   },
   components: {
-    GraphCanvas
+    GraphCanvas,
+    Icon
   },
   mixins: [artistGetters, albumGetters, genreGetters, labelGetters],
   methods: {
     ...mapActions(['addLabelParentRelation', 'deleteLabelParentRelation']),
+    refreshAction: function () {
+      this.$refs.graphCanvas.tryInitGraph()
+    },
     graphInitCondition: function () {
       // Needs at least one label to be displayed
       return (Object.keys(this.$store.state.data.labels).length > 0)
@@ -73,11 +82,18 @@ export default {
           var newNode = {
             id: id,
             type: 'album',
-            label: currentEntity.title,
-            shape: 'dot',
-            color: 'blue',
-            size: 20,
-            font: {size: 18, color: 'red'}
+            label: currentEntity.title.split(/((?:\w+ ){3})/g).filter(Boolean).join('\n'),
+            shape: 'image',
+            image: self.getAlbumArtImgPath(currentEntity.id),
+            color: {
+              border: '#000',
+              background: '#666'
+            },
+            size: 35,
+            font: {size: 18, color: 'red'},
+            shapeProperties: {
+              useBorderWithImage: true
+            }
           }
           self.graphData.nodes.push(newNode)
         })
@@ -90,10 +106,10 @@ export default {
             id: id,
             type: 'genre',
             label: currentEntity.title,
-            shape: 'dot',
+            shape: 'triangle',
             color: currentEntity.color,
-            size: 20,
-            font: {size: 18, color: 'red'}
+            size: 40,
+            font: {size: 20, color: currentEntity.color}
           }
           self.graphData.nodes.push(newNode)
         })
@@ -116,8 +132,26 @@ export default {
 
         // Add relationships
         results.forEach(result => {
-          self.graphData.edges.push({ from: result.from, to: result.to, type: result.relType })
+          var edgeColor = 'red'
+          var edgeWidth = 1
+          if (result.relType === 'SIMILAR_TO') {
+            edgeColor = 'black'
+            edgeWidth = '1.5'
+          }
+          var edge = {
+            from: result.from,
+            to: result.to,
+            type: result.relType,
+            color: edgeColor,
+            width: edgeWidth,
+            arrows: {
+              to: (result.relType === 'HAS_PARENT_GENRE')
+            }
+          }
+          self.graphData.edges.push(edge)
         })
+        self.graphData.nodes = _.uniqWith(self.graphData.nodes, _.isEqual)
+        self.graphData.edges = _.uniqWith(self.graphData.edges, _.isEqual)
         callback()
       })
     },
@@ -167,4 +201,13 @@ export default {
       cursor: pointer
       &:hover
         background: #777
+  .refresh-button
+    position: absolute
+    top: 10px
+    right: 10px
+    z-index: 5000
+    display: inline
+    color: #999
+    &:hover
+      color: #FFF
 </style>

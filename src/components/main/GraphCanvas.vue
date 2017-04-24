@@ -78,9 +78,9 @@ export default {
             }, */
             repulsion: {
               nodeDistance: 200,
-              centralGravity: 0.3,
-              springLength: 50,
-              springConstant: 0.1,
+              centralGravity: 0.05,
+              springLength: 120,
+              springConstant: 0.2,
               damping: 0.05
             },
             solver: 'repulsion',
