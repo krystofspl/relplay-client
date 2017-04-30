@@ -20,13 +20,13 @@
         <icon scale="1.2" name="circle-o-notch" spin></icon>
       </span>
       <span class="action" @click="clearPlaylistConfirm()" :title="$t('components.Playlist.clear')">
-        <icon scale="1.2" name="trash">
+        <icon scale="1.2" name="trash"></icon>
       </span>
       <span class="action" @click="saveCurrentPlaylist()">
-        <icon scale="1.2" name="floppy-o" :title="$t('components.Playlist.savePlaylist')">
+        <icon scale="1.2" name="floppy-o" :title="$t('components.Playlist.savePlaylist')"></icon>
       </span>
       <span class="action" @click="switchMainPanelView('Playlists')">
-        <icon scale="1.2" name="list" :title="$t('components.Playlist.loadPlaylist')">
+        <icon scale="1.2" name="list" :title="$t('components.Playlist.loadPlaylist')"></icon>
       </span>
     </div>
 
