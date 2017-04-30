@@ -1,7 +1,7 @@
 {
-  "name": "gml-front",
+  "name": "relplay-client",
   "version": "1.0.0",
-  "description": "Graph Music Library frontend",
+  "description": "RelPlay client",
   "author": "krystofspl <krystofspl@gmail.com>",
   "private": true,
   "scripts": {

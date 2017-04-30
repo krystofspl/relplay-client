@@ -90,8 +90,8 @@ export default {
             adaptiveTimestep: true,
             stabilization: {
               enabled: true,
-              iterations: 5,
-              updateInterval: 1
+              iterations: 20,
+              updateInterval: 3
             }
           }
         }
